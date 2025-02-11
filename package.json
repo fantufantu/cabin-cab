@@ -1,0 +1,26 @@
+{
+  "name": "create-new-bee",
+  "version": "1.0.0",
+  "description": "create new bee project",
+  "license": "MIT",
+  "scripts": {
+    "dev": "wasp dev",
+    "build": "wasp build"
+  },
+  "dependencies": {
+    "@aiszlab/bee": "^1.5.9",
+    "@aiszlab/fuzzy": "^1.5.9",
+    "@aiszlab/relax": "^1.5.9",
+    "musae": "^0.5.12",
+    "react": "18",
+    "react-dom": "18"
+  },
+  "devDependencies": {
+    "@aiszlab/wasp": "^1.5.9",
+    "@types/react": "18",
+    "@types/react-dom": "18",
+    "eslint": "^9.20.0",
+    "eslint-config-react-app": "^7.0.1",
+    "typescript": "^5.7.3"
+  }
+}
