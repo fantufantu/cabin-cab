@@ -1,7 +1,7 @@
 {
-  "name": "create-new-bee",
+  "name": "cabin-cab",
   "version": "1.0.0",
-  "description": "create new bee project",
+  "description": "cabin cab",
   "license": "MIT",
   "scripts": {
     "dev": "wasp dev",
@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@aiszlab/wasp": "^1.5.9",
+    "@tauri-apps/cli": "^2.2.7",
     "@types/react": "18",
     "@types/react-dom": "18",
     "eslint": "^9.20.0",
