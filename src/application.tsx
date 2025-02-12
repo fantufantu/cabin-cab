@@ -1,5 +1,8 @@
-const Application = () => {
-  return <div className='w-screen h-screen flex justify-center items-center'>Cabin Cab</div>
+import { type ApplicationProps } from '@aiszlab/bee'
+import Layout from './layout'
+
+const Application = ({ children }: ApplicationProps) => {
+  return <Layout>{children}</Layout>
 }
 
 export default Application

@@ -10,8 +10,8 @@
   "dependencies": {
     "@aiszlab/bee": "^1.5.9",
     "@aiszlab/fuzzy": "^1.5.9",
-    "@aiszlab/relax": "^1.5.9",
-    "musae": "^0.5.12",
+    "@aiszlab/relax": "^1.5.10",
+    "musae": "^0.5.13",
     "react": "18",
     "react-dom": "18"
   },
