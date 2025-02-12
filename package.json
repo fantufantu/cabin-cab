@@ -9,19 +9,19 @@
     "tauri-dev": "tauri dev"
   },
   "dependencies": {
-    "@aiszlab/bee": "^1.5.9",
-    "@aiszlab/fuzzy": "^1.5.9",
-    "@aiszlab/relax": "^1.5.10",
-    "musae": "^0.5.13",
-    "react": "18",
-    "react-dom": "18"
+    "@aiszlab/bee": "^1.5.11",
+    "@aiszlab/fuzzy": "^1.5.11",
+    "@aiszlab/relax": "^1.5.11",
+    "musae": "^0.5.14",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@aiszlab/wasp": "^1.5.9",
+    "@aiszlab/wasp": "^1.5.11",
     "@tauri-apps/cli": "^2.2.7",
-    "@types/react": "18",
-    "@types/react-dom": "18",
-    "eslint": "^9.20.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "eslint": "^9.20.1",
     "eslint-config-react-app": "^7.0.1",
     "tailwindcss": "^4.0.6",
     "typescript": "^5.7.3"
