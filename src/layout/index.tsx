@@ -10,19 +10,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
       className='w-screen h-screen flex'
       style={{
         // @ts-expect-error style vars
-        '--surface-container-low': colors['surface-container-low'],
-        '--on-primary': colors['on-primary']
+        '--color-surface-container-low': colors['surface-container-low'],
+        '--color-on-primary': colors['on-primary']
       }}
     >
       <Navigations />
-      <main
-        className='flex-1 py-10 px-8'
-        style={{
-          backgroundColor: 'var(--surface-container-low)'
-        }}
-      >
-        {children}
-      </main>
+      <main className='flex-1 py-10 px-8 bg-color-surface-container-low'>{children}</main>
     </div>
   )
 }

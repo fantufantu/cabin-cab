@@ -1,6 +1,5 @@
 import { bootstrap } from '@aiszlab/bee'
 import './styles.css'
-import 'musae/styles.css'
 import Application from './application'
 import { lazy } from 'react'
 
