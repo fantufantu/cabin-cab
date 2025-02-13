@@ -1,17 +1,17 @@
-import { bootstrap } from '@aiszlab/bee'
-import './styles.css'
-import Application from './application'
-import { lazy } from 'react'
+import { bootstrap } from "@aiszlab/bee";
+import "./styles.css";
+import Application from "./application";
+import { lazy } from "react";
 
-const Home = lazy(() => import('./pages/home'))
+const Home = lazy(() => import("./pages/home"));
 
 bootstrap({
-  selectors: '#root',
+  selectors: "#root",
   render: Application,
   routes: [
     {
-      path: '/',
-      element: <Home />
-    }
-  ]
-})
+      path: "/",
+      element: <Home />,
+    },
+  ],
+});

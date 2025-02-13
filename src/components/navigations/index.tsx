@@ -1,11 +1,11 @@
-import Logo from './logo'
+import Logo from "./logo";
 
 const Navigations = () => {
   return (
-    <aside className='p-8'>
+    <aside className="p-8">
       <Logo />
     </aside>
-  )
-}
+  );
+};
 
-export default Navigations
+export default Navigations;

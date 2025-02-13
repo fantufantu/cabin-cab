@@ -1,8 +1,8 @@
-import { type ApplicationProps } from '@aiszlab/bee'
-import Layout from './layout'
+import { type ApplicationProps } from "@aiszlab/bee";
+import Layout from "./layout";
 
 const Application = ({ children }: ApplicationProps) => {
-  return <Layout>{children}</Layout>
-}
+  return <Layout>{children}</Layout>;
+};
 
-export default Application
+export default Application;

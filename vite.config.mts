@@ -1,3 +1,3 @@
-import { defineConfig } from '@aiszlab/wasp/vite'
+import { defineConfig } from "@aiszlab/wasp/vite";
 
-export default defineConfig({})
+export default defineConfig({});

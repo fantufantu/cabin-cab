@@ -1,5 +1,5 @@
 const Tasks = () => {
-  return <div></div>
-}
+  return <div></div>;
+};
 
-export default Tasks
+export default Tasks;
