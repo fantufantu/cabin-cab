@@ -9,15 +9,15 @@
     "tauri-dev": "tauri dev"
   },
   "dependencies": {
-    "@aiszlab/bee": "^1.5.11",
-    "@aiszlab/fuzzy": "^1.5.11",
-    "@aiszlab/relax": "^1.5.11",
-    "musae": "^0.5.14",
+    "@aiszlab/bee": "^1.5.12",
+    "@aiszlab/fuzzy": "^1.5.12",
+    "@aiszlab/relax": "^1.5.12",
+    "musae": "^0.5.15",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@aiszlab/wasp": "^1.5.11",
+    "@aiszlab/wasp": "^1.5.12",
     "@tauri-apps/cli": "^2.2.7",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
