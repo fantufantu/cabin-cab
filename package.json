@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "wasp dev",
     "build": "wasp build",
-    "tauri-dev": "tauri dev"
+    "dev:tauri": "tauri dev"
   },
   "dependencies": {
     "@aiszlab/bee": "^1.5.12",
@@ -33,5 +33,10 @@
     "printWidth": 100,
     "arrowParens": "always",
     "singleQuote": false
+  },
+  "pnpm": {
+    "overrides": {
+      "musae": "link:../musae"
+    }
   }
 }
