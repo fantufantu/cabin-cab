@@ -1,7 +1,6 @@
 import { useTheme, Bench } from "musae";
-import Navigations from "../components/navigations";
 import { type ReactNode } from "react";
-import Logo from "../components/navigations/logo";
+import Logo from "../components/logo";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { colors } = useTheme();

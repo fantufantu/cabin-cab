@@ -9,21 +9,21 @@
     "dev:tauri": "tauri dev"
   },
   "dependencies": {
-    "@aiszlab/bee": "^1.5.12",
-    "@aiszlab/fuzzy": "^1.5.12",
-    "@aiszlab/relax": "^1.5.12",
-    "musae": "^0.5.15",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "@aiszlab/bee": "^2.0.2",
+    "@aiszlab/fuzzy": "^2.0.2",
+    "@aiszlab/relax": "^2.0.2",
+    "musae": "^1.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@aiszlab/wasp": "^1.5.12",
+    "@aiszlab/wasp": "^2.0.2",
     "@tauri-apps/cli": "^2.2.7",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
-    "eslint": "^9.20.1",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "eslint": "^9.21.0",
     "eslint-config-react-app": "^7.0.1",
-    "tailwindcss": "^4.0.6",
+    "tailwindcss": "^4.0.8",
     "typescript": "^5.7.3"
   },
   "prettier": {
@@ -35,8 +35,6 @@
     "singleQuote": false
   },
   "pnpm": {
-    "overrides": {
-      "musae": "link:../musae"
-    }
+    "overrides": {}
   }
 }
