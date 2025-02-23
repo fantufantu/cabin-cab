@@ -12,7 +12,7 @@
     "@aiszlab/bee": "^2.0.2",
     "@aiszlab/fuzzy": "^2.0.2",
     "@aiszlab/relax": "^2.0.2",
-    "musae": "^1.0.0",
+    "musae": "^1.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
