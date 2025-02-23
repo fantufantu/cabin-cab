@@ -13,7 +13,7 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![disk::my_custom_command])
+        .invoke_handler(tauri::generate_handler![disk::get_disk_info])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -1,11 +1,16 @@
-import { Input, Button } from "musae";
-import { useEffect } from "react";
+import { Input, Button, Progress } from "musae";
+import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { getDiskInfo, type DiskInfo } from "../../api/disk";
 
 const Home = () => {
+  const [diskInfo, setDiskInfo] = useState<DiskInfo>({ total: 0, used: 0 });
+
   useEffect(() => {
-    invoke("my_custom_command");
+    getDiskInfo().then(setDiskInfo);
   }, []);
+
+  console.log("setDiskInfo===", diskInfo);
 
   return (
     <div className="flex flex-col gap-8">
@@ -20,6 +25,8 @@ const Home = () => {
           Today’s schedule
         </Button>
       </div>
+
+      <Progress variant="circular" value={50} />
     </div>
   );
 };
