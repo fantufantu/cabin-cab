@@ -1,6 +1,12 @@
 import { Input, Button } from "musae";
+import { useEffect } from "react";
+import { invoke } from "@tauri-apps/api/core";
 
 const Home = () => {
+  useEffect(() => {
+    invoke("my_custom_command");
+  }, []);
+
   return (
     <div className="flex flex-col gap-8">
       <div>
