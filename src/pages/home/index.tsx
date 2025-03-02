@@ -1,6 +1,7 @@
 import { Input, Button, Progress } from "musae";
 import { useEffect, useMemo, useState } from "react";
 import { getDiskInfo, type DiskInfo } from "../../api/disk";
+import DiskUsage from "../../components/disk-usage";
 
 const Home = () => {
   const [diskInfo, setDiskInfo] = useState<DiskInfo>({ total: 0, used: 0 });
@@ -33,6 +34,7 @@ const Home = () => {
       <div>
         硬盘占用
         <Progress variant="circular" value={usedDisk} />
+        <DiskUsage />
       </div>
     </div>
   );
