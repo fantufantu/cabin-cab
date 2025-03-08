@@ -9,24 +9,25 @@
     "dev:tauri": "tauri dev"
   },
   "dependencies": {
-    "@aiszlab/bee": "^2.0.2",
-    "@aiszlab/fuzzy": "^2.0.2",
-    "@aiszlab/relax": "^2.0.2",
-    "@tauri-apps/api": "^2.2.0",
+    "@aiszlab/bee": "^2.0.3",
+    "@aiszlab/fuzzy": "^2.0.3",
+    "@aiszlab/relax": "^2.0.3",
+    "@tauri-apps/api": "^2.3.0",
+    "@tauri-apps/plugin-store": "~2",
     "@visx/shape": "^3.12.0",
     "musae": "^1.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@aiszlab/wasp": "^2.0.2",
-    "@tauri-apps/cli": "^2.2.7",
+    "@aiszlab/wasp": "^2.0.3",
+    "@tauri-apps/cli": "^2.3.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "eslint": "^9.21.0",
+    "eslint": "^9.22.0",
     "eslint-config-react-app": "^7.0.1",
-    "tailwindcss": "^4.0.8",
-    "typescript": "^5.7.3"
+    "tailwindcss": "^4.0.12",
+    "typescript": "^5.8.2"
   },
   "prettier": {
     "tabWidth": 2,
