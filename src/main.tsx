@@ -2,6 +2,7 @@ import { bootstrap } from "@aiszlab/bee";
 import "./styles.css";
 import Application from "./application";
 import { lazy } from "react";
+import Tasks from "./pages/tasks";
 
 const Home = lazy(() => import("./pages/home"));
 
@@ -12,6 +13,10 @@ bootstrap({
     {
       path: "/",
       element: <Home />,
+    },
+    {
+      path: "/tasks",
+      element: <Tasks />,
     },
   ],
 });
