@@ -1,22 +1,13 @@
 import { Button, Table } from "musae";
 import Editor, { EditorRef } from "./editor";
-import { useCallback, useContext, useRef } from "react";
-import TaskContext from "../../contexts/task";
+import { useCallback, useRef } from "react";
 
 const Tasks = () => {
   const editorRef = useRef<EditorRef>(null);
-  const { taskStore } = useContext(TaskContext);
 
   const add = useCallback(() => {
     editorRef.current?.open();
   }, []);
-
-  console.log(
-    "tasks=====",
-    taskStore?.store.length().then((size) => {
-      console.log("size======", size);
-    }),
-  );
 
   return (
     <div>

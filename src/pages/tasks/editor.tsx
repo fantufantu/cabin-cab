@@ -1,6 +1,5 @@
 import { Drawer, Form, Input } from "musae";
 import { forwardRef, useCallback, useContext, useImperativeHandle, useState } from "react";
-import TaskContext from "../../contexts/task";
 
 export interface EditorRef {
   open: () => void;
@@ -10,7 +9,6 @@ const { Item } = Form;
 
 const Editor = forwardRef<EditorRef, {}>((_, ref) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { taskStore } = useContext(TaskContext);
 
   useImperativeHandle(ref, () => {
     return {
@@ -24,9 +22,7 @@ const Editor = forwardRef<EditorRef, {}>((_, ref) => {
     setIsOpen(false);
   }, []);
 
-  const submit = useCallback(() => {
-    taskStore?.add("1", { name: "1" });
-  }, []);
+  const submit = useCallback(() => {}, []);
 
   return (
     <Drawer open={isOpen} onClose={cancel} onConfirm={submit}>
