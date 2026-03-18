@@ -4,10 +4,27 @@
   @import "musae";
 }
 
-/* musae theme utilities */
+/* bg utilities */
 @utility bg-color-on-primary {
   background-color: var(--color-on-primary);
 }
+@utility bg-color-on-primary-20 {
+  background-color: var(--color-on-primary-20);
+}
 @utility bg-color-surface-container-low {
   background-color: var(--color-surface-container-low);
+}
+
+/* text utilities */
+@utility text-color-primary {
+  color: var(--color-primary);
+}
+@utility text-color-on-primary {
+  color: var(--color-on-primary);
+}
+@utility text-color-secondary {
+  color: var(--color-secondary);
+}
+@utility text-color-on-secondary {
+  color: var(--color-on-secondary);
 }

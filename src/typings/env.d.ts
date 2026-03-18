@@ -1,3 +1,5 @@
+/// <reference types="@aiszlab/wasp/env" />
+
 import type { AuthenticationToken } from "@/constants/authentication";
 
 declare module "react" {
