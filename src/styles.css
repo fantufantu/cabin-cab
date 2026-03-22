@@ -11,6 +11,9 @@
 @utility bg-color-on-primary-20 {
   background-color: var(--color-on-primary-20);
 }
+@utility bg-color-secondary {
+  background-color: var(--color-secondary);
+}
 @utility bg-color-surface-container-low {
   background-color: var(--color-surface-container-low);
 }
@@ -27,4 +30,9 @@
 }
 @utility text-color-on-secondary {
   color: var(--color-on-secondary);
+}
+
+/* border utilities */
+@utility border-color-outline {
+  border-color: var(--color-outline);
 }

@@ -4,7 +4,9 @@ import Application from "./application";
 import { lazy } from "react";
 
 const Home = lazy(() => import("./pages/home"));
+const Plan = lazy(() => import("./pages/plan"));
 const PlanCities = lazy(() => import("./pages/plan/cities"));
+const PlanPeriod = lazy(() => import("./pages/plan/period"));
 
 bootstrap({
   selectors: "#root",
@@ -17,10 +19,15 @@ bootstrap({
 
     {
       path: "plan",
+      Component: Plan,
       children: [
         {
           path: "cities",
           element: <PlanCities />,
+        },
+        {
+          path: "period",
+          element: <PlanPeriod />,
         },
       ],
     },

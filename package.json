@@ -12,7 +12,8 @@
     "@aiszlab/bee": "^2.1.2",
     "@aiszlab/fuzzy": "^2.1.2",
     "@aiszlab/relax": "^2.1.2",
-    "musae": "1.0.27-beta.1",
+    "dayjs": "^1.11.20",
+    "musae": "1.0.27-beta.5",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
