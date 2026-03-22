@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 const Plan = () => {
   const [planDayCount, { add, subtract }] = useCounter(1, { min: 1 });
   const [selectedAdCodes, setSelectedAdCodes] = useState<Set<string>>(new Set());
-  const [startFrom, setStartFrom] = useState(() => dayjs().startOf("date"));
+  const [startFrom, setStartFrom] = useState(() => dayjs().startOf("day"));
 
   const toggleAdCode = (adcode: string) => {
     setSelectedAdCodes((prev) => {

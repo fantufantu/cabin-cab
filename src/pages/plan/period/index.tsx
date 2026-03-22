@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 const PlanPeriod = () => {
   const navigate = useNavigate();
   const {
+    cities: { selectedAdCodes },
     period: { dayCount, addDayCount, startFrom, subtractDayCount },
   } = usePlanContext();
 
@@ -17,11 +18,11 @@ const PlanPeriod = () => {
 
   // 旅游周期截止时间
   const endTo = useMemo(() => {
-    return dayjs(startFrom).add(dayCount, "day").endOf("date");
+    return dayjs(startFrom).add(dayCount, "day");
   }, [startFrom, dayCount]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col gap-4">
       <div className="flex items-center shadow p-5">
         <div className="mr-auto">
           <h1>计划周期</h1>
@@ -58,8 +59,12 @@ const PlanPeriod = () => {
         <Calendar value={[startFrom, endTo]} />
       </div>
 
-      <div className="mx-5 p-4">
+      <div className="mx-5 p-4 bg-color-primary text-color-on-primary rounded-2xl flex flex-col gap-2">
         <h3>行程摘要</h3>
+
+        <div className="bg-color-surface-container-highest rounded-lg p-2 text-color-on-surface text-sm">
+          计划旅游 {selectedAdCodes.size} 个城市，建议合理分配每城游览时间
+        </div>
       </div>
 
       <div className="mt-auto sticky bottom-0 flex items-center px-6 py-4 gap-3 bg-color-on-primary border-t border-color-outline">

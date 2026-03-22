@@ -5,6 +5,9 @@
 }
 
 /* bg utilities */
+@utility bg-color-primary {
+  background-color: var(--color-primary);
+}
 @utility bg-color-on-primary {
   background-color: var(--color-on-primary);
 }
@@ -16,6 +19,12 @@
 }
 @utility bg-color-surface-container-low {
   background-color: var(--color-surface-container-low);
+}
+@utility bg-color-surface-container-high {
+  background-color: var(--color-surface-container-high);
+}
+@utility bg-color-surface-container-highest {
+  background-color: var(--color-surface-container-highest);
 }
 
 /* text utilities */
@@ -30,6 +39,9 @@
 }
 @utility text-color-on-secondary {
   color: var(--color-on-secondary);
+}
+@utility text-color-on-surface {
+  color: var(--color-on-surface);
 }
 
 /* border utilities */
