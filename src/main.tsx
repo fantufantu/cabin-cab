@@ -7,6 +7,7 @@ const Home = lazy(() => import("./pages/home"));
 const Plan = lazy(() => import("./pages/plan"));
 const PlanCities = lazy(() => import("./pages/plan/cities"));
 const PlanPeriod = lazy(() => import("./pages/plan/period"));
+const TouristAttractions = lazy(() => import("./pages/plan/tourist-attractions"));
 
 bootstrap({
   selectors: "#root",
@@ -28,6 +29,10 @@ bootstrap({
         {
           path: "period",
           element: <PlanPeriod />,
+        },
+        {
+          path: "tourist-attractions",
+          element: <TouristAttractions />,
         },
       ],
     },

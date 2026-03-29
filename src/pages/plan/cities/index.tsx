@@ -9,7 +9,7 @@ import PlanHeader from "../../../components/plan/header";
 const PlanCities = () => {
   const { queryDistricts, districts } = useAmapStore();
   const {
-    cities: { selectedAdCodes, toggleAdCode },
+    cities: { selectedAdcodes, toggleAdcode },
   } = usePlanContext();
   const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ const PlanCities = () => {
       <PlanHeader
         title="选择目的城市"
         step={1}
-        subTitle={`可多选，已选 ${selectedAdCodes.size} 个城市`}
+        subTitle={`可多选，已选 ${selectedAdcodes.size} 个城市`}
       />
 
       <div className="mx-4">
@@ -39,24 +39,24 @@ const PlanCities = () => {
             <City
               key={item.adcode}
               item={item}
-              onClick={toggleAdCode}
-              isSelected={selectedAdCodes.has(item.adcode)}
+              onClick={toggleAdcode}
+              isSelected={selectedAdcodes.has(item.adcode)}
             />
           );
         })}
       </div>
 
       <div className="sticky bottom-0 flex items-center px-6 py-4 bg-color-on-primary border-t border-color-outline">
-        {selectedAdCodes.size === 0 && <span>请至少选择一个城市</span>}
+        {selectedAdcodes.size === 0 && <span>请至少选择一个城市</span>}
 
-        {selectedAdCodes.size > 0 && (
+        {selectedAdcodes.size > 0 && (
           <span>
-            已选择 {selectedAdCodes.size} 个城市：
-            {toArray(selectedAdCodes).map((code, index) => {
+            已选择 {selectedAdcodes.size} 个城市：
+            {toArray(selectedAdcodes).map((code, index) => {
               return (
                 <span key={code}>
                   <span>{districts.get(code)?.name}</span>
-                  {index < selectedAdCodes.size - 1 && <span>，</span>}
+                  {index < selectedAdcodes.size - 1 && <span>，</span>}
                 </span>
               );
             })}

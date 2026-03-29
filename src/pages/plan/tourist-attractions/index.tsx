@@ -1,0 +1,41 @@
+import { useNavigate } from "@aiszlab/bee/router";
+import PlanHeader from "../../../components/plan/header";
+import { Button, IconButton } from "musae";
+import { CalendarToday, KeyboardArrowLeft, KeyboardArrowRight } from "musae/icons";
+import { usePlanContext } from "../../../contexts/plan.context";
+import useAmapStore from "../../../stores/amap.store";
+import { useMounted } from "@aiszlab/relax";
+
+function TouristAttraction() {
+  const { queryTouristAttractions } = useAmapStore();
+  const {
+    cities: { selectedAdcodes },
+  } = usePlanContext();
+  const navigate = useNavigate();
+
+  const goBack = () => {
+    navigate(-1);
+  };
+
+  useMounted(() => {
+    queryTouristAttractions(selectedAdcodes.values().next().value ?? "");
+  });
+
+  return (
+    <div>
+      <PlanHeader step={3} title="景点" subTitle="选择您喜欢的景点" />
+
+      <div className="mt-auto sticky bottom-0 flex items-center px-6 py-4 gap-3 bg-color-on-primary border-t border-color-outline">
+        <IconButton size="small" color="secondary" onClick={goBack}>
+          <KeyboardArrowLeft />
+        </IconButton>
+
+        <Button className="flex-1" prefix={<CalendarToday />} suffix={<KeyboardArrowRight />}>
+          确认天
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export default TouristAttraction;

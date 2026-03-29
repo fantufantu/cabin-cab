@@ -1,10 +1,11 @@
 import { using } from "@aiszlab/relax/react";
-import { queryDistricts } from "../api/amap.api";
-import { District } from "../api/amap.types";
+import { queryDistricts, queryTouristAttractions } from "../api/amap.api";
+import { District, Poi } from "../api/amap.types";
 
 interface AmapStore {
   districts: Map<string, District>;
   queryDistricts: () => Promise<District[]>;
+  queryTouristAttractions: (adcode: string) => Promise<Poi[]>;
 }
 
 const useAmapStore = using<AmapStore>((setStore) => {
@@ -28,6 +29,20 @@ const useAmapStore = using<AmapStore>((setStore) => {
       });
 
       return _districts;
+    },
+
+    /**
+     * 查询景点数据，有限使用内存中已经记录的数据
+     * 如果内存中无有效数据，使用 API 调用远程接口
+     */
+    queryTouristAttractions: async (adcode: string) => {
+      const res = await queryTouristAttractions({
+        adcode,
+      });
+
+      console.log("res=====", res);
+
+      return res;
     },
   };
 });

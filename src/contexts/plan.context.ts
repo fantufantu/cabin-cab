@@ -7,10 +7,11 @@ interface PlanContextValue {
     addDayCount: () => void;
     subtractDayCount: () => void;
     startFrom: Dayjs;
+    setStartFrom: (date: Dayjs) => void;
   };
   cities: {
-    selectedAdCodes: Set<string>;
-    toggleAdCode: (adcode: string) => void;
+    selectedAdcodes: Set<string>;
+    toggleAdcode: (adcode: string) => void;
   };
 }
 

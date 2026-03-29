@@ -1,21 +1,25 @@
 import { Outlet } from "@aiszlab/bee/router";
 import PlanContext from "../../contexts/plan.context";
-import { useCounter } from "@aiszlab/relax";
-import { useState } from "react";
+import { toArray, useCounter, useEvent, useSessionStorageState } from "@aiszlab/relax";
+import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 
 const Plan = () => {
   const [planDayCount, { add, subtract }] = useCounter(1, { min: 1 });
-  const [selectedAdCodes, setSelectedAdCodes] = useState<Set<string>>(new Set());
   const [startFrom, setStartFrom] = useState(() => dayjs().startOf("day"));
 
-  const toggleAdCode = (adcode: string) => {
-    setSelectedAdCodes((prev) => {
-      const next = new Set(prev);
-      next.has(adcode) ? next.delete(adcode) : next.add(adcode);
-      return next;
-    });
-  };
+  const [cachedSelectedAdcodes, setCachedSelectedAdcodes] =
+    useSessionStorageState("cabin-cab__plan__cities");
+
+  const selectedAdcodes = useMemo(() => {
+    return new Set<string>(JSON.parse(cachedSelectedAdcodes ?? "[]"));
+  }, [cachedSelectedAdcodes]);
+
+  const toggleAdcode = useEvent((adcode: string) => {
+    const next = new Set(selectedAdcodes);
+    next.has(adcode) ? next.delete(adcode) : next.add(adcode);
+    setCachedSelectedAdcodes(JSON.stringify(toArray(next)));
+  });
 
   const addDayCount = () => {
     add();
@@ -33,10 +37,11 @@ const Plan = () => {
           addDayCount,
           subtractDayCount,
           startFrom,
+          setStartFrom,
         },
         cities: {
-          selectedAdCodes,
-          toggleAdCode,
+          selectedAdcodes,
+          toggleAdcode,
         },
       }}
     >
