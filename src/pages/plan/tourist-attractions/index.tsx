@@ -19,7 +19,9 @@ function TouristAttraction() {
   };
 
   useMounted(() => {
-    queryTouristAttractions(selectedAdcodes.values().next().value ?? "");
+    const validAdcode = selectedAdcodes.values().next().value;
+    if (!validAdcode) return;
+    queryTouristAttractions(validAdcode);
   });
 
   return (

@@ -4,6 +4,7 @@ import { District, Poi } from "../api/amap.types";
 
 interface AmapStore {
   districts: Map<string, District>;
+  touristAttractions: Map<string, Map<string, Poi>>;
   queryDistricts: () => Promise<District[]>;
   queryTouristAttractions: (adcode: string) => Promise<Poi[]>;
 }
@@ -11,6 +12,8 @@ interface AmapStore {
 const useAmapStore = using<AmapStore>((setStore) => {
   return {
     districts: new Map(),
+
+    touristAttractions: new Map(),
 
     /**
      * 查询地区数据，并更新全局缓存
@@ -36,13 +39,24 @@ const useAmapStore = using<AmapStore>((setStore) => {
      * 如果内存中无有效数据，使用 API 调用远程接口
      */
     queryTouristAttractions: async (adcode: string) => {
-      const res = await queryTouristAttractions({
+      const pois = await queryTouristAttractions({
         adcode,
+      }).catch(() => []);
+
+      setStore((store) => {
+        const validPois = store.touristAttractions.get(adcode) ?? new Map();
+        store.touristAttractions.set(adcode, validPois);
+
+        pois.forEach((poi) => {
+          validPois.set(poi.id, poi);
+        });
+
+        return {
+          ...store,
+        };
       });
 
-      console.log("res=====", res);
-
-      return res;
+      return pois;
     },
   };
 });
