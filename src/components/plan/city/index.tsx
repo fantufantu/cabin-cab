@@ -37,7 +37,7 @@ function City({ item, onClick, isSelected }: Props) {
 
       {isSelected && (
         <>
-          <div className={stringify(styles["city--selected"], "absolute inset-0 z-50")} />
+          <div className={stringify(styles["city--selected"], "absolute inset-0 z-10")} />
           <CheckCircle
             className="absolute top-3.5 right-3"
             color="var(--color-success)"

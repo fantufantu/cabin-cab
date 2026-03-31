@@ -5,6 +5,7 @@ import { useNavigate } from "@aiszlab/bee/router";
 import { usePlanContext } from "../../../contexts/plan.context";
 import City from "../../../components/plan/city";
 import PlanHeader from "../../../components/plan/header";
+import PlanFooter from "../../../components/plan/footer";
 
 const PlanCities = () => {
   const { queryDistricts, districts } = useAmapStore();
@@ -46,11 +47,11 @@ const PlanCities = () => {
         })}
       </div>
 
-      <div className="sticky bottom-0 flex items-center px-6 py-4 bg-color-on-primary border-t border-color-outline">
+      <PlanFooter className="flex items-center gap-2">
         {selectedAdcodes.size === 0 && <span>请至少选择一个城市</span>}
 
         {selectedAdcodes.size > 0 && (
-          <span>
+          <span className="whitespace-nowrap overflow-hidden text-ellipsis">
             已选择 {selectedAdcodes.size} 个城市：
             {toArray(selectedAdcodes).map((code, index) => {
               return (
@@ -66,7 +67,7 @@ const PlanCities = () => {
         <Button className="ml-auto" size="small" onClick={nextStep}>
           下一步
         </Button>
-      </div>
+      </PlanFooter>
     </div>
   );
 };

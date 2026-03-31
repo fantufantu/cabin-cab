@@ -5,6 +5,7 @@ import { useNavigate } from "@aiszlab/bee/router";
 import { useMemo } from "react";
 import dayjs from "dayjs";
 import PlanHeader from "../../../components/plan/header";
+import PlanFooter from "../../../components/plan/footer";
 
 const PlanPeriod = () => {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ const PlanPeriod = () => {
         </div>
       </div>
 
-      <div className="mt-auto sticky bottom-0 flex items-center px-6 py-4 gap-3 bg-color-on-primary border-t border-color-outline">
+      <PlanFooter className="flex items-center gap-2">
         <IconButton size="small" color="secondary" onClick={goBack}>
           <KeyboardArrowLeft />
         </IconButton>
@@ -79,7 +80,7 @@ const PlanPeriod = () => {
         >
           确认 {dayCount} 天
         </Button>
-      </div>
+      </PlanFooter>
     </div>
   );
 };

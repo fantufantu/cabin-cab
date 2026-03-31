@@ -5,6 +5,7 @@ import { CalendarToday, KeyboardArrowLeft, KeyboardArrowRight } from "musae/icon
 import { usePlanContext } from "../../../contexts/plan.context";
 import useAmapStore from "../../../stores/amap.store";
 import { useMounted } from "@aiszlab/relax";
+import PlanFooter from "../../../components/plan/footer";
 
 function TouristAttraction() {
   const { queryTouristAttractions } = useAmapStore();
@@ -34,6 +35,8 @@ function TouristAttraction() {
           确认天
         </Button>
       </div>
+
+      <PlanFooter></PlanFooter>
     </div>
   );
 }

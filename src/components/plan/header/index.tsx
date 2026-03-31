@@ -19,7 +19,7 @@ const PlanHeader = ({ title, step, subTitle }: Props) => {
   };
 
   return (
-    <div className="p-5 shadow flex flex-col gap-2 sticky top-0 z-10 bg-color-on-primary">
+    <div className="p-5 shadow flex flex-col gap-2 sticky top-0 z-50 bg-color-on-primary">
       <div className="flex items-center gap-3">
         <IconButton size="small" color="secondary" onClick={goBack}>
           <KeyboardArrowLeft size={24} />
