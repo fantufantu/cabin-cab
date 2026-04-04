@@ -25,7 +25,7 @@ function TouristAttraction() {
   useMounted(() => {
     Promise.allSettled([
       districts.size === 0 && queryDistricts(),
-      !isUndefined(currentAdcode) && queryTouristAttractions(currentAdcode.toString()),
+      queryTouristAttractions(currentAdcode?.toString()),
     ]);
   });
 

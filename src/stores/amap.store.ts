@@ -1,12 +1,13 @@
 import { using } from "@aiszlab/relax/react";
 import { queryDistricts, queryTouristAttractions } from "../api/amap.api";
 import { District, Poi } from "../api/amap.types";
+import { isUndefined } from "@aiszlab/relax";
 
 interface AmapStore {
   districts: Map<string, District>;
   touristAttractions: Map<string, Map<string, Poi>>;
   queryDistricts: () => Promise<District[]>;
-  queryTouristAttractions: (adcode: string) => Promise<Poi[]>;
+  queryTouristAttractions: (adcode?: string) => Promise<Poi[]>;
 }
 
 const useAmapStore = using<AmapStore>((setStore) => {
@@ -22,13 +23,16 @@ const useAmapStore = using<AmapStore>((setStore) => {
     queryDistricts: async () => {
       const _districts = (await queryDistricts()).at(0)?.districts ?? [];
 
-      _districts?.forEach((item) => {
-        setStore((store) => {
-          return {
-            ...store,
-            districts: store.districts.set(item.adcode, item),
-          };
+      setStore(({ districts, ...store }) => {
+        const nextDistricts = new Map(districts);
+        _districts.forEach((item) => {
+          nextDistricts.set(item.adcode, item);
         });
+
+        return {
+          ...store,
+          districts: nextDistricts,
+        };
       });
 
       return _districts;
@@ -38,7 +42,11 @@ const useAmapStore = using<AmapStore>((setStore) => {
      * 查询景点数据，有限使用内存中已经记录的数据
      * 如果内存中无有效数据，使用 API 调用远程接口
      */
-    queryTouristAttractions: async (adcode: string) => {
+    queryTouristAttractions: async (adcode) => {
+      if (isUndefined(adcode)) {
+        return [];
+      }
+
       const pois = await queryTouristAttractions({
         adcode,
       }).catch(() => []);
