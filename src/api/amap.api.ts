@@ -31,14 +31,10 @@ async function queryTouristAttractions({
 /**
  * 查询高德行政区域
  */
-async function queryDistricts({
-  adcodes = [],
-  page = 1,
-}: { adcodes?: string[]; page?: number } = {}): Promise<District[]> {
+async function queryDistricts(): Promise<District[]> {
   const url = new URL("https://restapi.amap.com/v3/config/district");
   url.searchParams.set("key", import.meta.env.VITE_AMAP_API_KEY);
-  url.searchParams.set("subdistrict", (adcodes.length + 1).toString());
-  url.searchParams.set("page", page.toString());
+  url.searchParams.set("subdistrict", "1");
 
   return (await (await fetch(url.toString())).json()).districts;
 }
