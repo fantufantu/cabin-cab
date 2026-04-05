@@ -21,8 +21,8 @@ importers:
         specifier: ^1.11.20
         version: 1.11.20
       musae:
-        specifier: 1.0.27-beta.9
-        version: 1.0.27-beta.9(@emotion/is-prop-valid@1.3.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23)
+        specifier: 1.0.27-beta.10
+        version: 1.0.27-beta.10(@emotion/is-prop-valid@1.3.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23)
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -2452,8 +2452,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  musae@1.0.27-beta.9:
-    resolution: {integrity: sha512-BExtFmIVbdjZI3V2L576gtalpHZFVNF6RHpcFFUFBwtDv9N/762k3vBCjH8mB+IQUUMUna0DHqO3blSsRzN/tg==}
+  musae@1.0.27-beta.10:
+    resolution: {integrity: sha512-danB7oisz2EVwibo1gr7ELtRq4KhOFzyxnJHmSbYLbOtEZnkrMmH2EcvWg669d9797yYSWivez6lQgnD7Qmjlw==}
     engines: {node: '>=22.0.0', pnpm: '>=10'}
     peerDependencies:
       react: '>=18'
@@ -5701,7 +5701,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  musae@1.0.27-beta.9(@emotion/is-prop-valid@1.3.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23):
+  musae@1.0.27-beta.10(@emotion/is-prop-valid@1.3.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23):
     dependencies:
       '@aiszlab/fuzzy': 2.1.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@aiszlab/relax': 2.1.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)

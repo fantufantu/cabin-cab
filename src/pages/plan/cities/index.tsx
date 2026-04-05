@@ -64,7 +64,12 @@ const PlanCities = () => {
           </span>
         )}
 
-        <Button className="ml-auto" size="small" onClick={nextStep}>
+        <Button
+          className="ml-auto"
+          size="small"
+          onClick={nextStep}
+          disabled={selectedAdcodes.size === 0}
+        >
           下一步
         </Button>
       </PlanFooter>
