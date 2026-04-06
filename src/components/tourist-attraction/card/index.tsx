@@ -1,7 +1,7 @@
-import { Checkbox } from "musae";
+import { Checkbox, Tag } from "musae";
 import type { Poi } from "../../../api/amap.types";
-import { ChangeEvent } from "react";
-import { useEvent } from "@aiszlab/relax";
+import { ChangeEvent, useMemo } from "react";
+import { toArray, unique, useEvent } from "@aiszlab/relax";
 
 interface Props {
   poi: Poi;
@@ -21,11 +21,23 @@ const TouristAttractionCard = ({ poi, onDeselect, onSelect, checked = false }: P
     }
   });
 
+  const tags = useMemo(() => unique(poi.type.split(";")), [poi.type]);
+
   return (
-    <div className="rounded shadow p-2">
+    <div className="rounded-lg shadow p-2 flex flex-col">
       <div className="flex items-center">
-        <span>{poi.name}</span>
-        <Checkbox checked={checked} onChange={toggle} />
+        <span className="text-sm">{poi.name}</span>
+        <Checkbox className="ml-auto" checked={checked} onChange={toggle} />
+      </div>
+
+      <p className="text-color-secondary text-xs">{poi.address}</p>
+
+      <div className="flex gap-2 mt-2">
+        {tags.map((tag) => (
+          <Tag key={tag} size="small">
+            {tag}
+          </Tag>
+        ))}
       </div>
     </div>
   );
