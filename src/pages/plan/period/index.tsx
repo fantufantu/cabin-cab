@@ -11,7 +11,7 @@ const PlanPeriod = () => {
   const navigate = useNavigate();
   const {
     cities: { selectedAdcodes },
-    period: { dayCount, addDayCount, startFrom, subtractDayCount, setStartFrom },
+    period: { duration, addDuration, depatureAt, subtractDuration, setDepatureAt },
   } = usePlanContext();
 
   const goBack = () => {
@@ -20,8 +20,8 @@ const PlanPeriod = () => {
 
   // 旅游周期截止时间
   const endTo = useMemo(() => {
-    return dayjs(startFrom).add(dayCount, "day");
-  }, [startFrom, dayCount]);
+    return dayjs(depatureAt).add(duration, "day");
+  }, [depatureAt, duration]);
 
   const goNext = () => {
     navigate("/plan/tourist-attractions");
@@ -35,28 +35,28 @@ const PlanPeriod = () => {
         <h3>旅游天数</h3>
 
         <div className="flex items-center gap-3">
-          {[3, 5, 7, 10, 14].map((dayCount) => {
-            return <Tag key={dayCount}>{dayCount}天</Tag>;
+          {[3, 5, 7, 10, 14].map((_duration) => {
+            return <Tag key={_duration}>{_duration}天</Tag>;
           })}
         </div>
 
         <div className="px-4 py-2 bg-color-surface-container-low rounded-full flex items-center gap-3">
           <span className="mr-auto">自定义天数</span>
 
-          <IconButton size="small" color="secondary" onClick={() => subtractDayCount()}>
+          <IconButton size="small" color="secondary" onClick={() => subtractDuration()}>
             <Remove size="small" />
           </IconButton>
 
-          <span>{dayCount}天</span>
+          <span>{duration}天</span>
 
-          <IconButton size="small" onClick={() => addDayCount()}>
+          <IconButton size="small" onClick={() => addDuration()}>
             <Add size="small" />
           </IconButton>
         </div>
       </div>
 
       <div className="mx-5 p-4 shadow-lg rounded-2xl flex justify-center">
-        <Calendar value={[startFrom, endTo]} onClick={setStartFrom} />
+        <Calendar value={[depatureAt, endTo]} onClick={setDepatureAt} />
       </div>
 
       <div className="mx-5 p-4 bg-color-primary text-color-on-primary rounded-2xl flex flex-col gap-2">
@@ -78,7 +78,7 @@ const PlanPeriod = () => {
           suffix={<KeyboardArrowRight />}
           onClick={goNext}
         >
-          确认 {dayCount} 天
+          确认 {duration} 天
         </Button>
       </PlanFooter>
     </div>

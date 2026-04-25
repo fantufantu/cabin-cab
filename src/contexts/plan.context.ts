@@ -3,11 +3,11 @@ import { createContext, useContext } from "react";
 
 interface PlanContextValue {
   period: {
-    dayCount: number;
-    addDayCount: () => void;
-    subtractDayCount: () => void;
-    startFrom: Dayjs;
-    setStartFrom: (date: Dayjs) => void;
+    duration: number;
+    addDuration: () => void;
+    subtractDuration: () => void;
+    depatureAt: Dayjs;
+    setDepatureAt: (date: Dayjs) => void;
   };
   cities: {
     selectedAdcodes: Set<string>;
