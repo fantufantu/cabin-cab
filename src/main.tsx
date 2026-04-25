@@ -4,10 +4,10 @@ import Application from "./application";
 import { lazy } from "react";
 
 const Home = lazy(() => import("./pages/home"));
-const Plan = lazy(() => import("./pages/plan"));
-const PlanCities = lazy(() => import("./pages/plan/cities"));
-const PlanPeriod = lazy(() => import("./pages/plan/period"));
-const TouristAttractions = lazy(() => import("./pages/plan/tourist-attractions"));
+const TouristPlan = lazy(() => import("./pages/tourist-plan"));
+const TouristPlanCities = lazy(() => import("./pages/tourist-plan/cities"));
+const TouristPlanPeriod = lazy(() => import("./pages/tourist-plan/period"));
+const TouristPlanAttractions = lazy(() => import("./pages/tourist-plan/attractions"));
 
 bootstrap({
   selectors: "#root",
@@ -19,20 +19,20 @@ bootstrap({
     },
 
     {
-      path: "plan",
-      Component: Plan,
+      path: "tourist-plan",
+      Component: TouristPlan,
       children: [
         {
           path: "cities",
-          element: <PlanCities />,
+          element: <TouristPlanCities />,
         },
         {
           path: "period",
-          element: <PlanPeriod />,
+          element: <TouristPlanPeriod />,
         },
         {
           path: "tourist-attractions",
-          element: <TouristAttractions />,
+          element: <TouristPlanAttractions />,
         },
       ],
     },

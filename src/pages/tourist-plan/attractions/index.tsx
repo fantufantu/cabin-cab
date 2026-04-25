@@ -18,7 +18,7 @@ import TouristAttractionCard from "../../../components/tourist-attraction/card";
 import { useMutation } from "@apollo/client/react";
 import { CREATE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
 
-function TouristAttraction() {
+function Attractions() {
   const { queryTouristAttractions, districts, queryDistricts, touristAttractions } = useAmapStore();
   const {
     cities: { selectedAdcodes },
@@ -169,4 +169,4 @@ function TouristAttraction() {
   );
 }
 
-export default TouristAttraction;
+export default Attractions;

@@ -4,9 +4,9 @@ import { toArray, useCounter, useEvent, useSessionStorageState } from "@aiszlab/
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 
-const Plan = () => {
-  const [planDayCount, { add, subtract }] = useCounter(1, { min: 1 });
-  const [startFrom, setStartFrom] = useState(() => dayjs().startOf("day"));
+const TouristPlan = () => {
+  const [duration, { add, subtract }] = useCounter(1, { min: 1 });
+  const [depatureAt, setDepatureAt] = useState(() => dayjs().startOf("day"));
 
   const [cachedSelectedAdcodes, setCachedSelectedAdcodes] =
     useSessionStorageState("cabin-cab__plan__cities");
@@ -21,11 +21,11 @@ const Plan = () => {
     setCachedSelectedAdcodes(JSON.stringify(toArray(next)));
   });
 
-  const addDayCount = () => {
+  const addDuration = () => {
     add();
   };
 
-  const subtractDayCount = () => {
+  const subtractDuration = () => {
     subtract();
   };
 
@@ -33,11 +33,11 @@ const Plan = () => {
     <PlanContext.Provider
       value={{
         period: {
-          dayCount: planDayCount,
-          addDayCount,
-          subtractDayCount,
-          startFrom,
-          setStartFrom,
+          duration,
+          addDuration,
+          subtractDuration,
+          depatureAt,
+          setDepatureAt,
         },
         cities: {
           selectedAdcodes,
@@ -50,4 +50,4 @@ const Plan = () => {
   );
 };
 
-export default Plan;
+export default TouristPlan;
