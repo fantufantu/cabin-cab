@@ -9,8 +9,8 @@ const { Col, Row } = Grid;
 const Home = () => {
   const navigate = useNavigate();
 
-  const startPlan = () => {
-    navigate("/plan/cities");
+  const startTouristPlan = () => {
+    navigate("/tourist-plan/cities");
   };
 
   return (
@@ -30,7 +30,7 @@ const Home = () => {
           <li>系统为你智能生成专属出行路线</li>
         </ol>
 
-        <Button className="mt-4" onClick={startPlan}>
+        <Button className="mt-4" onClick={startTouristPlan}>
           开始规划我的旅行
         </Button>
 
@@ -100,7 +100,7 @@ const Home = () => {
         </Row>
       </div>
 
-      <Button className="mx-4" onClick={startPlan}>
+      <Button className="mx-4" onClick={startTouristPlan}>
         立刻开始规划
       </Button>
     </div>

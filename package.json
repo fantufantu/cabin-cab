@@ -14,7 +14,7 @@
     "@aiszlab/relax": "^2.1.2",
     "@apollo/client": "^4.1.9",
     "dayjs": "^1.11.20",
-    "musae": "1.0.27-beta.12",
+    "musae": "1.0.27-beta.16",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },

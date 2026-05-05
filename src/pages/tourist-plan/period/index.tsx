@@ -4,8 +4,8 @@ import { usePlanContext } from "../../../contexts/plan.context";
 import { useNavigate } from "@aiszlab/bee/router";
 import { useMemo } from "react";
 import dayjs from "dayjs";
-import PlanHeader from "../../../components/plan/header";
-import PlanFooter from "../../../components/plan/footer";
+import PlanHeader from "../../../components/tourist-plan/header";
+import PlanFooter from "../../../components/tourist-plan/footer";
 
 const PlanPeriod = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const PlanPeriod = () => {
   }, [depatureAt, duration]);
 
   const goNext = () => {
-    navigate("/plan/tourist-attractions");
+    navigate("/tourist-plan/attractions");
   };
 
   return (

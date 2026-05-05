@@ -1,5 +1,5 @@
 import { useNavigate } from "@aiszlab/bee/router";
-import PlanHeader from "../../../components/plan/header";
+import PlanHeader from "../../../components/tourist-plan/header";
 import { Button, IconButton, Skeleton, Tabs, Tag } from "musae";
 import { CalendarToday, KeyboardArrowLeft, KeyboardArrowRight } from "musae/icons";
 import { usePlanContext } from "../../../contexts/plan.context";
@@ -12,9 +12,9 @@ import {
   useInfiniteScroll,
   useMounted,
 } from "@aiszlab/relax";
-import PlanFooter from "../../../components/plan/footer";
+import PlanFooter from "../../../components/tourist-plan/footer";
 import { Key, useMemo, useState } from "react";
-import TouristAttractionCard from "../../../components/tourist-attraction/card";
+import TouristAttractionCard from "../../../components/attraction/card";
 import { useMutation } from "@apollo/client/react";
 import { CREATE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
 
@@ -22,7 +22,7 @@ function Attractions() {
   const { queryTouristAttractions, districts, queryDistricts, touristAttractions } = useAmapStore();
   const {
     cities: { selectedAdcodes },
-    period: { duration, depatureAt }
+    period: { duration, depatureAt },
   } = usePlanContext();
   const navigate = useNavigate();
   const [currentAdcode, setCurrentAdcode] = useState(() => selectedAdcodes.values().next().value);
@@ -34,7 +34,7 @@ function Attractions() {
     return toArray(touristAttractions.get(currentAdcode)?.values()) ?? [];
   }, [currentAdcode, touristAttractions]);
 
-  const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN)
+  const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
 
   const goBack = () => {
     navigate(-1);
@@ -81,33 +81,35 @@ function Attractions() {
           cities: toArray(selectedAdcodes).map((code) => {
             return {
               code,
-              name: districts.get(code)?.name ?? code
-            }
+              name: districts.get(code)?.name ?? code,
+            };
           }),
           duration,
           depatureAt: depatureAt.valueOf(),
-          attractions: toArray(selectedPoiTree).map(([cityCode, _attractions]) => {
-            return toArray(_attractions).map((attractionId) => {
-              const _attraction = touristAttractions.get(cityCode)?.get(attractionId)
+          attractions: toArray(selectedPoiTree)
+            .map(([cityCode, _attractions]) => {
+              return toArray(_attractions).map((attractionId) => {
+                const _attraction = touristAttractions.get(cityCode)?.get(attractionId);
 
-              return {
-                code: attractionId,
-                name: _attraction?.name ?? attractionId,
-                belongTo: cityCode
-              }
+                return {
+                  code: attractionId,
+                  name: _attraction?.name ?? attractionId,
+                  belongTo: cityCode,
+                };
+              });
             })
-          }).flat()
-        }
-      }
-    })
+            .flat(),
+        },
+      },
+    });
 
     if (!data?.createTouristPlan.id) {
-      return
+      return;
     }
 
     // 出行计划创建成功，跳转计划详情生成页面
-    navigate(`/tourist-plan/${data.createTouristPlan.id}`)
-  }
+    navigate(`/tourist-plan/${data.createTouristPlan.id}`);
+  };
 
   return (
     <div ref={viewportRef}>
@@ -161,7 +163,12 @@ function Attractions() {
           <KeyboardArrowLeft />
         </IconButton>
 
-        <Button className="flex-1" prefix={<CalendarToday />} suffix={<KeyboardArrowRight />} onClick={submit}>
+        <Button
+          className="flex-1"
+          prefix={<CalendarToday />}
+          suffix={<KeyboardArrowRight />}
+          onClick={submit}
+        >
           生成出行计划
         </Button>
       </PlanFooter>

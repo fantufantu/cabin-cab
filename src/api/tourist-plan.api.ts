@@ -55,12 +55,14 @@ export const TOURIST_PLAN: TypedDocumentNode<
  */
 export function listenTouristPlanProposal({
   onProposal,
+  onSuccess,
+  id,
 }: {
   onProposal?: (proposal: string) => void;
-} = {}) {
-  const proposal$ = new EventSource(
-    BASE_URL + "/cabin-cab/tourist-plan/proposal/f07eb426-032f-45de-920b-90ea7ac98e50",
-  );
+  onSuccess?: () => void;
+  id: string;
+}) {
+  const proposal$ = new EventSource(BASE_URL + `/cabin-cab/tourist-plan/proposal/${id}`);
 
   proposal$.addEventListener("message", (event) => {
     const data: {
@@ -70,6 +72,11 @@ export function listenTouristPlanProposal({
 
     if (data.statusCode !== STATUS_CODE.CONTINUE) {
       proposal$.close();
+
+      if (data.statusCode === STATUS_CODE.SUCCESS) {
+        onSuccess?.();
+      }
+
       return;
     }
 

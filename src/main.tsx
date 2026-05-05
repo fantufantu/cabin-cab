@@ -15,29 +15,32 @@ bootstrap({
   render: Application,
   routes: [
     {
-      path: "/",
+      path: "",
       element: <Home />,
     },
-
     {
       path: "tourist-plan",
-      Component: TouristPlanLayout,
       children: [
         {
           path: ":id",
           element: <TouristPlan />,
         },
         {
-          path: "cities",
-          element: <TouristPlanCities />,
-        },
-        {
-          path: "period",
-          element: <TouristPlanPeriod />,
-        },
-        {
-          path: "tourist-attractions",
-          element: <TouristPlanAttractions />,
+          Component: TouristPlanLayout,
+          children: [
+            {
+              path: "cities",
+              element: <TouristPlanCities />,
+            },
+            {
+              path: "period",
+              element: <TouristPlanPeriod />,
+            },
+            {
+              path: "attractions",
+              element: <TouristPlanAttractions />,
+            },
+          ],
         },
       ],
     },

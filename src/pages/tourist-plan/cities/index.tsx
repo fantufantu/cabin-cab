@@ -3,9 +3,9 @@ import useAmapStore from "../../../stores/amap.store";
 import { Button, Search } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
 import { usePlanContext } from "../../../contexts/plan.context";
-import City from "../../../components/plan/city";
-import PlanHeader from "../../../components/plan/header";
-import PlanFooter from "../../../components/plan/footer";
+import City from "../../../components/tourist-plan/city";
+import PlanHeader from "../../../components/tourist-plan/header";
+import PlanFooter from "../../../components/tourist-plan/footer";
 
 const PlanCities = () => {
   const { queryDistricts, districts } = useAmapStore();
@@ -19,7 +19,7 @@ const PlanCities = () => {
   });
 
   const nextStep = () => {
-    navigate("/plan/period");
+    navigate("/tourist-plan/period");
   };
 
   return (
