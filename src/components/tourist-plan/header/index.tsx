@@ -1,5 +1,5 @@
 import { useNavigate } from "@aiszlab/bee/router";
-import { IconButton, Progress } from "musae";
+import { Button, IconButton, Progress } from "musae";
 import { KeyboardArrowLeft } from "musae/icons";
 
 interface Props {
@@ -8,10 +8,25 @@ interface Props {
   subTitle: string;
 }
 
+const TOURIST_PLAN_STEP: { title: string }[] = [
+  {
+    title: "城市",
+  },
+  {
+    title: "日期",
+  },
+  {
+    title: "景点",
+  },
+  {
+    title: "路线",
+  },
+] as const;
+
 /**
- * 计划页头
+ * 旅行计划页头
  */
-const PlanHeader = ({ title, step, subTitle }: Props) => {
+const TouristPlanHeader = ({ title, step, subTitle }: Props) => {
   const navigate = useNavigate();
 
   const goBack = () => {
@@ -36,12 +51,12 @@ const PlanHeader = ({ title, step, subTitle }: Props) => {
       <Progress value={(step / 4) * 100} />
 
       <div className="flex justify-between text-color-secondary text-sm">
-        {["城市", "日期", "景点", "路线"].map((item) => {
-          return <span key={item}>{item}</span>;
+        {TOURIST_PLAN_STEP.map(({ title }) => {
+          return <span key={title}>{title}</span>;
         })}
       </div>
     </div>
   );
 };
 
-export default PlanHeader;
+export default TouristPlanHeader;

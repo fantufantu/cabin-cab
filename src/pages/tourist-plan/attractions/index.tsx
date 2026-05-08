@@ -1,5 +1,5 @@
 import { useNavigate } from "@aiszlab/bee/router";
-import PlanHeader from "../../../components/tourist-plan/header";
+import TouristPlanHeader from "../../../components/tourist-plan/header";
 import { Button, IconButton, Skeleton, Tabs, Tag } from "musae";
 import { CalendarToday, KeyboardArrowLeft, KeyboardArrowRight } from "musae/icons";
 import { usePlanContext } from "../../../contexts/plan.context";
@@ -12,7 +12,7 @@ import {
   useInfiniteScroll,
   useMounted,
 } from "@aiszlab/relax";
-import PlanFooter from "../../../components/tourist-plan/footer";
+import TouristPlanFooter from "../../../components/tourist-plan/footer";
 import { Key, useMemo, useState } from "react";
 import TouristAttractionCard from "../../../components/attraction/card";
 import { useMutation } from "@apollo/client/react";
@@ -113,7 +113,7 @@ function Attractions() {
 
   return (
     <div ref={viewportRef}>
-      <PlanHeader step={3} title="景点" subTitle="选择您喜欢的景点" />
+      <TouristPlanHeader step={3} title="景点" subTitle="选择您喜欢的景点" />
 
       <Tabs
         activeKey={currentAdcode}
@@ -123,9 +123,10 @@ function Attractions() {
             key: adcode,
             label: (
               <span className="flex items-center">
-                {districts.get(adcode)?.name ?? adcode}&nbsp;
+                <span>{districts.get(adcode)?.name ?? adcode}</span>
+                &nbsp;
                 <Tag size="small" className="rounded-full">
-                  {(!isUndefined(currentAdcode) && selectedPoiTree.get(currentAdcode)?.size) ?? 0}
+                  {(!isUndefined(currentAdcode) && selectedPoiTree.get(adcode)?.size) ?? 0}
                 </Tag>
               </span>
             ),
@@ -158,7 +159,7 @@ function Attractions() {
         )}
       </div>
 
-      <PlanFooter className="flex items-center gap-3">
+      <TouristPlanFooter className="flex items-center gap-3">
         <IconButton size="small" color="secondary" onClick={goBack}>
           <KeyboardArrowLeft />
         </IconButton>
@@ -171,7 +172,7 @@ function Attractions() {
         >
           生成出行计划
         </Button>
-      </PlanFooter>
+      </TouristPlanFooter>
     </div>
   );
 }

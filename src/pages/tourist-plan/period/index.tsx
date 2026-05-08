@@ -4,8 +4,8 @@ import { usePlanContext } from "../../../contexts/plan.context";
 import { useNavigate } from "@aiszlab/bee/router";
 import { useMemo } from "react";
 import dayjs from "dayjs";
-import PlanHeader from "../../../components/tourist-plan/header";
-import PlanFooter from "../../../components/tourist-plan/footer";
+import TouristPlanHeader from "../../../components/tourist-plan/header";
+import TouristPlanFooter from "../../../components/tourist-plan/footer";
 
 const PlanPeriod = () => {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const PlanPeriod = () => {
 
   return (
     <div className="min-h-screen flex flex-col gap-4">
-      <PlanHeader title="计划周期" step={2} subTitle="选择旅游周期" />
+      <TouristPlanHeader title="计划周期" step={2} subTitle="选择旅游周期" />
 
       <div className="mx-5 p-4 shadow-lg rounded-2xl flex flex-col gap-2">
         <h3>旅游天数</h3>
@@ -67,7 +67,7 @@ const PlanPeriod = () => {
         </div>
       </div>
 
-      <PlanFooter className="flex items-center gap-2">
+      <TouristPlanFooter className="flex items-center gap-2">
         <IconButton size="small" color="secondary" onClick={goBack}>
           <KeyboardArrowLeft />
         </IconButton>
@@ -80,7 +80,7 @@ const PlanPeriod = () => {
         >
           确认 {duration} 天
         </Button>
-      </PlanFooter>
+      </TouristPlanFooter>
     </div>
   );
 };

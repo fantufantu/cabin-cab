@@ -6,8 +6,8 @@ import {
 } from "../../api/tourist-plan.api";
 import { useNavigate, useParams } from "@aiszlab/bee/router";
 import { Button, IconButton, Message, RichTextEditor, Tag } from "musae";
-import { useAsyncEffect, useMounted } from "@aiszlab/relax";
-import { useEffect, useState } from "react";
+import { useAsyncEffect } from "@aiszlab/relax";
+import { useState } from "react";
 import { TouristPlan as TouristPlanType } from "../../api/tourist-plan.types";
 import { KeyboardArrowLeft, LocationOn, Share } from "musae/icons";
 import { stringify } from "@aiszlab/relax/class-name";
@@ -120,7 +120,7 @@ function TouristPlan() {
           </div>
         </div>
 
-        <div>
+        <div className="flex flex-wrap gap-2">
           {touristPlan?.cities.map((_city) => {
             return (
               <Tag key={_city.code}>

@@ -6,7 +6,7 @@ interface Props {
   children?: ReactNode;
 }
 
-const PlanFooter = ({ className, children }: Props) => {
+const TouristPlanFooter = ({ className, children }: Props) => {
   return (
     <div
       className={stringify(
@@ -19,4 +19,4 @@ const PlanFooter = ({ className, children }: Props) => {
   );
 };
 
-export default PlanFooter;
+export default TouristPlanFooter;

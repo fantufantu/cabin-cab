@@ -32,7 +32,7 @@ const TouristAttractionCard = ({ poi, onDeselect, onSelect, checked = false }: P
 
       <p className="text-color-secondary text-xs">{poi.address}</p>
 
-      <div className="flex gap-2 mt-2">
+      <div className="flex flex-wrap gap-2 mt-2">
         {tags.map((tag) => (
           <Tag key={tag} size="small">
             {tag}

@@ -4,8 +4,8 @@ import { Button, Search } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
 import { usePlanContext } from "../../../contexts/plan.context";
 import City from "../../../components/tourist-plan/city";
-import PlanHeader from "../../../components/tourist-plan/header";
-import PlanFooter from "../../../components/tourist-plan/footer";
+import TouristPlanHeader from "../../../components/tourist-plan/header";
+import TouristPlanFooter from "../../../components/tourist-plan/footer";
 
 const PlanCities = () => {
   const { queryDistricts, districts } = useAmapStore();
@@ -24,7 +24,7 @@ const PlanCities = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <PlanHeader
+      <TouristPlanHeader
         title="选择目的城市"
         step={1}
         subTitle={`可多选，已选 ${selectedAdcodes.size} 个城市`}
@@ -47,7 +47,7 @@ const PlanCities = () => {
         })}
       </div>
 
-      <PlanFooter className="flex items-center gap-2">
+      <TouristPlanFooter className="flex items-center gap-2">
         {selectedAdcodes.size === 0 && <span>请至少选择一个城市</span>}
 
         {selectedAdcodes.size > 0 && (
@@ -72,7 +72,7 @@ const PlanCities = () => {
         >
           下一步
         </Button>
-      </PlanFooter>
+      </TouristPlanFooter>
     </div>
   );
 };
