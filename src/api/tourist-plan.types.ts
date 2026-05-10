@@ -11,10 +11,11 @@ export interface TouristPlan {
   attractions: {
     code: string;
     name: string;
-    belongTo: string;
+    cityCode: string;
   }[];
   duration: number;
   proposal?: string;
+  belongToId: string;
 }
 
 /**
@@ -22,5 +23,5 @@ export interface TouristPlan {
  */
 export type CreateTouristPlanInput = Pick<
   TouristPlan,
-  "depatureAt" | "attractions" | "cities" | "duration"
+  "depatureAt" | "attractions" | "cities" | "duration" | "belongToId"
 >;

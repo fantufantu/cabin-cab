@@ -43,7 +43,7 @@ export const TOURIST_PLAN: TypedDocumentNode<
       attractions {
         code
         name
-        belongTo
+        cityCode
       }
       duration
     }

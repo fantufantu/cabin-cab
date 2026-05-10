@@ -17,6 +17,7 @@ import { Key, useMemo, useState } from "react";
 import TouristAttractionCard from "../../../components/attraction/card";
 import { useMutation } from "@apollo/client/react";
 import { CREATE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
+import useAppStore from "../../../stores/app.store";
 
 function Attractions() {
   const { queryTouristAttractions, districts, queryDistricts, touristAttractions } = useAmapStore();
@@ -28,6 +29,7 @@ function Attractions() {
   const [currentAdcode, setCurrentAdcode] = useState(() => selectedAdcodes.values().next().value);
   const { sentinelRef, viewportRef } = useInfiniteScroll<HTMLElement, HTMLDivElement>();
   const [selectedPoiTree, setSelectedPoiTree] = useState(() => new Map<string, Set<string>>());
+  const { getAppId } = useAppStore();
 
   const currentTouristAttractions = useMemo(() => {
     if (isUndefined(currentAdcode)) return [];
@@ -94,11 +96,12 @@ function Attractions() {
                 return {
                   code: attractionId,
                   name: _attraction?.name ?? attractionId,
-                  belongTo: cityCode,
+                  cityCode,
                 };
               });
             })
             .flat(),
+          belongToId: await getAppId(),
         },
       },
     });

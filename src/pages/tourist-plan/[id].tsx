@@ -13,6 +13,7 @@ import { KeyboardArrowLeft, LocationOn, Share } from "musae/icons";
 import { stringify } from "@aiszlab/relax/class-name";
 import dayjs from "dayjs";
 import { clipboard } from "@aiszlab/relax/dom";
+import useAppStore from "../../stores/app.store";
 
 function TouristPlan() {
   const { id } = useParams();
@@ -20,6 +21,7 @@ function TouristPlan() {
   const [touristPlan, setTouristPlan] = useState<TouristPlanType>();
   const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
   const navigate = useNavigate();
+  const { getAppId } = useAppStore();
 
   useAsyncEffect(async () => {
     if (!id) return;
@@ -50,9 +52,9 @@ function TouristPlan() {
         variables: {
           input: {
             attractions: (touristPlan?.attractions ?? []).map((_item) => ({
-              name: _item.name,
-              belongTo: _item.belongTo,
               code: _item.code,
+              name: _item.name,
+              cityCode: _item.cityCode,
             })),
             cities: (touristPlan?.cities ?? []).map((_item) => ({
               name: _item.name,
@@ -60,6 +62,7 @@ function TouristPlan() {
             })),
             depatureAt: touristPlan?.depatureAt ?? 0,
             duration: touristPlan?.duration ?? 0,
+            belongToId: await getAppId(),
           },
         },
       }).catch(() => null)
