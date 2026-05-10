@@ -1,5 +1,5 @@
 import { stringify } from "@aiszlab/relax/class-name";
-import { District } from "../../../api/amap.types";
+import { District } from "../../api/amap.types";
 import styles from "./style.module.css";
 import { useEvent } from "@aiszlab/relax";
 import { CheckCircle } from "musae/icons";

@@ -3,7 +3,7 @@ import useAmapStore from "../../../stores/amap.store";
 import { Button, Search } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
 import { usePlanContext } from "../../../contexts/plan.context";
-import City from "../../../components/tourist-plan/city";
+import City from "../../../components/city";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
 import TouristPlanFooter from "../../../components/tourist-plan/footer";
 
