@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "wasp dev",
     "build": "wasp build",
-    "dev:tauri": "tauri dev"
+    "dev:tauri": "tauri dev",
+    "build:tauri": "tauri build"
   },
   "dependencies": {
     "@aiszlab/bee": "^2.1.2",
