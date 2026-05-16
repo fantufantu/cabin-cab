@@ -36,6 +36,8 @@
     "android": {
       "debugApplicationIdSuffix": ".debug"
     },
-    "iOS": {}
+    "iOS": {
+      "developmentTeam": "cabin-cab"
+    }
   }
 }
