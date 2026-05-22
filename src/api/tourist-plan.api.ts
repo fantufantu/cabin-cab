@@ -51,6 +51,35 @@ export const TOURIST_PLAN: TypedDocumentNode<
 `;
 
 /**
+ * 查询出行计划列表
+ */
+export const TOURIST_PLANS: TypedDocumentNode<
+  {
+    touristPlans: TouristPlan[];
+  },
+  {
+    belongToId: string;
+  }
+> = gql`
+  query TouristPlans($belongToId: String!) {
+    touristPlans(belongToId: $belongToId) {
+      id
+      cities {
+        code
+        name
+      }
+      depatureAt
+      attractions {
+        code
+        name
+        cityCode
+      }
+      duration
+    }
+  }
+`;
+
+/**
  * 用`SSE`方式获取出行计划方案
  */
 export function listenTouristPlanProposal({

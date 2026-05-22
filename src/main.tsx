@@ -9,6 +9,7 @@ const TouristPlanLayout = lazy(() => import("./pages/tourist-plan/layout"));
 const TouristPlanCities = lazy(() => import("./pages/tourist-plan/cities"));
 const TouristPlanPeriod = lazy(() => import("./pages/tourist-plan/period"));
 const TouristPlanAttractions = lazy(() => import("./pages/tourist-plan/attractions"));
+const TouristPlanList = lazy(() => import("./pages/tourist-plan/list"));
 
 bootstrap({
   selectors: "#root",
@@ -21,6 +22,10 @@ bootstrap({
     {
       path: "tourist-plan",
       children: [
+        {
+          path: "list",
+          element: <TouristPlanList />,
+        },
         {
           path: ":id",
           element: <TouristPlan />,

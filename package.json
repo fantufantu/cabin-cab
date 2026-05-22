@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@aiszlab/wasp": "^2.1.2",
-    "@tauri-apps/cli": "^2.11.0",
+    "@tauri-apps/cli": "^2.11.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^10.0.3",
@@ -39,8 +39,5 @@
     "printWidth": 100,
     "arrowParens": "always",
     "singleQuote": false
-  },
-  "pnpm": {
-    "overrides": {}
   }
 }

@@ -34,6 +34,14 @@ const Home = () => {
           开始规划我的旅行
         </Button>
 
+        <Button
+          className="mt-3"
+          variant="outlined"
+          onClick={() => navigate("/tourist-plan/list")}
+        >
+          查看已有计划
+        </Button>
+
         <div className="mt-15 backdrop-blur-2xl bg-color-on-primary-20 rounded-2xl border border-(--color-on-primary-20) flex justify-around py-3">
           {[
             { value: "10+", label: "热门城市" },
