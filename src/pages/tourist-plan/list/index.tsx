@@ -2,7 +2,7 @@ import { useLazyQuery } from "@apollo/client/react";
 import { TOURIST_PLANS } from "../../../api/tourist-plan.api";
 import { useNavigate } from "@aiszlab/bee/router";
 import { IconButton, Tag } from "musae";
-import { useAsyncEffect, useMounted } from "@aiszlab/relax";
+import { useMounted } from "@aiszlab/relax";
 import { useState } from "react";
 import { TouristPlan } from "../../../api/tourist-plan.types";
 import { KeyboardArrowLeft, LocationOn } from "musae/icons";
@@ -26,7 +26,7 @@ function TouristPlanList() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="bg-color-primary text-color-on-primary p-5 flex items-center gap-2">
+      <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex items-center gap-2">
         <IconButton size="small" color="secondary" onClick={() => navigate("/")}>
           <KeyboardArrowLeft size={24} />
         </IconButton>

@@ -49,3 +49,7 @@
   border-color: var(--color-outline);
 }
 
+/* 在真机模式下安全的上边距 */
+@utility safe-pt-* {
+  padding-top: max(calc(--value(integer) * 4px), env(safe-area-inset-top));
+}

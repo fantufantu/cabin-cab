@@ -87,7 +87,7 @@ function TouristPlan() {
 
   return (
     <div>
-      <div className="bg-color-primary text-color-on-primary p-5 flex flex-col gap-3">
+      <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex flex-col gap-3">
         <div className="flex items-center justify-between gap-2">
           <IconButton size="small" color="secondary" onClick={goBack}>
             <KeyboardArrowLeft size={24} />

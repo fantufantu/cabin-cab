@@ -20,7 +20,9 @@ const Home = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-4">
-      <div className={stringify("bg-cover px-8 py-12 relative", styles["getting-started"])}>
+      <div
+        className={stringify("bg-cover px-8 pb-12 safe-pt-12 relative", styles["getting-started"])}
+      >
         <UserAvatar className="absolute right-8 top-8" />
 
         <h1 className="text-color-on-primary text-2xl">旅行规划助手</h1>
