@@ -2,6 +2,7 @@ import { Avatar, IconButton } from "musae";
 import { AccountCircle } from "musae/icons";
 import { useNavigate } from "@aiszlab/bee/router";
 import { useAuthStore } from "../../stores/auth.store";
+import { isTauri } from "../../utils/tauri.util";
 import type { CSSProperties } from "react";
 
 interface UserAvatarProps {
@@ -16,6 +17,8 @@ const UserAvatar = ({ className, style }: UserAvatarProps) => {
   const toLogin = () => {
     navigate("/login");
   };
+
+  if (isTauri()) return null;
 
   if (!me) {
     return (
