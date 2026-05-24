@@ -8,7 +8,7 @@
     "build": "wasp build",
     "dev:tauri": "tauri dev",
     "dev:ios": "tauri ios run \"iPhone 17 Pro\"",
-    "build:tauri": "tauri ios build",
+    "build:ios": "tauri ios build --export-method app-store-connect",
     "init:ios": "tauri ios init"
   },
   "dependencies": {
