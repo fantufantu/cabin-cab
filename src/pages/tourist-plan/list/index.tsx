@@ -2,7 +2,7 @@ import { useLazyQuery } from "@apollo/client/react";
 import { TOURIST_PLANS } from "../../../api/tourist-plan.api";
 import { useNavigate } from "@aiszlab/bee/router";
 import { IconButton, Tag } from "musae";
-import { useAsyncEffect } from "@aiszlab/relax";
+import { useAsyncEffect, useMounted } from "@aiszlab/relax";
 import { useState } from "react";
 import { TouristPlan } from "../../../api/tourist-plan.types";
 import { KeyboardArrowLeft, LocationOn } from "musae/icons";
@@ -11,20 +11,18 @@ import useAppStore from "../../../stores/app.store";
 
 function TouristPlanList() {
   const [queryTouristPlans] = useLazyQuery(TOURIST_PLANS);
-  const [plans, setPlans] = useState<TouristPlan[]>([]);
+  const [touristPlans, setTouristPlans] = useState<TouristPlan[]>([]);
   const navigate = useNavigate();
   const { getAppId } = useAppStore();
 
-  useAsyncEffect(async () => {
+  useMounted(async () => {
     const belongToId = await getAppId();
-    const result = (
-      await queryTouristPlans({ variables: { belongToId } }).catch(() => null)
+    const paginatedTouristPlans = (
+      await queryTouristPlans({ variables: { filter: { belongToId } } }).catch(() => null)
     )?.data?.touristPlans;
 
-    if (result) {
-      setPlans(result);
-    }
-  }, []);
+    setTouristPlans(paginatedTouristPlans?.items ?? []);
+  });
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -36,28 +34,26 @@ function TouristPlanList() {
       </div>
 
       <div className="flex flex-col gap-3 p-4">
-        {plans.length === 0 ? (
+        {touristPlans.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 text-color-secondary">
             <p className="text-lg">暂无出行计划</p>
             <p className="text-sm mt-2">快去创建一个吧</p>
           </div>
-        ) : (
-          plans.map((plan) => (
+        )}
+
+        {touristPlans.length > 0 &&
+          touristPlans.map((plan) => (
             <div
               key={plan.id}
               className="rounded-xl border border-color-outline p-4 flex flex-col gap-3 active:bg-color-surface-container"
               onClick={() => navigate(`/tourist-plan/${plan.id}`)}
             >
               <div className="flex justify-between items-center">
-                <span className="text-lg font-medium">
-                  {plan.duration}天行程
-                </span>
+                <span className="text-lg font-medium">{plan.duration}天行程</span>
                 <span className="text-sm text-color-secondary">
                   {dayjs(plan.depatureAt).format("YYYY/MM/DD")}
                   {" - "}
-                  {dayjs(plan.depatureAt)
-                    .add(plan.duration, "day")
-                    .format("YYYY/MM/DD")}
+                  {dayjs(plan.depatureAt).add(plan.duration, "day").format("YYYY/MM/DD")}
                 </span>
               </div>
 
@@ -70,12 +66,9 @@ function TouristPlanList() {
                 ))}
               </div>
 
-              <div className="text-sm text-color-secondary">
-                {plan.attractions.length}个景点
-              </div>
+              <div className="text-sm text-color-secondary">{plan.attractions.length}个景点</div>
             </div>
-          ))
-        )}
+          ))}
       </div>
     </div>
   );

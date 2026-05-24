@@ -13,3 +13,11 @@ export const STATUS_CODE = {
 } as const;
 
 export type StatusCode = ValueOf<typeof STATUS_CODE>;
+
+/**
+ * `Auth`相关的全局标识
+ */
+export const AUTH_TOKENS = {
+  AUTHENTICATION: "authentication",
+  AUTHORIZATION: "authorization",
+};

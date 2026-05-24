@@ -2,6 +2,7 @@ import { gql, TypedDocumentNode } from "@apollo/client";
 import { CreateTouristPlanInput, TouristPlan } from "./tourist-plan.types";
 import { BASE_URL, STATUS_CODE, StatusCode } from "../constants/api.constant";
 import { tryParse } from "@aiszlab/relax";
+import { Paginated } from "./pagination.types";
 
 /**
  * 创建出行计划
@@ -55,26 +56,31 @@ export const TOURIST_PLAN: TypedDocumentNode<
  */
 export const TOURIST_PLANS: TypedDocumentNode<
   {
-    touristPlans: TouristPlan[];
+    touristPlans: Paginated<TouristPlan>;
   },
   {
-    belongToId: string;
+    filter: {
+      belongToId: string;
+    };
   }
 > = gql`
-  query TouristPlans($belongToId: String!) {
-    touristPlans(belongToId: $belongToId) {
-      id
-      cities {
-        code
-        name
+  query TouristPlans($filter: FilterTouristPlansInput!) {
+    touristPlans(filter: $filter) {
+      items {
+        id
+        cities {
+          code
+          name
+        }
+        depatureAt
+        attractions {
+          code
+          name
+          cityCode
+        }
+        duration
       }
-      depatureAt
-      attractions {
-        code
-        name
-        cityCode
-      }
-      duration
+      total
     }
   }
 `;
