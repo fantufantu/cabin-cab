@@ -115,7 +115,7 @@ function Attractions() {
   };
 
   return (
-    <div ref={viewportRef}>
+    <div className="min-h-screen flex flex-col" ref={viewportRef}>
       <TouristPlanHeader step={3} title="景点" subTitle="选择您喜欢的景点" />
 
       <Tabs
@@ -162,7 +162,7 @@ function Attractions() {
         )}
       </div>
 
-      <TouristPlanFooter className="flex items-center gap-3">
+      <TouristPlanFooter>
         <IconButton size="small" color="secondary" onClick={goBack}>
           <KeyboardArrowLeft />
         </IconButton>

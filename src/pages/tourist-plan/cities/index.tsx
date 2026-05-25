@@ -23,7 +23,7 @@ const PlanCities = () => {
   };
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="min-h-screen flex flex-col gap-4">
       <TouristPlanHeader
         title="选择目的城市"
         step={1}
@@ -47,7 +47,7 @@ const PlanCities = () => {
         })}
       </div>
 
-      <TouristPlanFooter className="flex items-center gap-2">
+      <TouristPlanFooter>
         {selectedAdcodes.size === 0 && <span>请至少选择一个城市</span>}
 
         {selectedAdcodes.size > 0 && (

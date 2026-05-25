@@ -67,7 +67,7 @@ const PlanPeriod = () => {
         </div>
       </div>
 
-      <TouristPlanFooter className="flex items-center gap-2">
+      <TouristPlanFooter>
         <IconButton size="small" color="secondary" onClick={goBack}>
           <KeyboardArrowLeft />
         </IconButton>

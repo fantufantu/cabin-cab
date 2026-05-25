@@ -5,7 +5,7 @@ import {
   TOURIST_PLAN,
 } from "../../api/tourist-plan.api";
 import { useNavigate, useParams } from "@aiszlab/bee/router";
-import { Button, IconButton, Message, RichTextEditor, Tag } from "musae";
+import { Button, IconButton, Message, RichTextEditor, Skeleton, Tag } from "musae";
 import { useAsyncEffect } from "@aiszlab/relax";
 import { useState } from "react";
 import { TouristPlan as TouristPlanType } from "../../api/tourist-plan.types";
@@ -14,6 +14,7 @@ import { stringify } from "@aiszlab/relax/class-name";
 import dayjs from "dayjs";
 import { clipboard } from "@aiszlab/relax/dom";
 import useAppStore from "../../stores/app.store";
+import TouristPlanFooter from "../../components/tourist-plan/footer";
 
 function TouristPlan() {
   const { id } = useParams();
@@ -86,7 +87,7 @@ function TouristPlan() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex flex-col gap-3">
         <div className="flex items-center justify-between gap-2">
           <IconButton size="small" color="secondary" onClick={goBack}>
@@ -135,25 +136,36 @@ function TouristPlan() {
         </div>
       </div>
 
-      <RichTextEditor
-        value={touristPlan?.proposal}
-        use="markdown"
-        disabled
-        className="p-5 min-h-screen"
-      />
+      {!touristPlan?.proposal && (
+        <div className="p-5 flex flex-col gap-4">
+          <Skeleton className="h-5 w-3/4 rounded" />
+          <Skeleton className="h-5 w-full rounded" />
+          <Skeleton className="h-5 w-5/6 rounded" />
+          <Skeleton className="h-5 w-full rounded" />
+          <Skeleton className="h-5 w-2/3 rounded" />
+          <Skeleton className="h-20 w-full rounded mt-4" />
+          <Skeleton className="h-5 w-full rounded" />
+          <Skeleton className="h-5 w-4/5 rounded" />
+          <Skeleton className="h-5 w-full rounded" />
+          <Skeleton className="h-5 w-3/5 rounded" />
+          <Skeleton className="h-20 w-full rounded mt-4" />
+          <Skeleton className="h-5 w-full rounded" />
+          <Skeleton className="h-5 w-5/6 rounded" />
+          <Skeleton className="h-5 w-2/4 rounded" />
+        </div>
+      )}
 
-      <div
-        className={stringify(
-          "flex gap-2 justify-between p-5 sticky bottom-0 bg-color-on-primary border-t border-color-outline",
-          "items-center",
-        )}
-      >
+      {!!touristPlan?.proposal && (
+        <RichTextEditor value={touristPlan.proposal} use="markdown" disabled className="p-5" />
+      )}
+
+      <TouristPlanFooter>
         <Button onClick={regenerate}>重新规划</Button>
 
-        <IconButton size="small" onClick={share}>
+        <IconButton size="small" onClick={share} className="ml-auto">
           <Share />
         </IconButton>
-      </div>
+      </TouristPlanFooter>
     </div>
   );
 }
