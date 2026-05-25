@@ -7,7 +7,7 @@
     "dev": "wasp dev",
     "build": "wasp build",
     "dev:tauri": "tauri dev",
-    "dev:ios": "tauri ios run \"iPhone 13 Pro Max\"",
+    "dev:ios": "tauri ios run \"iPhone 14 Plus\"",
     "dev:ipad": "tauri ios run \"iPad Pro 13-inch\"",
     "build:ios": "tauri ios build --export-method app-store-connect",
     "init:ios": "tauri ios init"
