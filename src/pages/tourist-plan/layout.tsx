@@ -1,11 +1,11 @@
 import { Outlet } from "@aiszlab/bee/router";
 import PlanContext from "../../contexts/plan.context";
-import { toArray, useCounter, useEvent, useSessionStorageState } from "@aiszlab/relax";
+import { toArray, useCounter, useEvent, useSessionStorageState, useUnmount } from "@aiszlab/relax";
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 
 const TouristPlan = () => {
-  const [duration, { add, subtract }] = useCounter(1, { min: 1 });
+  const [duration, { add, subtract, setCount: setDuration }] = useCounter(1, { min: 1 });
   const [depatureAt, setDepatureAt] = useState(() => dayjs().startOf("day"));
 
   const [cachedSelectedAdcodes, setCachedSelectedAdcodes] =
@@ -28,6 +28,13 @@ const TouristPlan = () => {
   const subtractDuration = () => {
     subtract();
   };
+
+  // 上下文卸载时，清除缓存数据
+  useUnmount(() => {
+    setDuration(1);
+    setDepatureAt(() => dayjs().startOf("day"));
+    setCachedSelectedAdcodes(null);
+  });
 
   return (
     <PlanContext.Provider
