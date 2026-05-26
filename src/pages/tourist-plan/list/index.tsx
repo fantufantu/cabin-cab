@@ -1,40 +1,60 @@
 import { useLazyQuery } from "@apollo/client/react";
 import { TOURIST_PLANS } from "../../../api/tourist-plan.api";
 import { useNavigate } from "@aiszlab/bee/router";
-import { IconButton, Tag } from "musae";
+import { IconButton, Skeleton, Tag } from "musae";
 import { useMounted } from "@aiszlab/relax";
-import { useState } from "react";
-import { TouristPlan } from "../../../api/tourist-plan.types";
+import { useMemo } from "react";
 import { KeyboardArrowLeft, LocationOn } from "musae/icons";
 import dayjs from "dayjs";
 import useAppStore from "../../../stores/app.store";
 
 function TouristPlanList() {
-  const [queryTouristPlans] = useLazyQuery(TOURIST_PLANS);
-  const [touristPlans, setTouristPlans] = useState<TouristPlan[]>([]);
+  const [queryTouristPlans, { data, loading }] = useLazyQuery(TOURIST_PLANS);
   const navigate = useNavigate();
   const { getAppId } = useAppStore();
 
   useMounted(async () => {
     const belongToId = await getAppId();
-    const paginatedTouristPlans = (
-      await queryTouristPlans({ variables: { filter: { belongToId } } }).catch(() => null)
-    )?.data?.touristPlans;
-
-    setTouristPlans(paginatedTouristPlans?.items ?? []);
+    await queryTouristPlans({ variables: { filter: { belongToId } } }).catch(() => null);
   });
+
+  const touristPlans = useMemo(() => {
+    return data?.touristPlans.items ?? [];
+  }, [data]);
+
+  const toHome = () => {
+    navigate("/");
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex items-center gap-2">
-        <IconButton size="small" color="secondary" onClick={() => navigate("/")}>
+      <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex items-center justify-center relative">
+        <IconButton size="small" color="secondary" className="absolute left-5" onClick={toHome}>
           <KeyboardArrowLeft size={24} />
         </IconButton>
-        <h1>我的出行计划</h1>
+
+        <h1 className="text-xl">我的出行计划</h1>
       </div>
 
       <div className="flex flex-col gap-3 p-4">
-        {touristPlans.length === 0 && (
+        {loading &&
+          touristPlans.length === 0 &&
+          Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="rounded-xl border border-color-outline p-4 flex flex-col gap-3">
+              <div className="flex justify-between items-center">
+                <Skeleton className="h-5 w-20 rounded" />
+                <Skeleton className="h-4 w-40 rounded" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-6 w-16 rounded" />
+                <Skeleton className="h-6 w-16 rounded" />
+                <Skeleton className="h-6 w-14 rounded" />
+              </div>
+              <Skeleton className="h-4 w-16 rounded" />
+            </div>
+          ))}
+
+        {!loading && touristPlans.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 text-color-secondary">
             <p className="text-lg">暂无出行计划</p>
             <p className="text-sm mt-2">快去创建一个吧</p>
