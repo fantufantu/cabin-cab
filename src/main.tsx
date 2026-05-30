@@ -2,6 +2,7 @@ import { bootstrap } from "@aiszlab/bee";
 import "./styles.css";
 import Application from "./application";
 import { lazy } from "react";
+import { withPageTransition } from "./components/page-transition";
 
 const Home = lazy(() => import("./pages/home"));
 const TouristPlan = lazy(() => import("./pages/tourist-plan/[id]"));
@@ -15,7 +16,7 @@ const Login = lazy(() => import("./pages/login"));
 bootstrap({
   selectors: "#root",
   render: Application,
-  routes: [
+  routes: withPageTransition([
     {
       path: "",
       element: <Home />,
@@ -54,5 +55,5 @@ bootstrap({
         },
       ],
     },
-  ],
+  ]),
 });
