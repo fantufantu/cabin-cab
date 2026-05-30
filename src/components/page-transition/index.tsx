@@ -27,11 +27,11 @@ const PageTransition = ({ children }: { children: ReactNode }) => {
   const variants = VARIANTS[direction];
 
   return (
-    <div className="grid overflow-hidden h-full">
+    <div className="grid h-full">
       <AnimatePresence mode="sync" initial={false}>
         <motion.div
           key={pathname}
-          className="[grid-area:1/1] overflow-y-auto"
+          className="[grid-area:1/1]"
           variants={variants}
           initial="initial"
           animate="animate"
