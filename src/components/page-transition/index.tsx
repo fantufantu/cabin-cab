@@ -4,20 +4,19 @@ import type { ReactNode } from "react";
 
 const VARIANTS = {
   PUSH: {
-    initial: { x: "30%", opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: "-30%", opacity: 0 },
+    initial: { x: "100%" },
+    animate: { x: 0 },
+    exit: { x: 0 },
   },
   POP: {
-    initial: { x: "-30%", opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: "30%", opacity: 0 },
+    initial: { x: 0 },
+    animate: { x: 0 },
+    exit: { x: "100%" },
   },
 } as const;
 
 const TRANSITION = {
   x: { type: "tween" as const, duration: 0.3, ease: ["easeOut", "easeIn"] as Easing[] },
-  opacity: { duration: 0.3 },
 };
 
 const PageTransition = ({ children }: { children: ReactNode }) => {
@@ -28,19 +27,21 @@ const PageTransition = ({ children }: { children: ReactNode }) => {
   const variants = VARIANTS[direction];
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={pathname}
-        variants={variants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        transition={TRANSITION}
-        style={{ height: "100%", overflow: "auto" }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <div className="grid overflow-hidden">
+      <AnimatePresence mode="sync" initial={false}>
+        <motion.div
+          key={pathname}
+          className="[grid-area:1/1]"
+          variants={variants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={TRANSITION}
+        >
+          {children}
+        </motion.div>
+      </AnimatePresence>
+    </div>
   );
 };
 
