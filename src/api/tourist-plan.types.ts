@@ -1,3 +1,13 @@
+interface PlanDetail {
+  attractions: {
+    attractionName: string;
+    planAt: number;
+    planGap: number;
+    attractionDescription: string;
+    tip: string;
+  }[];
+}
+
 /**
  * 出行计划类型声明
  */
@@ -16,6 +26,7 @@ export interface TouristPlan {
   duration: number;
   proposal?: string;
   belongToId: string;
+  plan?: PlanDetail;
 }
 
 /**

@@ -47,6 +47,15 @@ export const TOURIST_PLAN: TypedDocumentNode<
         cityCode
       }
       duration
+      itinerary {
+        items {
+          itineraryName
+          itineraryDescription
+          itineraryTip
+          itineraryStartAt
+          itineraryDuration
+        }
+      }
     }
   }
 `;
