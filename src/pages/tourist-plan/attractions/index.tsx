@@ -25,6 +25,7 @@ function Attractions() {
     cities: { selectedAdcodes },
     period: { duration, depatureAt },
   } = usePlanContext();
+
   const navigate = useNavigate();
   const [currentAdcode, setCurrentAdcode] = useState(() => selectedAdcodes.values().next().value);
   const { sentinelRef, viewportRef } = useInfiniteScroll<HTMLElement, HTMLDivElement>();
@@ -42,10 +43,9 @@ function Attractions() {
     navigate(-1);
   };
 
-  useRequest(
-    () => Promise.allSettled([queryDistricts(), queryTouristAttractions(currentAdcode)]),
-    { auto: true }
-  );
+  useRequest(() => Promise.allSettled([queryDistricts(), queryTouristAttractions(currentAdcode)]), {
+    auto: true,
+  });
 
   const selectPoi = useEvent((poiId: string) => {
     if (isUndefined(currentAdcode)) return;

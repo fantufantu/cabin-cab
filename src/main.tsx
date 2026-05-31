@@ -2,7 +2,6 @@ import { bootstrap } from "@aiszlab/bee";
 import "./styles.css";
 import Application from "./application";
 import { lazy } from "react";
-import PageTransitionLayout from "./layout/page-transition.layout";
 
 const Home = lazy(() => import("./pages/home"));
 const TouristPlan = lazy(() => import("./pages/tourist-plan/[id]"));
@@ -18,43 +17,38 @@ bootstrap({
   render: Application,
   routes: [
     {
-      Component: PageTransitionLayout,
+      path: "",
+      element: <Home />,
+    },
+    {
+      path: "login",
+      element: <Login />,
+    },
+    {
+      path: "tourist-plan",
       children: [
         {
-          path: "",
-          element: <Home />,
+          path: "list",
+          element: <TouristPlanList />,
         },
         {
-          path: "login",
-          element: <Login />,
+          path: ":id",
+          element: <TouristPlan />,
         },
         {
-          path: "tourist-plan",
+          Component: TouristPlanLayout,
           children: [
             {
-              path: "list",
-              element: <TouristPlanList />,
+              path: "cities",
+              element: <TouristPlanCities />,
             },
             {
-              path: ":id",
-              element: <TouristPlan />,
+              path: "period",
+              element: <TouristPlanPeriod />,
             },
             {
-              Component: TouristPlanLayout,
-              children: [
-                {
-                  path: "cities",
-                  element: <TouristPlanCities />,
-                },
-                {
-                  path: "period",
-                  element: <TouristPlanPeriod />,
-                },
-                {
-                  path: "attractions",
-                  element: <TouristPlanAttractions />,
-                },
-              ],
+              path: "attractions",
+              element: <TouristPlanAttractions />,
             },
           ],
         },
