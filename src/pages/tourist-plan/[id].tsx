@@ -2,12 +2,13 @@ import { useLazyQuery, useMutation } from "@apollo/client/react";
 import {
   CREATE_TOURIST_PLAN,
   listenTouristPlanProposal,
+  PARSE_TOURIST_PLAN,
   TOURIST_PLAN,
 } from "../../api/tourist-plan.api";
 import { useNavigate, useParams } from "@aiszlab/bee/router";
-import { Button, IconButton, Message, RichTextEditor, Skeleton, Tag } from "musae";
+import { Button, IconButton, Message, RichTextEditor, Skeleton, Tabs, Tag } from "musae";
 import { useAsyncEffect } from "@aiszlab/relax";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { TouristPlan as TouristPlanType } from "../../api/tourist-plan.types";
 import { KeyboardArrowLeft, LocationOn, Share } from "musae/icons";
 import { stringify } from "@aiszlab/relax/class-name";
@@ -15,6 +16,7 @@ import dayjs from "dayjs";
 import { clipboard } from "@aiszlab/relax/dom";
 import useAppStore from "../../stores/app.store";
 import TouristPlanFooter from "../../components/tourist-plan/footer";
+import Itinerary from "../../components/tourist-plan/itinerary";
 
 function TouristPlan() {
   const { id } = useParams();
@@ -23,6 +25,7 @@ function TouristPlan() {
   const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
   const navigate = useNavigate();
   const { getAppId } = useAppStore();
+  const [parseTouristPlan, { loading: isTouristPlanParsing }] = useMutation(PARSE_TOURIST_PLAN);
 
   useAsyncEffect(async () => {
     if (!id) return;
@@ -31,20 +34,33 @@ function TouristPlan() {
 
     setTouristPlan(_touristPlan);
     if (!_touristPlan) return;
-    if (_touristPlan.proposal) return;
 
-    listenTouristPlanProposal({
-      id,
-      onProposal: (proposal) => {
-        setTouristPlan((prev) => {
-          return {
+    if (!_touristPlan.proposal) {
+      listenTouristPlanProposal({
+        id,
+        onProposal: (proposal) => {
+          setTouristPlan((prev) => {
+            return {
+              ...prev,
+              ..._touristPlan,
+              proposal: (prev?.proposal ?? "") + proposal,
+            };
+          });
+        },
+      });
+    }
+
+    if (!_touristPlan.itinerary) {
+      parseTouristPlan({ variables: { id } })
+        .catch(() => null)
+        .then((data) => {
+          setTouristPlan((prev) => ({
             ...prev,
             ..._touristPlan,
-            proposal: (prev?.proposal ?? "") + proposal,
-          };
+            itinerary: data?.data?.parseTouristPlan.itinerary ?? prev?.itinerary,
+          }));
         });
-      },
-    });
+    }
   }, [id]);
 
   const regenerate = async () => {
@@ -88,7 +104,7 @@ function TouristPlan() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex flex-col gap-3 sticky top-0">
+      <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex flex-col gap-3 sticky top-0 z-10">
         <div className="flex items-center justify-between gap-2">
           <IconButton size="small" color="secondary" onClick={goBack}>
             <KeyboardArrowLeft size={24} />
@@ -136,28 +152,55 @@ function TouristPlan() {
         </div>
       </div>
 
-      {!touristPlan?.proposal && (
-        <div className="p-5 flex flex-col gap-4">
-          <Skeleton className="h-5 w-3/4 rounded" />
-          <Skeleton className="h-5 w-full rounded" />
-          <Skeleton className="h-5 w-5/6 rounded" />
-          <Skeleton className="h-5 w-full rounded" />
-          <Skeleton className="h-5 w-2/3 rounded" />
-          <Skeleton className="h-20 w-full rounded mt-4" />
-          <Skeleton className="h-5 w-full rounded" />
-          <Skeleton className="h-5 w-4/5 rounded" />
-          <Skeleton className="h-5 w-full rounded" />
-          <Skeleton className="h-5 w-3/5 rounded" />
-          <Skeleton className="h-20 w-full rounded mt-4" />
-          <Skeleton className="h-5 w-full rounded" />
-          <Skeleton className="h-5 w-5/6 rounded" />
-          <Skeleton className="h-5 w-2/4 rounded" />
-        </div>
-      )}
+      <Tabs
+        items={[
+          {
+            key: "proposal",
+            label: "计划内容",
+            children: (
+              <>
+                {!touristPlan?.proposal && (
+                  <div className="flex flex-col gap-4">
+                    <Skeleton className="h-5 w-3/4 rounded" />
+                    <Skeleton className="h-5 w-full rounded" />
+                    <Skeleton className="h-5 w-5/6 rounded" />
+                    <Skeleton className="h-5 w-full rounded" />
+                    <Skeleton className="h-5 w-2/3 rounded" />
+                    <Skeleton className="h-20 w-full rounded mt-4" />
+                    <Skeleton className="h-5 w-full rounded" />
+                    <Skeleton className="h-5 w-4/5 rounded" />
+                    <Skeleton className="h-5 w-full rounded" />
+                    <Skeleton className="h-5 w-3/5 rounded" />
+                    <Skeleton className="h-20 w-full rounded mt-4" />
+                    <Skeleton className="h-5 w-full rounded" />
+                    <Skeleton className="h-5 w-5/6 rounded" />
+                    <Skeleton className="h-5 w-2/4 rounded" />
+                  </div>
+                )}
 
-      {!!touristPlan?.proposal && (
-        <RichTextEditor value={touristPlan.proposal} use="markdown" disabled className="p-5" />
-      )}
+                {!!touristPlan?.proposal && (
+                  <RichTextEditor value={touristPlan.proposal} use="markdown" disabled />
+                )}
+              </>
+            ),
+          },
+          // 提案未生成前不允许查看行程详情
+          ...(!!touristPlan?.proposal
+            ? [
+                {
+                  key: "itinerary",
+                  label: "行程详情",
+                  children: (
+                    <Itinerary
+                      itinerary={touristPlan?.itinerary}
+                      isLoading={!touristPlan?.itinerary}
+                    />
+                  ),
+                },
+              ]
+            : []),
+        ]}
+      />
 
       <TouristPlanFooter>
         <Button onClick={regenerate}>重新规划</Button>

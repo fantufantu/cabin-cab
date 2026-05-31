@@ -8,6 +8,18 @@ interface PlanDetail {
   }[];
 }
 
+export interface ItineraryItem {
+  itineraryName: string;
+  itineraryDescription: string;
+  itineraryTip: string;
+  itineraryStartAt: number;
+  itineraryDuration: number;
+}
+
+export interface Itinerary {
+  items: ItineraryItem[];
+}
+
 /**
  * 出行计划类型声明
  */
@@ -27,6 +39,7 @@ export interface TouristPlan {
   proposal?: string;
   belongToId: string;
   plan?: PlanDetail;
+  itinerary?: Itinerary;
 }
 
 /**

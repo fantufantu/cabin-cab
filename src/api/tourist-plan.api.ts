@@ -61,6 +61,32 @@ export const TOURIST_PLAN: TypedDocumentNode<
 `;
 
 /**
+ * 解析出行计划行程
+ */
+export const PARSE_TOURIST_PLAN: TypedDocumentNode<
+  {
+    parseTouristPlan: Pick<TouristPlan, "itinerary">;
+  },
+  {
+    id: string;
+  }
+> = gql`
+  mutation ParseTouristPlan($id: String!) {
+    parseTouristPlan(id: $id) {
+      itinerary {
+        items {
+          itineraryName
+          itineraryDescription
+          itineraryTip
+          itineraryStartAt
+          itineraryDuration
+        }
+      }
+    }
+  }
+`;
+
+/**
  * 查询出行计划列表
  */
 export const TOURIST_PLANS: TypedDocumentNode<
