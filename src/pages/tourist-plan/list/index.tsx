@@ -2,21 +2,22 @@ import { useLazyQuery } from "@apollo/client/react";
 import { TOURIST_PLANS } from "../../../api/tourist-plan.api";
 import { useNavigate } from "@aiszlab/bee/router";
 import { IconButton, Skeleton, Tag } from "musae";
-import { useMounted } from "@aiszlab/relax";
+import { useRequest } from "@aiszlab/relax";
 import { useMemo } from "react";
 import { KeyboardArrowLeft, LocationOn } from "musae/icons";
 import dayjs from "dayjs";
 import useAppStore from "../../../stores/app.store";
 
 function TouristPlanList() {
-  const [queryTouristPlans, { data, loading }] = useLazyQuery(TOURIST_PLANS);
+  const [queryTouristPlans] = useLazyQuery(TOURIST_PLANS);
   const navigate = useNavigate();
   const { getAppId } = useAppStore();
 
-  useMounted(async () => {
+  const { data, loading } = useRequest(async () => {
     const belongToId = await getAppId();
-    await queryTouristPlans({ variables: { filter: { belongToId } } }).catch(() => null);
-  });
+    const result = await queryTouristPlans({ variables: { filter: { belongToId } } });
+    return result.data;
+  }, { auto: true });
 
   const touristPlans = useMemo(() => {
     return data?.touristPlans.items ?? [];

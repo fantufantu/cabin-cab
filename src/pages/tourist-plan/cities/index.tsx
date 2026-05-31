@@ -1,4 +1,4 @@
-import { toArray, useMounted } from "@aiszlab/relax";
+import { toArray, useRequest } from "@aiszlab/relax";
 import useAmapStore from "../../../stores/amap.store";
 import { Button, Search } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
@@ -14,9 +14,7 @@ const PlanCities = () => {
   } = usePlanContext();
   const navigate = useNavigate();
 
-  useMounted(() => {
-    queryDistricts();
-  });
+  useRequest(queryDistricts, { auto: true });
 
   const nextStep = () => {
     navigate("/tourist-plan/period");

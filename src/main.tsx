@@ -2,7 +2,7 @@ import { bootstrap } from "@aiszlab/bee";
 import "./styles.css";
 import Application from "./application";
 import { lazy } from "react";
-import { withPageTransition } from "./components/page-transition";
+import PageTransitionLayout from "./layout/page-transition.layout";
 
 const Home = lazy(() => import("./pages/home"));
 const TouristPlan = lazy(() => import("./pages/tourist-plan/[id]"));
@@ -16,44 +16,49 @@ const Login = lazy(() => import("./pages/login"));
 bootstrap({
   selectors: "#root",
   render: Application,
-  routes: withPageTransition([
+  routes: [
     {
-      path: "",
-      element: <Home />,
-    },
-    {
-      path: "login",
-      element: <Login />,
-    },
-    {
-      path: "tourist-plan",
+      Component: PageTransitionLayout,
       children: [
         {
-          path: "list",
-          element: <TouristPlanList />,
+          path: "",
+          element: <Home />,
         },
         {
-          path: ":id",
-          element: <TouristPlan />,
+          path: "login",
+          element: <Login />,
         },
         {
-          Component: TouristPlanLayout,
+          path: "tourist-plan",
           children: [
             {
-              path: "cities",
-              element: <TouristPlanCities />,
+              path: "list",
+              element: <TouristPlanList />,
             },
             {
-              path: "period",
-              element: <TouristPlanPeriod />,
+              path: ":id",
+              element: <TouristPlan />,
             },
             {
-              path: "attractions",
-              element: <TouristPlanAttractions />,
+              Component: TouristPlanLayout,
+              children: [
+                {
+                  path: "cities",
+                  element: <TouristPlanCities />,
+                },
+                {
+                  path: "period",
+                  element: <TouristPlanPeriod />,
+                },
+                {
+                  path: "attractions",
+                  element: <TouristPlanAttractions />,
+                },
+              ],
             },
           ],
         },
       ],
     },
-  ]),
+  ],
 });

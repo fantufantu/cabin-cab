@@ -26,7 +26,7 @@ const useAmapStore = using<AmapStore>((setStore) => {
         return toArray(existingDistricts.values());
       }
 
-      const _districts = (await queryDistricts()).at(0)?.districts ?? [];
+      const _districts = (await queryDistricts())?.at(0)?.districts ?? [];
 
       setStore(({ districts, ...store }) => {
         const nextDistricts = new Map(districts);

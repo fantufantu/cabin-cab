@@ -15,8 +15,8 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@aiszlab/relax':
-        specifier: ^2.1.2
-        version: 2.1.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: 2.1.3-beta.0
+        version: 2.1.3-beta.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@apollo/client':
         specifier: ^4.1.9
         version: 4.1.9(graphql@16.13.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rxjs@7.8.2)
@@ -77,6 +77,12 @@ packages:
 
   '@aiszlab/relax@2.1.2':
     resolution: {integrity: sha512-8tHUuxgWapBM9JCI7eRQR7ToxEiQJBGAFNMtbqfkgQyCJpCJfnOyXfjqrDOfrHAn9eUSmGOXDljLibp2QnQ6/Q==}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+
+  '@aiszlab/relax@2.1.3-beta.0':
+    resolution: {integrity: sha512-zRM6aXb+OhugfewQNU50DuAzy7Awnka8SeWWubyT8nc6Gn8b76FyhfwwidbBFrNu6xQML3kwKOorPdC1JqmDGw==}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
@@ -3070,6 +3076,14 @@ snapshots:
       - react-dom
 
   '@aiszlab/relax@2.1.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@babel/runtime': 7.28.6
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+      react-is: 19.2.4
+      rxjs: 7.8.2
+
+  '@aiszlab/relax@2.1.3-beta.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.28.6
       react: 19.2.4

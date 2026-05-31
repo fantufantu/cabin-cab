@@ -10,7 +10,7 @@ import {
   toArray,
   useEvent,
   useInfiniteScroll,
-  useMounted,
+  useRequest,
 } from "@aiszlab/relax";
 import TouristPlanFooter from "../../../components/tourist-plan/footer";
 import { Key, useMemo, useState } from "react";
@@ -42,9 +42,10 @@ function Attractions() {
     navigate(-1);
   };
 
-  useMounted(() => {
-    Promise.allSettled([queryDistricts(), queryTouristAttractions(currentAdcode)]);
-  });
+  useRequest(
+    () => Promise.allSettled([queryDistricts(), queryTouristAttractions(currentAdcode)]),
+    { auto: true }
+  );
 
   const selectPoi = useEvent((poiId: string) => {
     if (isUndefined(currentAdcode)) return;

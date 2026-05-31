@@ -4,15 +4,13 @@ import { ConfigProvider } from "musae";
 import { zh_CN } from "musae/locales";
 import { ApolloProvider } from "@apollo/client/react";
 import { client } from "./api";
-import { useMounted } from "@aiszlab/relax";
+import { useRequest } from "@aiszlab/relax";
 import { useAuthStore } from "./stores/auth.store";
 
 const Application = ({ children }: ApplicationProps) => {
   const { whoAmI } = useAuthStore();
 
-  useMounted(() => {
-    whoAmI();
-  });
+  useRequest(whoAmI, { auto: true });
 
   return (
     <ConfigProvider locale={zh_CN}>
