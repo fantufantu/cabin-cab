@@ -47,19 +47,18 @@ function TouristPlan() {
             };
           });
         },
+        onSuccess: () => {
+          parseTouristPlan({ variables: { id } })
+            .catch(() => null)
+            .then((data) => {
+              setTouristPlan((prev) => ({
+                ...prev,
+                ..._touristPlan,
+                itinerary: data?.data?.parseTouristPlan.itinerary ?? prev?.itinerary,
+              }));
+            });
+        },
       });
-    }
-
-    if (!_touristPlan.itinerary) {
-      parseTouristPlan({ variables: { id } })
-        .catch(() => null)
-        .then((data) => {
-          setTouristPlan((prev) => ({
-            ...prev,
-            ..._touristPlan,
-            itinerary: data?.data?.parseTouristPlan.itinerary ?? prev?.itinerary,
-          }));
-        });
     }
   }, [id]);
 
@@ -184,21 +183,13 @@ function TouristPlan() {
               </>
             ),
           },
-          // 提案未生成前不允许查看行程详情
-          ...(!!touristPlan?.proposal
-            ? [
-                {
-                  key: "itinerary",
-                  label: "行程详情",
-                  children: (
-                    <Itinerary
-                      itinerary={touristPlan?.itinerary}
-                      isLoading={!touristPlan?.itinerary}
-                    />
-                  ),
-                },
-              ]
-            : []),
+          {
+            key: "itinerary",
+            label: "行程详情",
+            children: (
+              <Itinerary itinerary={touristPlan?.itinerary} isLoading={!touristPlan?.itinerary} />
+            ),
+          },
         ]}
       />
 
