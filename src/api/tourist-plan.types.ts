@@ -25,11 +25,13 @@ export interface Itinerary {
  */
 export interface TouristPlan {
   id: string;
+  cityCodes: string[];
   cities: {
     code: string;
     name: string;
   }[];
   depatureAt: number;
+  attractionCodes: string[];
   attractions: {
     code: string;
     name: string;
@@ -47,5 +49,5 @@ export interface TouristPlan {
  */
 export type CreateTouristPlanInput = Pick<
   TouristPlan,
-  "depatureAt" | "attractions" | "cities" | "duration" | "belongToId"
+  "depatureAt" | "attractionCodes" | "cityCodes" | "duration" | "belongToId"
 >;

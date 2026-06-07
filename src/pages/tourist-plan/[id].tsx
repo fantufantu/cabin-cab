@@ -67,15 +67,8 @@ function TouristPlan() {
       await createTouristPlan({
         variables: {
           input: {
-            attractions: (touristPlan?.attractions ?? []).map((_item) => ({
-              code: _item.code,
-              name: _item.name,
-              cityCode: _item.cityCode,
-            })),
-            cities: (touristPlan?.cities ?? []).map((_item) => ({
-              name: _item.name,
-              code: _item.code,
-            })),
+            attractionCodes: (touristPlan?.attractions ?? []).map((_item) => _item.code),
+            cityCodes: (touristPlan?.cities ?? []).map((_item) => _item.code),
             depatureAt: touristPlan?.depatureAt ?? 0,
             duration: touristPlan?.duration ?? 0,
             belongToId: await getAppId(),

@@ -81,27 +81,12 @@ function Attractions() {
     const { data } = await createTouristPlan({
       variables: {
         input: {
-          cities: toArray(selectedAdcodes).map((code) => {
-            return {
-              code,
-              name: cities.get(code)?.name ?? code,
-            };
-          }),
+          cityCodes: toArray(selectedAdcodes),
           duration,
           depatureAt: depatureAt.valueOf(),
-          attractions: toArray(selectedPoiTree)
-            .map(([cityCode, _attractions]) => {
-              return toArray(_attractions).map((attractionId) => {
-                const _attraction = touristAttractions.get(cityCode)?.get(attractionId);
-
-                return {
-                  code: attractionId,
-                  name: _attraction?.name ?? attractionId,
-                  cityCode,
-                };
-              });
-            })
-            .flat(),
+          attractionCodes: toArray(selectedPoiTree).flatMap(([_cityCode, _attractions]) =>
+            toArray(_attractions),
+          ),
           belongToId: await getAppId(),
         },
       },
