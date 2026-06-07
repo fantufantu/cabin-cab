@@ -8,13 +8,13 @@ import TouristPlanHeader from "../../../components/tourist-plan/header";
 import TouristPlanFooter from "../../../components/tourist-plan/footer";
 
 const PlanCities = () => {
-  const { queryDistricts, districts } = useAmapStore();
+  const { queryCities, cities } = useAmapStore();
   const {
     cities: { selectedAdcodes, toggleAdcode },
   } = usePlanContext();
   const navigate = useNavigate();
 
-  useRequest(queryDistricts, { auto: true });
+  useRequest(queryCities, { auto: true });
 
   const nextStep = () => {
     navigate("/tourist-plan/period");
@@ -33,13 +33,13 @@ const PlanCities = () => {
       </div>
 
       <div className="mx-4 grid grid-cols-2 gap-3">
-        {toArray(districts.values()).map((item) => {
+        {toArray(cities.values()).map((item) => {
           return (
             <City
-              key={item.adcode}
+              key={item.code}
               item={item}
               onClick={toggleAdcode}
-              isSelected={selectedAdcodes.has(item.adcode)}
+              isSelected={selectedAdcodes.has(item.code)}
             />
           );
         })}
@@ -54,7 +54,7 @@ const PlanCities = () => {
             {toArray(selectedAdcodes).map((code, index) => {
               return (
                 <span key={code}>
-                  <span>{districts.get(code)?.name}</span>
+                  <span>{cities.get(code)?.name}</span>
                   {index < selectedAdcodes.size - 1 && <span>，</span>}
                 </span>
               );

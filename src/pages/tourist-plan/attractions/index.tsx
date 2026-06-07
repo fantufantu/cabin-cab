@@ -20,7 +20,7 @@ import { CREATE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
 import useAppStore from "../../../stores/app.store";
 
 function Attractions() {
-  const { queryTouristAttractions, districts, queryDistricts, touristAttractions } = useAmapStore();
+  const { queryTouristAttractions, cities, queryCities, touristAttractions } = useAmapStore();
   const {
     cities: { selectedAdcodes },
     period: { duration, depatureAt },
@@ -43,7 +43,7 @@ function Attractions() {
     navigate(-1);
   };
 
-  useRequest(() => Promise.allSettled([queryDistricts(), queryTouristAttractions(currentAdcode)]), {
+  useRequest(() => Promise.allSettled([queryCities(), queryTouristAttractions(currentAdcode)]), {
     auto: true,
   });
 
@@ -84,7 +84,7 @@ function Attractions() {
           cities: toArray(selectedAdcodes).map((code) => {
             return {
               code,
-              name: districts.get(code)?.name ?? code,
+              name: cities.get(code)?.name ?? code,
             };
           }),
           duration,
@@ -127,7 +127,7 @@ function Attractions() {
             key: adcode,
             label: (
               <span className="flex items-center">
-                <span>{districts.get(adcode)?.name ?? adcode}</span>
+                <span>{cities.get(adcode)?.name ?? adcode}</span>
                 &nbsp;
                 <Tag size="small" className="rounded-full">
                   {(!isUndefined(currentAdcode) && selectedPoiTree.get(adcode)?.size) ?? 0}

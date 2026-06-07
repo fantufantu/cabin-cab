@@ -1,5 +1,46 @@
+import { gql, TypedDocumentNode } from "@apollo/client";
 import { AMAP_POI_TYPE_CODE } from "../constants/amap.constant";
-import { District, Poi } from "./amap.types";
+import type { City, Poi } from "./amap.types";
+import type { Paginated } from "./pagination.types";
+import { client } from "./index";
+
+/**
+ * 查询城市列表
+ */
+const CITIES: TypedDocumentNode<
+  {
+    cities: Paginated<City>;
+  },
+  {
+    pagination: { page: number; limit: number };
+    filter?: { keyword?: string };
+  }
+> = gql`
+  query Cities($pagination: Pagination!, $filter: FilterCitiesInput) {
+    cities(pagination: $pagination, filter: $filter) {
+      items {
+        code
+        name
+        image
+      }
+      total
+    }
+  }
+`;
+
+/**
+ * 查询城市（分页，一页查询全部）
+ */
+async function queryCities(): Promise<City[]> {
+  const { data } = await client.query({
+    query: CITIES,
+    variables: {
+      pagination: { page: 1, limit: 999 },
+    },
+  });
+
+  return data?.cities?.items ?? [];
+}
 
 /**
  * 查询高德地图景点
@@ -28,15 +69,4 @@ async function queryTouristAttractions({
   return (await (await fetch(url.toString())).json()).pois;
 }
 
-/**
- * 查询高德行政区域
- */
-async function queryDistricts(): Promise<District[] | undefined> {
-  const url = new URL("https://restapi.amap.com/v3/config/district");
-  url.searchParams.set("key", import.meta.env.VITE_AMAP_API_KEY);
-  url.searchParams.set("subdistrict", "1");
-
-  return (await (await fetch(url.toString())).json()).districts;
-}
-
-export { queryDistricts, queryTouristAttractions };
+export { queryCities, queryTouristAttractions };

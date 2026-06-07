@@ -1,46 +1,46 @@
 import { using } from "@aiszlab/relax/react";
-import { queryDistricts, queryTouristAttractions } from "../api/amap.api";
-import { District, Poi } from "../api/amap.types";
+import { queryCities, queryTouristAttractions } from "../api/amap.api";
+import type { City, Poi } from "../api/amap.types";
 import { isUndefined, toArray } from "@aiszlab/relax";
 
 interface AmapStore {
-  districts: Map<string, District>;
+  cities: Map<string, City>;
   touristAttractions: Map<string, Map<string, Poi>>;
-  queryDistricts: () => Promise<District[]>;
+  queryCities: () => Promise<City[]>;
   queryTouristAttractions: (adcode?: string) => Promise<Poi[]>;
 }
 
 const useAmapStore = using<AmapStore>((setStore) => {
   return {
-    districts: new Map(),
+    cities: new Map(),
 
     touristAttractions: new Map(),
 
     /**
-     * 查询地区数据，并更新全局缓存
-     * 借助缓存避免高德配额消费过多
+     * 查询城市数据，并更新全局缓存
+     * 借助缓存避免服务端重复请求
      */
-    queryDistricts: async (): Promise<District[]> => {
-      const existingDistricts = useAmapStore.state.districts;
-      if (existingDistricts.size > 0) {
-        return toArray(existingDistricts.values());
+    queryCities: async (): Promise<City[]> => {
+      const existingCities = useAmapStore.state.cities;
+      if (existingCities.size > 0) {
+        return toArray(existingCities.values());
       }
 
-      const _districts = (await queryDistricts())?.at(0)?.districts ?? [];
+      const _cities = await queryCities();
 
-      setStore(({ districts, ...store }) => {
-        const nextDistricts = new Map(districts);
-        _districts.forEach((item) => {
-          nextDistricts.set(item.adcode, item);
+      setStore(({ cities, ...store }) => {
+        const nextCities = new Map(cities);
+        _cities.forEach((item) => {
+          nextCities.set(item.code, item);
         });
 
         return {
           ...store,
-          districts: nextDistricts,
+          cities: nextCities,
         };
       });
 
-      return _districts;
+      return _cities;
     },
 
     /**

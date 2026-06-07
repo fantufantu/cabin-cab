@@ -1,13 +1,13 @@
 import { stringify } from "@aiszlab/relax/class-name";
-import { District } from "../../api/amap.types";
+import type { City } from "../../api/amap.types";
 import styles from "./style.module.css";
 import { useEvent } from "@aiszlab/relax";
 import { CheckCircle } from "musae/icons";
 import { Tag } from "musae";
 
 interface Props {
-  item: District;
-  onClick: (adCode: string) => void;
+  item: City;
+  onClick: (code: string) => void;
   isSelected: boolean;
 }
 
@@ -16,17 +16,20 @@ interface Props {
  */
 function City({ item, onClick, isSelected }: Props) {
   const click = useEvent(() => {
-    onClick(item.adcode);
+    onClick(item.code);
   });
 
   return (
     <div
-      key={item.adcode}
+      key={item.code}
       className={stringify(
         styles.city,
         "bg-cover h-40 rounded-2xl flex flex-col text-color-on-primary",
         "p-3 relative overflow-hidden",
       )}
+      style={{
+        "--image": `url(${item.image})`,
+      }}
       onClick={click}
     >
       <Tag size="small">约3天</Tag>
