@@ -4,6 +4,7 @@ import { createContext, useContext } from "react";
 interface PlanContextValue {
   period: {
     duration: number;
+    setDuration: (duration: number) => void;
     addDuration: () => void;
     subtractDuration: () => void;
     depatureAt: Dayjs;

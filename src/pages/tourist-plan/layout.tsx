@@ -41,6 +41,7 @@ const TouristPlan = () => {
       value={{
         period: {
           duration,
+          setDuration,
           addDuration,
           subtractDuration,
           depatureAt,
