@@ -11,8 +11,8 @@ interface PlanContextValue {
     setDepatureAt: (date: Dayjs) => void;
   };
   cities: {
-    selectedAdcodes: Set<string>;
-    toggleAdcode: (adcode: string) => void;
+    selectedCityCodes: Set<string>;
+    toggleCityCode: (cityCode: string) => void;
   };
 }
 

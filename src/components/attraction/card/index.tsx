@@ -1,44 +1,35 @@
-import { Checkbox, Tag } from "musae";
-import type { Poi } from "../../../api/amap.types";
-import { ChangeEvent, useMemo } from "react";
-import { toArray, unique, useEvent } from "@aiszlab/relax";
+import { Checkbox, Image } from "musae";
+import type { Attraction } from "../../../api/attraction.types";
+import { ChangeEvent } from "react";
+import { useEvent } from "@aiszlab/relax";
 
 interface Props {
-  poi: Poi;
+  attraction: Attraction;
   checked?: boolean;
-  onSelect?: (poiId: string) => void;
-  onDeselect?: (poiId: string) => void;
+  onSelect?: (code: string) => void;
+  onDeselect?: (code: string) => void;
 }
 
-const TouristAttractionCard = ({ poi, onDeselect, onSelect, checked = false }: Props) => {
+const TouristAttractionCard = ({ attraction, onDeselect, onSelect, checked = false }: Props) => {
   const toggle = useEvent((event: ChangeEvent<HTMLInputElement>) => {
-    const isChecked = event.target.checked;
-
-    if (isChecked) {
-      onSelect?.(poi.id);
+    if (event.target.checked) {
+      onSelect?.(attraction.code);
     } else {
-      onDeselect?.(poi.id);
+      onDeselect?.(attraction.code);
     }
   });
 
-  const tags = useMemo(() => unique(poi.type.split(";")), [poi.type]);
-
   return (
-    <div className="rounded-lg shadow p-2 flex flex-col">
-      <div className="flex items-center">
-        <span className="text-sm">{poi.name}</span>
-        <Checkbox className="ml-auto" checked={checked} onChange={toggle} />
-      </div>
-
-      <p className="text-color-secondary text-xs">{poi.address}</p>
-
-      <div className="flex flex-wrap gap-2 mt-2">
-        {tags.map((tag) => (
-          <Tag key={tag} size="small">
-            {tag}
-          </Tag>
-        ))}
-      </div>
+    <div className="rounded-lg shadow p-2 flex items-center gap-3">
+      <Image
+        src={attraction.image}
+        alt={attraction.name}
+        width={80}
+        height={80}
+        previewable={false}
+      />
+      <span className="text-sm flex-1 truncate">{attraction.name}</span>
+      <Checkbox checked={checked} onChange={toggle} />
     </div>
   );
 };

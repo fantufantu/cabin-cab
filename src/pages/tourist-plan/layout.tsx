@@ -8,17 +8,17 @@ const TouristPlan = () => {
   const [duration, { add, subtract, setCount: setDuration }] = useCounter(1, { min: 1 });
   const [depatureAt, setDepatureAt] = useState(() => dayjs().startOf("day"));
 
-  const [cachedSelectedAdcodes, setCachedSelectedAdcodes] =
+  const [cachedSelectedCityCodes, setCachedSelectedCityCodes] =
     useSessionStorageState("cabin-cab__plan__cities");
 
-  const selectedAdcodes = useMemo(() => {
-    return new Set<string>(JSON.parse(cachedSelectedAdcodes ?? "[]"));
-  }, [cachedSelectedAdcodes]);
+  const selectedCityCodes = useMemo(() => {
+    return new Set<string>(JSON.parse(cachedSelectedCityCodes ?? "[]"));
+  }, [cachedSelectedCityCodes]);
 
-  const toggleAdcode = useEvent((adcode: string) => {
-    const next = new Set(selectedAdcodes);
-    next.has(adcode) ? next.delete(adcode) : next.add(adcode);
-    setCachedSelectedAdcodes(JSON.stringify(toArray(next)));
+  const toggleCityCode = useEvent((cityCode: string) => {
+    const next = new Set(selectedCityCodes);
+    next.has(cityCode) ? next.delete(cityCode) : next.add(cityCode);
+    setCachedSelectedCityCodes(JSON.stringify(toArray(next)));
   });
 
   const addDuration = () => {
@@ -33,7 +33,7 @@ const TouristPlan = () => {
   useUnmount(() => {
     setDuration(1);
     setDepatureAt(() => dayjs().startOf("day"));
-    setCachedSelectedAdcodes(null);
+    setCachedSelectedCityCodes(null);
   });
 
   return (
@@ -48,8 +48,8 @@ const TouristPlan = () => {
           setDepatureAt,
         },
         cities: {
-          selectedAdcodes,
-          toggleAdcode,
+          selectedCityCodes,
+          toggleCityCode,
         },
       }}
     >

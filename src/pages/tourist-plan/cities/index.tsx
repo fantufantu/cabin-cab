@@ -10,7 +10,7 @@ import TouristPlanFooter from "../../../components/tourist-plan/footer";
 const PlanCities = () => {
   const { queryCities, cities } = useAmapStore();
   const {
-    cities: { selectedAdcodes, toggleAdcode },
+    cities: { selectedCityCodes, toggleCityCode },
   } = usePlanContext();
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ const PlanCities = () => {
       <TouristPlanHeader
         title="选择目的城市"
         step={1}
-        subTitle={`可多选，已选 ${selectedAdcodes.size} 个城市`}
+        subTitle={`可多选，已选 ${selectedCityCodes.size} 个城市`}
       />
 
       <div className="mx-4">
@@ -38,24 +38,24 @@ const PlanCities = () => {
             <City
               key={item.code}
               item={item}
-              onClick={toggleAdcode}
-              isSelected={selectedAdcodes.has(item.code)}
+              onClick={toggleCityCode}
+              isSelected={selectedCityCodes.has(item.code)}
             />
           );
         })}
       </div>
 
       <TouristPlanFooter>
-        {selectedAdcodes.size === 0 && <span>请至少选择一个城市</span>}
+        {selectedCityCodes.size === 0 && <span>请至少选择一个城市</span>}
 
-        {selectedAdcodes.size > 0 && (
+        {selectedCityCodes.size > 0 && (
           <span className="whitespace-nowrap overflow-hidden text-ellipsis">
-            已选择 {selectedAdcodes.size} 个城市：
-            {toArray(selectedAdcodes).map((code, index) => {
+            已选择 {selectedCityCodes.size} 个城市：
+            {toArray(selectedCityCodes).map((code, index) => {
               return (
                 <span key={code}>
                   <span>{cities.get(code)?.name}</span>
-                  {index < selectedAdcodes.size - 1 && <span>，</span>}
+                  {index < selectedCityCodes.size - 1 && <span>，</span>}
                 </span>
               );
             })}
@@ -66,7 +66,7 @@ const PlanCities = () => {
           className="ml-auto"
           size="small"
           onClick={nextStep}
-          disabled={selectedAdcodes.size === 0}
+          disabled={selectedCityCodes.size === 0}
         >
           下一步
         </Button>
