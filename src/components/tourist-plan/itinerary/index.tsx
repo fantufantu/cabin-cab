@@ -14,6 +14,7 @@ function Itinerary({ itinerary, isLoading }: Props) {
           <Skeleton className="h-40" />
           <Skeleton className="h-40" />
           <Skeleton className="h-40" />
+          <Skeleton className="h-40" />
         </>
       )}
 
@@ -21,11 +22,17 @@ function Itinerary({ itinerary, isLoading }: Props) {
         itinerary?.items.map((item, index) => (
           <div key={index} className="p-4 rounded flex flex-col gap-2 shadow-lg">
             <div className="text-lg font-semibold">{item.itineraryName}</div>
-            <div className="text-sm">{item.itineraryDescription}</div>
-            <div className="text-sm">小贴士：{item.itineraryTip}</div>
+
+            {!!item.itineraryDescription && (
+              <div className="text-sm">{item.itineraryDescription}</div>
+            )}
+
+            {!!item.itineraryTip && <div className="text-sm">小贴士：{item.itineraryTip}</div>}
+
             <div className="text-sm">
               开始时间：{new Date(item.itineraryStartAt).toLocaleString()}
             </div>
+
             <div className="text-sm">持续时间：{item.itineraryDuration / 1000 / 60 / 60}小时</div>
           </div>
         ))}
