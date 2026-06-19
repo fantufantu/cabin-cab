@@ -13,7 +13,9 @@ const useAppStore = using<AppStore>((setStore) => {
     if (_appId) return _appId;
 
     const appId = crypto.randomUUID();
-    LOCAL_STORAGE.set(LOCAL_STORAGE_KEYS.APP_ID, appId).catch(() => null);
+    LOCAL_STORAGE.set(LOCAL_STORAGE_KEYS.APP_ID, appId)
+      .then(() => LOCAL_STORAGE.save())
+      .catch(() => null);
     setStore((store) => ({ ...store, appId }));
     return appId;
   };
