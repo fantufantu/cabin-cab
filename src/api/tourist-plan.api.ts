@@ -47,14 +47,14 @@ export const TOURIST_PLAN: TypedDocumentNode<
         cityCode
       }
       duration
-      itinerary {
-        items {
-          itineraryName
-          itineraryDescription
-          itineraryTip
-          itineraryStartAt
-          itineraryDuration
-        }
+      itineraries {
+        id
+        dayFrom
+        sortOrder
+        name
+        description
+        tip
+        duration
       }
     }
   }
@@ -65,7 +65,7 @@ export const TOURIST_PLAN: TypedDocumentNode<
  */
 export const PARSE_TOURIST_PLAN: TypedDocumentNode<
   {
-    parseTouristPlan: Pick<TouristPlan, "itinerary">;
+    parseTouristPlan: Pick<TouristPlan, "itineraries">;
   },
   {
     id: string;
@@ -73,14 +73,14 @@ export const PARSE_TOURIST_PLAN: TypedDocumentNode<
 > = gql`
   mutation ParseTouristPlan($id: String!) {
     parseTouristPlan(id: $id) {
-      itinerary {
-        items {
-          itineraryName
-          itineraryDescription
-          itineraryTip
-          itineraryStartAt
-          itineraryDuration
-        }
+      itineraries {
+        id
+        dayFrom
+        sortOrder
+        name
+        description
+        tip
+        duration
       }
     }
   }

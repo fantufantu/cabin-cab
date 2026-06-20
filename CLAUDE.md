@@ -46,6 +46,22 @@ try {
 
 `try/catch` is acceptable only when different error types need distinct handling, or when cleanup logic must run regardless of success/failure.
 
+**Prefer `reduce` over `for...of`** for grouping/aggregation of array values into a `Map` or object:
+
+```typescript
+// ✅ Good — reduce
+const grouped = items.reduce((map, item) => {
+  (map.get(item.key) ?? []).push(item);
+  return map;
+}, new Map());
+
+// ❌ Avoid — for...of
+const grouped = new Map();
+for (const item of items) {
+  (grouped.get(item.key) ?? []).push(item);
+}
+```
+
 ## Architecture
 
 Cabin Cab (驾驾旅游助手) is an AI-powered travel planning app built as a **Tauri v2** hybrid app targeting iOS and macOS desktop. The web frontend is a React 19 SPA that also runs in a Tauri WebView.
