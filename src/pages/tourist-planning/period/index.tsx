@@ -1,6 +1,6 @@
 import { Button, Calendar, IconButton, Tag } from "musae";
 import { Add, Remove, CalendarToday, KeyboardArrowRight, KeyboardArrowLeft } from "musae/icons";
-import { usePlanContext } from "../../../contexts/plan.context";
+import { usePlanContext } from "../../../contexts/tourist-planning.context";
 import { useNavigate } from "@aiszlab/bee/router";
 import { useCallback, useMemo } from "react";
 import dayjs from "dayjs";
@@ -24,7 +24,7 @@ const PlanPeriod = () => {
   }, [depatureAt, duration]);
 
   const goNext = () => {
-    navigate("/tourist-plan/attractions");
+    navigate("/tourist-planning/attractions");
   };
 
   const disabledDate = useCallback((date: dayjs.Dayjs) => {

@@ -2,7 +2,7 @@ import { useNavigate } from "@aiszlab/bee/router";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
 import { Button, IconButton, Skeleton, Tabs, Tag } from "musae";
 import { CalendarToday, KeyboardArrowLeft, KeyboardArrowRight } from "musae/icons";
-import { usePlanContext } from "../../../contexts/plan.context";
+import { usePlanContext } from "../../../contexts/tourist-planning.context";
 import useAmapStore from "../../../stores/amap.store";
 import {
   isUndefined,

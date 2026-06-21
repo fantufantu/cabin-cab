@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import { clipboard } from "@aiszlab/relax/dom";
 import useAppStore from "../../stores/app.store";
 import TouristPlanFooter from "../../components/tourist-plan/footer";
-import DetailPlanContext from "../../contexts/detail-plan.context";
+import TouristPlanContext from "../../contexts/tourist-plan.context";
 
 function TouristPlanLayout() {
   const { id } = useParams();
@@ -98,7 +98,7 @@ function TouristPlanLayout() {
   );
 
   return (
-    <DetailPlanContext.Provider value={{ touristPlan }}>
+    <TouristPlanContext.Provider value={{ touristPlan, setTouristPlan }}>
       <div className="min-h-screen flex flex-col">
         <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex flex-col gap-3 sticky top-0 z-10">
           <div className="flex items-center justify-between gap-2">
@@ -164,7 +164,7 @@ function TouristPlanLayout() {
           </IconButton>
         </TouristPlanFooter>
       </div>
-    </DetailPlanContext.Provider>
+    </TouristPlanContext.Provider>
   );
 }
 

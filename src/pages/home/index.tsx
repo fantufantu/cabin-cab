@@ -11,7 +11,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const startTouristPlan = () => {
-    navigate("/tourist-plan/cities");
+    navigate("/tourist-planning/cities");
   };
 
   const viewTouristPlans = () => {

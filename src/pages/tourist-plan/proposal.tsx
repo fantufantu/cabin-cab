@@ -1,8 +1,8 @@
 import { RichTextEditor, Skeleton } from "musae";
-import { useDetailPlanContext } from "../../contexts/detail-plan.context";
+import { useTouristPlanContext } from "../../contexts/tourist-plan.context";
 
 function TouristPlanProposal() {
-  const { touristPlan } = useDetailPlanContext();
+  const { touristPlan } = useTouristPlanContext();
 
   if (!touristPlan?.proposal) {
     return (

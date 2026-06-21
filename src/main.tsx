@@ -7,10 +7,11 @@ const Home = lazy(() => import("./pages/home"));
 const TouristPlanLayout = lazy(() => import("./pages/tourist-plan/layout"));
 const TouristPlanProposal = lazy(() => import("./pages/tourist-plan/proposal"));
 const TouristPlanItineraries = lazy(() => import("./pages/tourist-plan/itineraries"));
-const TouristPlanningLayout = lazy(() => import("./pages/tourist-plan/planning-layout"));
-const TouristPlanCities = lazy(() => import("./pages/tourist-plan/cities"));
-const TouristPlanPeriod = lazy(() => import("./pages/tourist-plan/period"));
-const TouristPlanAttractions = lazy(() => import("./pages/tourist-plan/attractions"));
+const TouristPlanItineraryEdit = lazy(() => import("./pages/tourist-plan/itinerary-edit"));
+const TouristPlanningLayout = lazy(() => import("./pages/tourist-planning/layout"));
+const TouristPlanCities = lazy(() => import("./pages/tourist-planning/cities"));
+const TouristPlanPeriod = lazy(() => import("./pages/tourist-planning/period"));
+const TouristPlanAttractions = lazy(() => import("./pages/tourist-planning/attractions"));
 const TouristPlanList = lazy(() => import("./pages/tourist-plan/list"));
 const Login = lazy(() => import("./pages/login"));
 
@@ -45,24 +46,29 @@ bootstrap({
               path: "itinerary",
               element: <TouristPlanItineraries />,
             },
+            {
+              path: "itinerary/:itineraryId/edit",
+              element: <TouristPlanItineraryEdit />,
+            },
           ],
         },
+      ],
+    },
+    {
+      path: "tourist-planning",
+      Component: TouristPlanningLayout,
+      children: [
         {
-          Component: TouristPlanningLayout,
-          children: [
-            {
-              path: "cities",
-              element: <TouristPlanCities />,
-            },
-            {
-              path: "period",
-              element: <TouristPlanPeriod />,
-            },
-            {
-              path: "attractions",
-              element: <TouristPlanAttractions />,
-            },
-          ],
+          path: "cities",
+          element: <TouristPlanCities />,
+        },
+        {
+          path: "period",
+          element: <TouristPlanPeriod />,
+        },
+        {
+          path: "attractions",
+          element: <TouristPlanAttractions />,
         },
       ],
     },

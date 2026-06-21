@@ -2,7 +2,7 @@ import { toArray, useRequest } from "@aiszlab/relax";
 import useAmapStore from "../../../stores/amap.store";
 import { Button, Search } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
-import { usePlanContext } from "../../../contexts/plan.context";
+import { usePlanContext } from "../../../contexts/tourist-planning.context";
 import City from "../../../components/city";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
 import TouristPlanFooter from "../../../components/tourist-plan/footer";
@@ -17,7 +17,7 @@ const PlanCities = () => {
   useRequest(queryCities, { auto: true });
 
   const nextStep = () => {
-    navigate("/tourist-plan/period");
+    navigate("/tourist-planning/period");
   };
 
   return (

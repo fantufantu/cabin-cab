@@ -1,3 +1,5 @@
+import { TouristPlanItinerary } from "./tourist-plan-itinerary.types";
+
 interface PlanDetail {
   attractions: {
     attractionName: string;
@@ -6,16 +8,6 @@ interface PlanDetail {
     attractionDescription: string;
     tip: string;
   }[];
-}
-
-export interface Itinerary {
-  id: string;
-  dayFrom: number;
-  sortOrder: number;
-  name: string;
-  description: string;
-  tip: string;
-  duration: number;
 }
 
 /**
@@ -39,7 +31,7 @@ export interface TouristPlan {
   proposal?: string;
   belongToId: string;
   plan?: PlanDetail;
-  itineraries?: Itinerary[];
+  itineraries?: TouristPlanItinerary[];
 }
 
 /**

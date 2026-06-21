@@ -1,5 +1,5 @@
 import { Outlet } from "@aiszlab/bee/router";
-import PlanContext from "../../contexts/plan.context";
+import PlanContext from "../../contexts/tourist-planning.context";
 import { toArray, useCounter, useEvent, useSessionStorageState, useUnmount } from "@aiszlab/relax";
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";

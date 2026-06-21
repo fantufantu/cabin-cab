@@ -1,8 +1,8 @@
 import Itineraries from "../../components/tourist-plan/itinerary";
-import { useDetailPlanContext } from "../../contexts/detail-plan.context";
+import { useTouristPlanContext } from "../../contexts/tourist-plan.context";
 
 function TouristPlanItineraries() {
-  const { touristPlan } = useDetailPlanContext();
+  const { touristPlan } = useTouristPlanContext();
 
   return (
     <Itineraries
