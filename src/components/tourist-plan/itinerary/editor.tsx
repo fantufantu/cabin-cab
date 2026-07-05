@@ -90,11 +90,11 @@ function ItineraryEditor({ itinerary, open, onClose }: Props) {
           </Form.Item>
 
           <Form.Item name="description" label="描述">
-            <Textarea placeholder="描述" />
+            <Textarea placeholder="描述" rows={5} />
           </Form.Item>
 
           <Form.Item name="tip" label="小贴士">
-            <Textarea placeholder="小贴士" />
+            <Textarea placeholder="小贴士" rows={5} />
           </Form.Item>
 
           <Form.Item name="durationHours" label="建议时长（小时）">
