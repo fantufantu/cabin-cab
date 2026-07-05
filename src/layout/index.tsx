@@ -1,11 +1,13 @@
 import { useTheme } from "musae";
 import { type ReactNode } from "react";
+import ThemeToggle from "../components/theme-toggle";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { colors } = useTheme();
 
   return (
     <div
+      className="min-h-screen"
       style={{
         "--color-surface-container-low": colors["surface-container-low"],
         "--color-surface-container-high": colors["surface-container-high"],
@@ -23,6 +25,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
+      <ThemeToggle />
     </div>
   );
 };

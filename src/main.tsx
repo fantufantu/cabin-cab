@@ -19,7 +19,7 @@ bootstrap({
   render: Application,
   routes: [
     {
-      path: "",
+      index: true,
       element: <Home />,
     },
     {

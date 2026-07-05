@@ -13,6 +13,7 @@ export function isTauri() {
  */
 export const LOCAL_STORAGE_KEYS = {
   APP_ID: "appId",
+  THEME_MODE: "theme-mode",
 };
 
 /**
