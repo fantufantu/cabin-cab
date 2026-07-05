@@ -6,7 +6,7 @@ import {
   TOURIST_PLAN,
 } from "../../api/tourist-plan.api";
 import { Outlet, useLocation, useNavigate, useParams } from "@aiszlab/bee/router";
-import { Button, IconButton, Message, Tabs, Tag } from "musae";
+import { Button, IconButton, Message, Skeleton, Tabs, Tag } from "musae";
 import { useAsyncEffect } from "@aiszlab/relax";
 import { useMemo, useState } from "react";
 import { TouristPlan as TouristPlanType } from "../../api/tourist-plan.types";
@@ -21,7 +21,7 @@ import TouristPlanContext from "../../contexts/tourist-plan.context";
 function TouristPlanLayout() {
   const { id } = useParams();
   const location = useLocation();
-  const [queryTouristPlan] = useLazyQuery(TOURIST_PLAN);
+  const [queryTouristPlan, { loading }] = useLazyQuery(TOURIST_PLAN);
   const [touristPlan, setTouristPlan] = useState<TouristPlanType>();
   const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
   const navigate = useNavigate();
@@ -92,10 +92,12 @@ function TouristPlanLayout() {
   const tabItems = useMemo(
     () => [
       { key: `/tourist-plan/${id}`, label: "计划内容" },
-      { key: `/tourist-plan/${id}/itinerary`, label: "行程详情" },
+      { key: `/tourist-plan/${id}/itineraries`, label: "行程详情" },
     ],
     [id],
   );
+
+  const isLoading = loading || !touristPlan;
 
   return (
     <TouristPlanContext.Provider value={{ touristPlan, setTouristPlan }}>
@@ -113,37 +115,50 @@ function TouristPlanLayout() {
             </IconButton>
           </div>
 
-          <div
-            className={stringify(
-              "backdrop-blur-2xl bg-color-on-primary-20 rounded-2xl border border-(--color-on-primary-20) p-3",
-              "flex flex-col gap-2",
-            )}
-          >
-            <div>行程规划完成</div>
-
-            <div className="flex gap-2 justify-between items-center mx-4">
-              <span>{touristPlan?.duration}天行程</span>
-              <span>{touristPlan?.cities.length}个城市</span>
-              <span>{touristPlan?.attractions.length}个景点</span>
+          {isLoading && (
+            <div className="flex flex-wrap gap-2">
+              <Skeleton className="h-6 w-16 rounded" />
+              <Skeleton className="h-6 w-20 rounded" />
+              <Skeleton className="h-6 w-14 rounded" />
+              <Skeleton className="h-6 w-24 rounded" />
             </div>
+          )}
 
-            <div className="rounded-full backdrop-blur-2xl bg-color-on-primary-20 py-2 flex justify-center items-center gap-1">
-              {dayjs(touristPlan?.depatureAt).format("MM月DD日")}
-              <span>-</span>
-              {dayjs(touristPlan?.depatureAt)
-                .add(touristPlan?.duration ?? 0, "day")
-                .format("MM月DD日")}
-            </div>
-          </div>
+          {!isLoading && (
+            <>
+              <div
+                className={stringify(
+                  "backdrop-blur-2xl bg-color-on-primary-20 rounded-2xl border border-(--color-on-primary-20) p-3",
+                  "flex flex-col gap-2",
+                )}
+              >
+                <div>行程规划完成</div>
 
-          <div className="flex flex-wrap gap-2">
-            {touristPlan?.cities.map((_city) => (
-              <Tag key={_city.code}>
-                <LocationOn />
-                {_city.name}
-              </Tag>
-            ))}
-          </div>
+                <div className="flex gap-2 justify-between items-center mx-4">
+                  <span>{touristPlan?.duration}天行程</span>
+                  <span>{touristPlan?.cities.length}个城市</span>
+                  <span>{touristPlan?.attractions.length}个景点</span>
+                </div>
+
+                <div className="rounded-full backdrop-blur-2xl bg-color-on-primary-20 py-2 flex justify-center items-center gap-1">
+                  {dayjs(touristPlan?.depatureAt).format("MM月DD日")}
+                  <span>-</span>
+                  {dayjs(touristPlan?.depatureAt)
+                    .add(touristPlan?.duration ?? 0, "day")
+                    .format("MM月DD日")}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {touristPlan?.cities.map((_city) => (
+                  <Tag key={_city.code}>
+                    <LocationOn />
+                    {_city.name}
+                  </Tag>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         <Tabs
@@ -153,16 +168,31 @@ function TouristPlanLayout() {
         />
 
         <div className="flex-1 px-5 py-4">
-          <Outlet />
+          {isLoading && (
+            <div className="flex flex-col gap-4">
+              <Skeleton className="h-5 w-full rounded" />
+              <Skeleton className="h-5 w-5/6 rounded" />
+              <Skeleton className="h-5 w-4/6 rounded" />
+              <Skeleton className="h-40 w-full rounded-lg mt-2" />
+              <Skeleton className="h-5 w-full rounded" />
+              <Skeleton className="h-5 w-3/4 rounded" />
+              <Skeleton className="h-5 w-5/6 rounded" />
+              <Skeleton className="h-20 w-full rounded-lg mt-2" />
+            </div>
+          )}
+
+          {!isLoading && <Outlet />}
         </div>
 
-        <TouristPlanFooter>
-          <Button onClick={regenerate}>重新规划</Button>
+        {!isLoading && (
+          <TouristPlanFooter>
+            <Button onClick={regenerate}>重新规划</Button>
 
-          <IconButton size="small" onClick={share} className="ml-auto">
-            <Share />
-          </IconButton>
-        </TouristPlanFooter>
+            <IconButton size="small" onClick={share} className="ml-auto">
+              <Share />
+            </IconButton>
+          </TouristPlanFooter>
+        )}
       </div>
     </TouristPlanContext.Provider>
   );

@@ -1,3 +1,4 @@
+import { tryParse } from "@aiszlab/relax";
 import { LazyStore } from "@tauri-apps/plugin-store";
 
 /**
@@ -7,8 +8,6 @@ export function isTauri() {
   return !!window.isTauri;
 }
 
-/* 应用存储 start */
-
 /**
  * 存储键
  */
@@ -17,8 +16,25 @@ export const LOCAL_STORAGE_KEYS = {
 };
 
 /**
- * tauri 文件存储
+ * browser localStorage 降级，接口与 LazyStore 对齐
  */
-export const LOCAL_STORAGE = new LazyStore("./cabin-cab.store.json");
+const browserLocalStorage = {
+  async get<T>(key: string): Promise<T | undefined> {
+    return tryParse(window.localStorage.getItem(key));
+  },
 
-/* 应用存储 end */
+  async set(key: string, value: unknown): Promise<void> {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  },
+
+  async save(): Promise<void> {
+    // localStorage 同步写入，无需额外操作
+  },
+};
+
+/**
+ * 持久化存储，tauri 环境使用文件存储，浏览器降级使用 localStorage
+ */
+export const LOCAL_STORAGE = isTauri()
+  ? new LazyStore("./cabin-cab.store.json")
+  : browserLocalStorage;

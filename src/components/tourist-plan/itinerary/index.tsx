@@ -1,7 +1,7 @@
 import { Collapse, Skeleton } from "musae";
 import { TouristPlanItinerary } from "../../../api/tourist-plan-itinerary.types";
-import { useMemo } from "react";
-import { useNavigate, useParams } from "@aiszlab/bee/router";
+import { useMemo, useState } from "react";
+import ItineraryEditor from "./editor";
 
 interface Props {
   itineraries?: TouristPlanItinerary[];
@@ -9,8 +9,7 @@ interface Props {
 }
 
 function Itineraries({ itineraries, isLoading }: Props) {
-  const navigate = useNavigate();
-  const { id } = useParams();
+  const [selectedItinerary, setSelectedItinerary] = useState<TouristPlanItinerary | null>(null);
 
   const items = useMemo(() => {
     return Array.from(
@@ -30,7 +29,7 @@ function Itineraries({ itineraries, isLoading }: Props) {
             <div
               key={item.id}
               className="p-4 rounded flex flex-col gap-2 shadow-lg cursor-pointer"
-              onClick={() => navigate(`/tourist-plan/${id}/itinerary/${item.id}/edit`)}
+              onClick={() => setSelectedItinerary(item)}
             >
               <div className="text-lg font-semibold">{item.name}</div>
               {!!item.description && <div className="text-sm">{item.description}</div>}
@@ -55,6 +54,12 @@ function Itineraries({ itineraries, isLoading }: Props) {
       )}
 
       {!isLoading && <Collapse items={items} defaultActiveKey={items.length > 0 ? [items[0].key] : []} />}
+
+      <ItineraryEditor
+        itinerary={selectedItinerary}
+        open={selectedItinerary !== null}
+        onClose={() => setSelectedItinerary(null)}
+      />
     </div>
   );
 }

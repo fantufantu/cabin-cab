@@ -42,7 +42,7 @@ type UpdateTouristPlanItineraryInput = Partial<
 >;
 ```
 
-## Edit Page Component (`src/pages/tourist-plan/itinerary-edit.tsx`)
+## Edit Page Component (`src/pages/tourist-plan/itinerary/edit.tsx`)
 
 **Data in**: Read `itineraryId` from route params (`useParams`), pull the matching `Itinerary` from `useDetailPlanContext().touristPlan.itineraries`.
 
@@ -87,6 +87,6 @@ type UpdateTouristPlanItineraryInput = Partial<
 | `src/api/tourist-plan.api.ts` | Add `UPDATE_TOURIST_PLAN_ITINERARY` typed mutation document |
 | `src/contexts/detail-plan.context.ts` | Add `setTouristPlan` setter to `DetailPlanContextValue` |
 | `src/pages/tourist-plan/layout.tsx` | Pass `setTouristPlan` into context provider |
-| `src/pages/tourist-plan/itinerary-edit.tsx` | **New** — edit page component with form |
+| `src/pages/tourist-plan/itinerary/edit.tsx` | **New** — edit page component with form |
 | `src/main.tsx` | Add route `/tourist-plan/:id/itinerary/:itineraryId/edit` + lazy import |
 | `src/components/tourist-plan/itinerary/index.tsx` | Add `onClick` to itinerary cards, navigate with itinerary id |

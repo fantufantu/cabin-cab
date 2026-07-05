@@ -30,8 +30,8 @@ importers:
         specifier: ^12.40.0
         version: 12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       musae:
-        specifier: 1.0.27-beta.31
-        version: 1.0.27-beta.31(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23)
+        specifier: 1.0.27-beta.34
+        version: 1.0.27-beta.34(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23)
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -2523,8 +2523,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  musae@1.0.27-beta.31:
-    resolution: {integrity: sha512-I7nCgJVQNAmUaiaDVkufsg83wG6CCZnKRnXddcIKVIHporU04vT2bXPCzzf7I/8apuWIgtZMd91tcls7Wc5Nnw==}
+  musae@1.0.27-beta.34:
+    resolution: {integrity: sha512-4CIoCsjyedkyw+G89c/VGJ9JDsyFOJO4p7KLoLvsx+5JZPdeVMfOqBSzHa/kJzAf5hC1nqHPfdt7ijyiATty0w==}
     engines: {node: '>=22.0.0', pnpm: '>=10'}
     peerDependencies:
       react: '>=18'
@@ -5829,7 +5829,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  musae@1.0.27-beta.31(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23):
+  musae@1.0.27-beta.34(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23):
     dependencies:
       '@aiszlab/fuzzy': 2.1.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@aiszlab/relax': 2.1.3-beta.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)

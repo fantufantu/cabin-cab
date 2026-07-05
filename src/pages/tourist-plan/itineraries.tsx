@@ -3,13 +3,9 @@ import { useTouristPlanContext } from "../../contexts/tourist-plan.context";
 
 function TouristPlanItineraries() {
   const { touristPlan } = useTouristPlanContext();
+  const isEmpty = (touristPlan?.itineraries ?? []).length === 0;
 
-  return (
-    <Itineraries
-      itineraries={touristPlan?.itineraries}
-      isLoading={!touristPlan?.itineraries}
-    />
-  );
+  return <Itineraries itineraries={touristPlan?.itineraries} isLoading={isEmpty} />;
 }
 
 export default TouristPlanItineraries;
