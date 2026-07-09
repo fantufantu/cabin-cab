@@ -5,7 +5,7 @@ import { AUTH_TOKENS } from "../constants/api.constant";
 
 interface Store {
   me: User | null;
-  login: (input: { username: string; password: string }) => Promise<void>;
+  login: (input: { who: string; password: string }) => Promise<void>;
   whoAmI: () => Promise<void>;
 }
 

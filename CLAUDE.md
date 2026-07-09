@@ -46,6 +46,30 @@ try {
 
 `try/catch` is acceptable only when different error types need distinct handling, or when cleanup logic must run regardless of success/failure.
 
+**Use `musae` `Form` for all input-type forms.** Never manage form field state manually with `useState` when the page contains text inputs, selects, or other form controls. Use `Form.useForm<T>()` to create a typed form instance, wrap fields in `<Form.Item name="...">` with validation `rules`, and read values via `form.getFieldsValue()` on submit. Non-input UI state (e.g., checkbox agreement, loading flags) remains as `useState`.
+
+```typescript
+// ✅ Good — musae Form with typed useForm
+const form = Form.useForm<{ email: string; password: string }>();
+
+<Form form={form}>
+  <Form.Item name="email" rules={[{ validate: (v) => (!v ? "请输入邮箱" : undefined) }]}>
+    <Input placeholder="邮箱" />
+  </Form.Item>
+</Form>
+
+const handleSubmit = async () => {
+  const isValid = await form.validate();
+  if (!isValid) return;
+  const values = form.getFieldsValue();
+  // ...
+};
+
+// ❌ Avoid — manual useState for every field
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+```
+
 **Prefer `reduce` over `for...of`** for grouping/aggregation of array values into a `Map` or object:
 
 ```typescript
