@@ -1,6 +1,5 @@
 import { useTheme } from "musae";
 import { type ReactNode } from "react";
-import ThemeToggle from "../components/theme-toggle";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { colors } = useTheme();
@@ -25,7 +24,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-      <ThemeToggle />
     </div>
   );
 };

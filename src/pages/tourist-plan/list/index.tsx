@@ -28,8 +28,8 @@ function TouristPlanList() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex items-center justify-center relative">
+    <div className="flex flex-col">
+      <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex items-center justify-center sticky top-0 z-50">
         <IconButton size="small" color="secondary" className="absolute left-5" onClick={toHome}>
           <KeyboardArrowLeft size={24} />
         </IconButton>

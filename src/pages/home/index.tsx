@@ -3,7 +3,6 @@ import styles from "./index.module.css";
 import { stringify } from "@aiszlab/relax/class-name";
 import { AddAlert, AccountCircle, AttachFile, AutoDelete } from "musae/icons";
 import { useNavigate } from "@aiszlab/bee/router";
-import UserAvatar from "../../components/auth/user-avatar";
 
 const { Col, Row } = Grid;
 
@@ -23,8 +22,6 @@ const Home = () => {
       <div
         className={stringify("bg-cover px-8 pb-12 safe-pt-12 relative", styles["getting-started"])}
       >
-        <UserAvatar className="absolute right-8 top-8" />
-
         <h1 className="text-color-on-primary text-2xl">旅行规划助手</h1>
         <p className="text-color-secondary">AI 智能规划</p>
 

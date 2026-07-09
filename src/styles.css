@@ -53,3 +53,8 @@
 @utility safe-pt-* {
   padding-top: max(calc(--value(integer) * 4px), env(safe-area-inset-top));
 }
+
+/* 在真机模式下安全的下边距 */
+@utility safe-pb-* {
+  padding-bottom: max(calc(--value(integer) * 4px), env(safe-area-inset-bottom));
+}
