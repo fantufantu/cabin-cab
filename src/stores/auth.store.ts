@@ -7,6 +7,7 @@ interface Store {
   me: User | null;
   login: (input: { who: string; password: string }) => Promise<void>;
   whoAmI: () => Promise<void>;
+  logout: () => void;
 }
 
 const useAuthStore = using<Store>((setState) => {
@@ -26,6 +27,10 @@ const useAuthStore = using<Store>((setState) => {
       const user = await whoAmI().catch(() => null);
       if (!user) return;
       setState((state) => ({ ...state, me: user }));
+    },
+
+    logout: () => {
+      setState((state) => ({ ...state, me: null }));
     },
   };
 });

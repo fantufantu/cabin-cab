@@ -1,4 +1,4 @@
-import { Button, Switch } from "musae";
+import { Button, Switch, useActionSheet } from "musae";
 import { DarkMode, LightMode, Logout } from "musae/icons";
 import { useTheme } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
@@ -8,26 +8,43 @@ import useAppStore from "../../stores/app.store";
 import { AUTH_TOKENS } from "../../constants/api.constant";
 import UserInfo from "../../components/user/info";
 import type { User } from "../../typings/user";
+import { useMemo } from "react";
 
 const Profile = () => {
-  const { me } = useAuthStore();
+  const { me, logout } = useAuthStore();
   const { mode, toggle } = useTheme();
   const { persist } = useThemeStore();
   const { getAppId } = useAppStore();
   const navigate = useNavigate();
+  const [{ show }, actionSheet] = useActionSheet();
 
   const isLoggedIn = !!me;
 
-  const user = me
-    ? Promise.resolve(me)
-    : getAppId().then<User>((appId) => ({
-        nickname: `用户${appId.slice(-6)}`,
-        username: appId,
-      }));
+  const user = useMemo(() => {
+    return me
+      ? Promise.resolve(me)
+      : getAppId().then<User>((appId) => ({
+          nickname: `用户${appId.slice(-6)}`,
+          username: appId,
+        }));
+  }, [me]);
 
-  const handleLogout = () => {
-    localStorage.removeItem(AUTH_TOKENS.AUTHENTICATION);
-    navigate("/profile", { replace: true });
+  const handleLogoutClick = () => {
+    show({
+      title: "确定要退出登录吗？",
+      description: "退出后需要重新登录才能同步数据",
+      actions: [
+        {
+          key: "confirm",
+          text: "退出登录",
+          onClick: () => {
+            localStorage.removeItem(AUTH_TOKENS.AUTHENTICATION);
+            logout();
+            navigate("/profile", { replace: true });
+          },
+        },
+      ],
+    }).catch(() => {});
   };
 
   return (
@@ -44,9 +61,10 @@ const Profile = () => {
           {mode === "dark" ? <DarkMode /> : <LightMode />}
           <span className="text-color-on-surface">昼夜模式</span>
         </div>
+
         <Switch
           value={mode === "dark"}
-          onChange={() => persist(toggle())}
+          onClick={(e) => persist(toggle(e))}
           icon
           checkedChildren={<DarkMode />}
           uncheckedChildren={<LightMode />}
@@ -58,9 +76,9 @@ const Profile = () => {
         <Button
           variant="outlined"
           color="secondary"
-          className="flex items-center justify-center gap-3"
+          className="flex items-center justify-center gap-3 w-full"
           prefix={<Logout />}
-          onClick={handleLogout}
+          onClick={handleLogoutClick}
         >
           退出登录
         </Button>
@@ -77,6 +95,8 @@ const Profile = () => {
           </div>
         </div>
       )}
+
+      {actionSheet}
     </div>
   );
 };

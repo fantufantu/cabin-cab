@@ -46,6 +46,11 @@ export const WHO_AM_I: TypedDocumentNode<{ whoAmI: User }> = gql`
       nickname
       avatar
       emailAddress
+      membership {
+        name
+        quota
+      }
+      usedQuota
     }
   }
 `;

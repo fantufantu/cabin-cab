@@ -17,7 +17,8 @@ import { Key, useMemo, useState } from "react";
 import TouristAttractionCard from "../../../components/attraction/card";
 import { useMutation } from "@apollo/client/react";
 import { CREATE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
-import useAppStore from "../../../stores/app.store";
+import { useBelongToId } from "../../../hooks/use-belong-to-id";
+import { useAuthStore } from "../../../stores/auth.store";
 
 function Attractions() {
   const { queryAttractions, cities, queryCities, touristAttractions } = useAmapStore();
@@ -34,7 +35,8 @@ function Attractions() {
   const [selectedAttractionTree, setSelectedAttractionTree] = useState(
     () => new Map<string, Set<string>>(),
   );
-  const { getAppId } = useAppStore();
+  const getBelongToId = useBelongToId();
+  const { whoAmI } = useAuthStore();
 
   const currentTouristAttractions = useMemo(() => {
     if (isUndefined(currentCityCode)) return [];
@@ -91,7 +93,7 @@ function Attractions() {
           attractionCodes: toArray(selectedAttractionTree).flatMap(([_cityCode, _attractions]) =>
             toArray(_attractions),
           ),
-          belongToId: await getAppId(),
+          belongToId: await getBelongToId(),
         },
       },
     });
@@ -100,8 +102,8 @@ function Attractions() {
       return;
     }
 
-    // 出行计划创建成功，跳转计划详情生成页面
-    navigate(`/tourist-plan/${data.createTouristPlan.id}`);
+    // 出行计划创建成功，更新用户信息，跳转计划详情生成页面
+    Promise.all([whoAmI(), navigate(`/tourist-plan/${data.createTouristPlan.id}`)]);
   };
 
   return (
