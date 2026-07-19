@@ -1,20 +1,25 @@
-import { Suspense, use } from "react";
 import { Avatar, Progress, Skeleton, Tag } from "musae";
 import { AccountCircle } from "musae/icons";
 import type { User } from "../../typings/user";
+import { useMemo } from "react";
 
 interface Props {
-  user: Promise<User>;
+  user: User | null;
 }
 
-const _UserInfo = ({ user: _user }: Props) => {
-  const user = use(_user);
+const UserInfo = ({ user }: Props) => {
+  const quotaPercent = useMemo(() => {
+    if (!user) return 0;
+    if (!user.membership) return 0;
 
-  console.log("user======", user);
+    return user
+      ? Math.min(Math.round(((user.usedQuota ?? 0) / user.membership.quota) * 100), 100)
+      : 0;
+  }, [user]);
 
-  const quotaPercent = user.membership
-    ? Math.min(Math.round(((user.usedQuota ?? 0) / user.membership.quota) * 100), 100)
-    : 0;
+  if (!user) {
+    return <Skeleton className="h-14 rounded" />;
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -41,11 +46,5 @@ const _UserInfo = ({ user: _user }: Props) => {
     </div>
   );
 };
-
-const UserInfo = ({ user }: Props) => (
-  <Suspense fallback={<Skeleton className="h-14 rounded" />}>
-    <_UserInfo user={user} />
-  </Suspense>
-);
 
 export default UserInfo;

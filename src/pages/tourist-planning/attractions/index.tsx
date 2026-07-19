@@ -20,7 +20,6 @@ import { useBelongToId } from "../../../hooks/use-belong-to-id";
 import { useAuthStore } from "../../../stores/auth.store";
 import { queryCities } from "../../../api/city.api";
 import { queryAttractions } from "../../../api/attraction.api";
-import { LOCAL_STORAGE, LOCAL_STORAGE_KEYS, GUEST_QUOTA } from "../../../utils/tauri.util";
 
 function Attractions() {
   const {
@@ -36,7 +35,6 @@ function Attractions() {
   const [selectedAttractionTree, setSelectedAttractionTree] = useState(
     () => new Map<string, Set<string>>(),
   );
-  const getBelongToId = useBelongToId();
   const { whoAmI, me } = useAuthStore();
 
   const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
@@ -104,7 +102,7 @@ function Attractions() {
           attractionCodes: toArray(selectedAttractionTree).flatMap(([_cityCode, _attractions]) =>
             toArray(_attractions),
           ),
-          belongToId: await getBelongToId(),
+          belongToId: me!.id,
         },
       },
     });

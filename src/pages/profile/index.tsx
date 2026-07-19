@@ -6,17 +6,13 @@ import { useAuthStore } from "../../stores/auth.store";
 import { useThemeStore } from "../../stores/theme.store";
 import { AUTH_TOKENS } from "../../constants/api.constant";
 import UserInfo from "../../components/user/info";
-import useMe from "../../hooks/use-me";
 
 const Profile = () => {
-  const { me, logout } = useAuthStore();
+  const { me, logout, isLoggedIn } = useAuthStore();
   const { mode, toggle } = useTheme();
   const { persist } = useThemeStore();
   const navigate = useNavigate();
   const [{ show }, actionSheet] = useActionSheet();
-  const user = useMe();
-
-  const isLoggedIn = !!me;
 
   const handleLogoutClick = () => {
     show({
@@ -38,8 +34,7 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col gap-6 safe-pt-5 px-5 py-8">
-      {/* User info — Suspense handled internally */}
-      <UserInfo user={user} />
+      {!!me && <UserInfo user={me} />}
 
       {/* Theme toggle */}
       <div
