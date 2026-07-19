@@ -15,6 +15,8 @@ import { stringify } from "@aiszlab/relax/class-name";
 import dayjs from "dayjs";
 import { clipboard } from "@aiszlab/relax/dom";
 import useAppStore from "../../stores/app.store";
+import { useAuthStore } from "../../stores/auth.store";
+import { LOCAL_STORAGE, LOCAL_STORAGE_KEYS, GUEST_QUOTA } from "../../utils/tauri.util";
 import TouristPlanFooter from "../../components/tourist-plan/footer";
 import TouristPlanContext from "../../contexts/tourist-plan.context";
 
@@ -26,6 +28,7 @@ function TouristPlanLayout() {
   const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
   const navigate = useNavigate();
   const { getAppId } = useAppStore();
+  const { me } = useAuthStore();
   const [parseTouristPlan] = useMutation(PARSE_TOURIST_PLAN);
 
   useAsyncEffect(async () => {
@@ -77,6 +80,7 @@ function TouristPlanLayout() {
     )?.data?.createTouristPlan.id;
 
     if (!_newId) return;
+
     navigate(`/tourist-plan/${_newId}`, { replace: true });
   };
 

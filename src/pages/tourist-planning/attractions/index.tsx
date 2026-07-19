@@ -1,9 +1,8 @@
 import { useNavigate } from "@aiszlab/bee/router";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
-import { Button, IconButton, Skeleton, Tabs, Tag } from "musae";
+import { Button, IconButton, Message, Skeleton, Tabs, Tag } from "musae";
 import { CalendarToday, KeyboardArrowLeft, KeyboardArrowRight } from "musae/icons";
 import { usePlanContext } from "../../../contexts/tourist-planning.context";
-import useAmapStore from "../../../stores/amap.store";
 import {
   isUndefined,
   range,
@@ -13,15 +12,17 @@ import {
   useRequest,
 } from "@aiszlab/relax";
 import TouristPlanFooter from "../../../components/tourist-plan/footer";
-import { Key, useMemo, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import TouristAttractionCard from "../../../components/attraction/card";
 import { useMutation } from "@apollo/client/react";
 import { CREATE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
 import { useBelongToId } from "../../../hooks/use-belong-to-id";
 import { useAuthStore } from "../../../stores/auth.store";
+import { queryCities } from "../../../api/city.api";
+import { queryAttractions } from "../../../api/attraction.api";
+import { LOCAL_STORAGE, LOCAL_STORAGE_KEYS, GUEST_QUOTA } from "../../../utils/tauri.util";
 
 function Attractions() {
-  const { queryAttractions, cities, queryCities, touristAttractions } = useAmapStore();
   const {
     cities: { selectedCityCodes },
     period: { duration, depatureAt },
@@ -36,12 +37,7 @@ function Attractions() {
     () => new Map<string, Set<string>>(),
   );
   const getBelongToId = useBelongToId();
-  const { whoAmI } = useAuthStore();
-
-  const currentTouristAttractions = useMemo(() => {
-    if (isUndefined(currentCityCode)) return [];
-    return toArray(touristAttractions.get(currentCityCode)?.values()) ?? [];
-  }, [currentCityCode, touristAttractions]);
+  const { whoAmI, me } = useAuthStore();
 
   const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
 
@@ -49,9 +45,24 @@ function Attractions() {
     navigate(-1);
   };
 
-  useRequest(() => Promise.allSettled([queryCities(), queryAttractions(currentCityCode)]), {
-    auto: true,
-  });
+  const { data: cities } = useRequest(
+    () => queryCities().then((_cities) => new Map(_cities.map(({ code, name }) => [code, name]))),
+    {
+      auto: true,
+    },
+  );
+
+  const { data, run } = useRequest(
+    async (cityCode?: string) => {
+      if (!cityCode) return null;
+      return await queryAttractions(cityCode).catch(() => null);
+    },
+    {
+      auto: true,
+      defaultParams: [currentCityCode],
+    },
+  );
+  const attractions = data ?? [];
 
   const selectAttraction = useEvent((code: string) => {
     if (isUndefined(currentCityCode)) return;
@@ -80,7 +91,7 @@ function Attractions() {
   const changeDistrict = useEvent((activeKey: Key) => {
     const cityCode = activeKey.toString();
     setCurrentCityCode(cityCode);
-    queryAttractions(cityCode);
+    run(cityCode);
   });
 
   const submit = async () => {
@@ -118,7 +129,7 @@ function Attractions() {
             key: cityCode,
             label: (
               <span className="flex items-center">
-                <span>{cities.get(cityCode)?.name ?? cityCode}</span>
+                <span>{cities?.get(cityCode) ?? cityCode}</span>
                 &nbsp;
                 <Tag size="small" className="rounded-full">
                   {(!isUndefined(currentCityCode) && selectedAttractionTree.get(cityCode)?.size) ??
@@ -131,14 +142,14 @@ function Attractions() {
       />
 
       <div className="flex flex-col gap-2 p-4">
-        {currentTouristAttractions.length === 0 &&
+        {attractions.length === 0 &&
           range(1, 10).map((key) => {
             return <Skeleton key={key} className="h-20 rounded-lg" />;
           })}
 
-        {currentTouristAttractions.length > 0 && (
+        {attractions.length > 0 && (
           <>
-            {currentTouristAttractions.map((attraction) => (
+            {attractions.map((attraction) => (
               <TouristAttractionCard
                 key={attraction.code}
                 attraction={attraction}

@@ -18,9 +18,6 @@ const useAuthStore = using<Store>((setState) => {
       const token = await login(input);
       if (!token) throw new Error("登录失败");
       localStorage.setItem(AUTH_TOKENS.AUTHENTICATION, token);
-      const user = await whoAmI();
-      if (!user) return;
-      setState((state) => ({ ...state, me: user }));
     },
 
     whoAmI: async () => {

@@ -1,24 +1,38 @@
 import { toArray, useRequest } from "@aiszlab/relax";
-import useAmapStore from "../../../stores/amap.store";
 import { Button, Search } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
 import { usePlanContext } from "../../../contexts/tourist-planning.context";
 import City from "../../../components/city";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
 import TouristPlanFooter from "../../../components/tourist-plan/footer";
+import { queryCities } from "../../../api/city.api";
 
 const PlanCities = () => {
-  const { queryCities, cities } = useAmapStore();
   const {
     cities: { selectedCityCodes, toggleCityCode },
   } = usePlanContext();
   const navigate = useNavigate();
 
-  useRequest(queryCities, { auto: true });
+  const { data, run: searchCities } = useRequest(
+    (keyword?: string) =>
+      queryCities({
+        keyword,
+      }),
+    {
+      auto: true,
+      defaultParams: [""],
+    },
+  );
 
   const nextStep = () => {
     navigate("/tourist-planning/period");
   };
+
+  const cities = data ?? [];
+  const cityNameMap = cities.reduce(
+    (map, city) => map.set(city.code, city.name),
+    new Map<string, string>(),
+  );
 
   return (
     <div className="min-h-screen flex flex-col gap-4">
@@ -29,11 +43,11 @@ const PlanCities = () => {
       />
 
       <div className="mx-4">
-        <Search />
+        <Search onSearch={(keyword) => searchCities(keyword)} />
       </div>
 
       <div className="mx-4 grid grid-cols-2 gap-3">
-        {toArray(cities.values()).map((item) => {
+        {cities.map((item) => {
           return (
             <City
               key={item.code}
@@ -54,7 +68,7 @@ const PlanCities = () => {
             {toArray(selectedCityCodes).map((code, index) => {
               return (
                 <span key={code}>
-                  <span>{cities.get(code)?.name}</span>
+                  <span>{cityNameMap.get(code) ?? code}</span>
                   {index < selectedCityCodes.size - 1 && <span>，</span>}
                 </span>
               );

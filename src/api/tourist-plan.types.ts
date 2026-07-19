@@ -41,3 +41,17 @@ export type CreateTouristPlanInput = Pick<
   TouristPlan,
   "depatureAt" | "attractionCodes" | "cityCodes" | "duration" | "belongToId"
 >;
+
+/**
+ * 当天出行计划个数查询变量
+ */
+export interface CountTouristPlansTodayVariables {
+  belongToId: string;
+}
+
+/**
+ * 当天出行计划个数
+ */
+export interface CountTouristPlansTodayResponse {
+  countTouristPlansToday: number;
+}

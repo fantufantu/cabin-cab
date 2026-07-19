@@ -14,7 +14,7 @@ interface FormValue {
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuthStore();
+  const { login, whoAmI } = useAuthStore();
   const form = Form.useForm<FormValue>({
     defaultValue: { isAgreed: false },
   });
@@ -26,19 +26,24 @@ const Login = () => {
     setIsSubmitting(true);
 
     const { who, password } = form.getFieldsValue();
-    await login({ who: who!, password: password! })
-      .then(() => {
-        navigate("/", { replace: true });
-      })
-      .catch(() => {
-        Notification.error({
-          title: "登录失败",
-          description: "请检查邮箱和密码是否正确",
-        });
-      })
+
+    const isSucceed = await login({ who: who!, password: password! })
+      .then(() => whoAmI())
+      .then(() => true)
+      .catch(() => false)
       .finally(() => {
         setIsSubmitting(false);
       });
+
+    if (!isSucceed) {
+      Notification.error({
+        title: "登录失败",
+        description: "请检查邮箱和密码是否正确",
+      });
+      return;
+    }
+
+    navigate("/", { replace: true });
   };
 
   return (

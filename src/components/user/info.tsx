@@ -10,6 +10,8 @@ interface Props {
 const _UserInfo = ({ user: _user }: Props) => {
   const user = use(_user);
 
+  console.log("user======", user);
+
   const quotaPercent = user.membership
     ? Math.min(Math.round(((user.usedQuota ?? 0) / user.membership.quota) * 100), 100)
     : 0;

@@ -1,5 +1,5 @@
 import { gql, TypedDocumentNode } from "@apollo/client";
-import type { City } from "./city.types";
+import type { City, FilterCitiesInput } from "./city.types";
 import type { Paginated } from "./pagination.types";
 import { client } from "./index";
 
@@ -12,7 +12,7 @@ const CITIES: TypedDocumentNode<
   },
   {
     pagination: { page: number; limit: number };
-    filter?: { keyword?: string };
+    filter?: FilterCitiesInput;
   }
 > = gql`
   query Cities($pagination: Pagination!, $filter: FilterCitiesInput) {
@@ -30,11 +30,12 @@ const CITIES: TypedDocumentNode<
 /**
  * 查询城市（分页，一页查询全部）
  */
-async function queryCities(): Promise<City[]> {
+async function queryCities(filter?: FilterCitiesInput): Promise<City[]> {
   const { data } = await client.query({
     query: CITIES,
     variables: {
       pagination: { page: 1, limit: 999 },
+      ...(!!filter && { filter }),
     },
   });
 

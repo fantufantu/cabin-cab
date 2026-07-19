@@ -4,30 +4,19 @@ import { useTheme } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
 import { useAuthStore } from "../../stores/auth.store";
 import { useThemeStore } from "../../stores/theme.store";
-import useAppStore from "../../stores/app.store";
 import { AUTH_TOKENS } from "../../constants/api.constant";
 import UserInfo from "../../components/user/info";
-import type { User } from "../../typings/user";
-import { useMemo } from "react";
+import useMe from "../../hooks/use-me";
 
 const Profile = () => {
   const { me, logout } = useAuthStore();
   const { mode, toggle } = useTheme();
   const { persist } = useThemeStore();
-  const { getAppId } = useAppStore();
   const navigate = useNavigate();
   const [{ show }, actionSheet] = useActionSheet();
+  const user = useMe();
 
   const isLoggedIn = !!me;
-
-  const user = useMemo(() => {
-    return me
-      ? Promise.resolve(me)
-      : getAppId().then<User>((appId) => ({
-          nickname: `用户${appId.slice(-6)}`,
-          username: appId,
-        }));
-  }, [me]);
 
   const handleLogoutClick = () => {
     show({

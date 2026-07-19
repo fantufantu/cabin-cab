@@ -6,3 +6,10 @@ export interface City {
   name: string;
   image: string;
 }
+
+/**
+ * 城市列表筛选入参
+ */
+export interface FilterCitiesInput {
+  keyword?: string;
+}
