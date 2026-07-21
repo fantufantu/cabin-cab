@@ -115,8 +115,8 @@ function Attractions() {
     // 出行计划创建成功，更新用户信息，跳转计划详情生成页面
     Promise.all([
       whoAmI(),
-      navigate(`/tourist-plan/${data.createTouristPlan.id}`),
       emit(EVENT_BUS_TOKENS.REFRESH_TOURIST_PLANS),
+      navigate(`/tourist-plan/${data.createTouristPlan.id}`),
     ]);
   };
 
