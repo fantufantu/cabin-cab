@@ -1,19 +1,47 @@
 import { NavLink, Outlet, useLocation } from "@aiszlab/bee/router";
 import { useTheme } from "musae";
 import { AccountCircle, RocketLaunch, WbSunny } from "musae/icons";
+import EventBusContext, { Handlers } from "../contexts/event-bus.context";
+import { useMemo, useRef } from "react";
 
 const TABS = [
-  { key: "home", label: "首页", icon: WbSunny, to: "/", match: (pathname: string) => pathname === "/" },
-  { key: "travel", label: "旅行", icon: RocketLaunch, to: "/tourist-plan/list", match: (pathname: string) => pathname === "/tourist-plan/list" },
-  { key: "profile", label: "我的", icon: AccountCircle, to: "/profile", match: (pathname: string) => pathname === "/profile" },
+  {
+    key: "home",
+    label: "首页",
+    icon: WbSunny,
+    to: "/",
+    match: (pathname: string) => pathname === "/",
+  },
+  {
+    key: "travel",
+    label: "旅行",
+    icon: RocketLaunch,
+    to: "/tourist-plan/list",
+    match: (pathname: string) => pathname === "/tourist-plan/list",
+  },
+  {
+    key: "profile",
+    label: "我的",
+    icon: AccountCircle,
+    to: "/profile",
+    match: (pathname: string) => pathname === "/profile",
+  },
 ] as const;
 
 const TabLayout = () => {
   const { colors } = useTheme();
   const location = useLocation();
+  const handlersRef = useRef<Handlers>(new Map());
+
+  const _eventBusContextValue = useMemo(
+    () => ({
+      handlersRef,
+    }),
+    [handlersRef],
+  );
 
   return (
-    <>
+    <EventBusContext.Provider value={_eventBusContextValue}>
       <div className="pb-24">
         <Outlet />
       </div>
@@ -45,7 +73,7 @@ const TabLayout = () => {
           );
         })}
       </nav>
-    </>
+    </EventBusContext.Provider>
   );
 };
 

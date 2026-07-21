@@ -2,22 +2,27 @@ import { useLazyQuery } from "@apollo/client/react";
 import { TOURIST_PLANS } from "../../../api/tourist-plan.api";
 import { useNavigate } from "@aiszlab/bee/router";
 import { IconButton, Skeleton, Tag } from "musae";
-import { useRequest } from "@aiszlab/relax";
+import { useMounted, useRequest } from "@aiszlab/relax";
 import { useMemo } from "react";
 import { KeyboardArrowLeft, LocationOn } from "musae/icons";
 import dayjs from "dayjs";
 import useAppStore from "../../../stores/app.store";
+import { EVENT_BUS_TOKENS, useEventBusContext } from "../../../contexts/event-bus.context";
 
 function TouristPlanList() {
   const [queryTouristPlans] = useLazyQuery(TOURIST_PLANS);
   const navigate = useNavigate();
   const { getAppId } = useAppStore();
+  const { handlersRef } = useEventBusContext();
 
-  const { data, loading } = useRequest(async () => {
-    const belongToId = await getAppId();
-    const result = await queryTouristPlans({ variables: { filter: { belongToId } } });
-    return result.data;
-  }, { auto: true });
+  const { data, loading, run } = useRequest(
+    async () => {
+      const belongToId = await getAppId();
+      const result = await queryTouristPlans({ variables: { filter: { belongToId } } });
+      return result.data;
+    },
+    { auto: true },
+  );
 
   const touristPlans = useMemo(() => {
     return data?.touristPlans.items ?? [];
@@ -26,6 +31,16 @@ function TouristPlanList() {
   const toHome = () => {
     navigate("/");
   };
+
+  useMounted(() => {
+    handlersRef.current.set(EVENT_BUS_TOKENS.REFRESH_TOURIST_PLANS, async () => {
+      await run();
+    });
+
+    return () => {
+      handlersRef.current.delete(EVENT_BUS_TOKENS.REFRESH_TOURIST_PLANS);
+    };
+  });
 
   return (
     <div className="flex flex-col">

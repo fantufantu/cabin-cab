@@ -1,6 +1,6 @@
 import { useNavigate } from "@aiszlab/bee/router";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
-import { Button, IconButton, Message, Skeleton, Tabs, Tag } from "musae";
+import { Button, IconButton, Skeleton, Tabs, Tag } from "musae";
 import { CalendarToday, KeyboardArrowLeft, KeyboardArrowRight } from "musae/icons";
 import { usePlanContext } from "../../../contexts/tourist-planning.context";
 import {
@@ -12,11 +12,10 @@ import {
   useRequest,
 } from "@aiszlab/relax";
 import TouristPlanFooter from "../../../components/tourist-plan/footer";
-import { Key, useEffect, useState } from "react";
+import { Key, useState } from "react";
 import TouristAttractionCard from "../../../components/attraction/card";
 import { useMutation } from "@apollo/client/react";
 import { CREATE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
-import { useBelongToId } from "../../../hooks/use-belong-to-id";
 import { useAuthStore } from "../../../stores/auth.store";
 import { queryCities } from "../../../api/city.api";
 import { queryAttractions } from "../../../api/attraction.api";
