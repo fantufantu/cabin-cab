@@ -4,7 +4,7 @@ import Application from "./application";
 import { lazy } from "react";
 
 const Home = lazy(() => import("./pages/home"));
-const TabLayout = lazy(() => import("./layout/tab-layout"));
+const MainLayout = lazy(() => import("./layout/main.layout"));
 const Profile = lazy(() => import("./pages/profile"));
 const TouristPlanLayout = lazy(() => import("./pages/tourist-plan/layout"));
 const TouristPlanProposal = lazy(() => import("./pages/tourist-plan/proposal"));
@@ -21,7 +21,7 @@ bootstrap({
   render: Application,
   routes: [
     {
-      Component: TabLayout,
+      Component: MainLayout,
       children: [
         {
           index: true,

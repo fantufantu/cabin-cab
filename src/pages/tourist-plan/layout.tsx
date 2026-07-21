@@ -14,9 +14,8 @@ import { KeyboardArrowLeft, LocationOn, Share } from "musae/icons";
 import { stringify } from "@aiszlab/relax/class-name";
 import dayjs from "dayjs";
 import { clipboard } from "@aiszlab/relax/dom";
-import useAppStore from "../../stores/app.store";
 import { useAuthStore } from "../../stores/auth.store";
-import { LOCAL_STORAGE, LOCAL_STORAGE_KEYS, GUEST_QUOTA } from "../../utils/tauri.util";
+import { LOCAL_STORAGE, LOCAL_STORAGE_KEYS, GUEST_QUOTA } from "../../utils/tauri.utils";
 import TouristPlanFooter from "../../components/tourist-plan/footer";
 import TouristPlanContext from "../../contexts/tourist-plan.context";
 
@@ -27,8 +26,7 @@ function TouristPlanLayout() {
   const [touristPlan, setTouristPlan] = useState<TouristPlanType>();
   const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
   const navigate = useNavigate();
-  const { getAppId } = useAppStore();
-  const { me } = useAuthStore();
+  const { myId } = useAuthStore();
   const [parseTouristPlan] = useMutation(PARSE_TOURIST_PLAN);
 
   useAsyncEffect(async () => {
@@ -73,7 +71,7 @@ function TouristPlanLayout() {
             cityCodes: (touristPlan?.cities ?? []).map((_item) => _item.code),
             depatureAt: touristPlan?.depatureAt ?? 0,
             duration: touristPlan?.duration ?? 0,
-            belongToId: await getAppId(),
+            belongToId: await myId(),
           },
         },
       }).catch(() => null)

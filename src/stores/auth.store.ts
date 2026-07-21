@@ -2,8 +2,7 @@ import { using } from "@aiszlab/relax/react";
 import { User } from "../typings/user";
 import { login, whoAmI } from "../api/auth.api";
 import { AUTH_TOKENS } from "../constants/api.constant";
-import useAppStore from "./app.store";
-import { GUEST_QUOTA } from "../utils/tauri.util";
+import { GUEST_QUOTA, LOCAL_STORAGE, LOCAL_STORAGE_KEYS } from "../utils/tauri.utils";
 import { client } from "../api";
 import { COUNT_TOURIST_PLANS_TODAY } from "../api/tourist-plan.api";
 
@@ -13,9 +12,29 @@ interface Store {
   login: (input: { who: string; password: string }) => Promise<void>;
   whoAmI: () => Promise<void>;
   logout: () => void;
+  myId: () => Promise<string>;
 }
 
-const useAuthStore = using<Store>((setState) => {
+const useAuthStore = using<Store>((setState, getState) => {
+  let _appId: string | undefined;
+
+  const createAppId = async () => {
+    if (_appId) return _appId;
+
+    const appId = crypto.randomUUID();
+    LOCAL_STORAGE.set(LOCAL_STORAGE_KEYS.APP_ID, appId)
+      .then(() => LOCAL_STORAGE.save())
+      .catch(() => null);
+    setState((state) => ({ ...state, appId }));
+    return appId;
+  };
+
+  const getAppId = async () => {
+    return (_appId ??=
+      (await LOCAL_STORAGE.get<string>(LOCAL_STORAGE_KEYS.APP_ID).catch(() => null)) ??
+      (await createAppId()));
+  };
+
   return {
     me: null,
 
@@ -29,8 +48,10 @@ const useAuthStore = using<Store>((setState) => {
 
     whoAmI: async () => {
       const [user, appId] = await Promise.all([
+        // 查询用户信息
         whoAmI().catch(() => null),
-        useAppStore.state.getAppId(),
+        // 生成`appId`
+        getAppId(),
       ]);
 
       const usedQuota =
@@ -67,6 +88,10 @@ const useAuthStore = using<Store>((setState) => {
         me: null,
         isLoggedIn: true,
       }));
+    },
+
+    myId: async () => {
+      return getState().me?.id ?? (await getAppId());
     },
   };
 });

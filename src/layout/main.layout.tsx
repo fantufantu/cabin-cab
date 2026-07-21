@@ -1,8 +1,6 @@
 import { NavLink, Outlet, useLocation } from "@aiszlab/bee/router";
 import { useTheme } from "musae";
 import { AccountCircle, RocketLaunch, WbSunny } from "musae/icons";
-import EventBusContext, { Handlers } from "../contexts/event-bus.context";
-import { useMemo, useRef } from "react";
 
 const TABS = [
   {
@@ -28,20 +26,12 @@ const TABS = [
   },
 ] as const;
 
-const TabLayout = () => {
+const MainLayout = () => {
   const { colors } = useTheme();
   const location = useLocation();
-  const handlersRef = useRef<Handlers>(new Map());
-
-  const _eventBusContextValue = useMemo(
-    () => ({
-      handlersRef,
-    }),
-    [handlersRef],
-  );
 
   return (
-    <EventBusContext.Provider value={_eventBusContextValue}>
+    <>
       <div className="pb-24">
         <Outlet />
       </div>
@@ -73,8 +63,8 @@ const TabLayout = () => {
           );
         })}
       </nav>
-    </EventBusContext.Provider>
+    </>
   );
 };
 
-export default TabLayout;
+export default MainLayout;

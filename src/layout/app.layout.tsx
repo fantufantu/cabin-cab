@@ -1,7 +1,7 @@
 import { useTheme } from "musae";
 import { type ReactNode } from "react";
 
-const Layout = ({ children }: { children: ReactNode }) => {
+const AppLayout = ({ children }: { children: ReactNode }) => {
   const { colors } = useTheme();
 
   return (
@@ -28,4 +28,4 @@ const Layout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default Layout;
+export default AppLayout;

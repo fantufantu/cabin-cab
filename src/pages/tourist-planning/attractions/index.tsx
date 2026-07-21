@@ -17,6 +17,7 @@ import TouristAttractionCard from "../../../components/attraction/card";
 import { useMutation } from "@apollo/client/react";
 import { CREATE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
 import { useAuthStore } from "../../../stores/auth.store";
+import { EVENT_BUS_TOKENS, useEventBusStore } from "../../../stores/event-bus.store";
 import { queryCities } from "../../../api/city.api";
 import { queryAttractions } from "../../../api/attraction.api";
 
@@ -35,6 +36,7 @@ function Attractions() {
     () => new Map<string, Set<string>>(),
   );
   const { whoAmI, me } = useAuthStore();
+  const { emit } = useEventBusStore();
 
   const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
 
@@ -111,7 +113,11 @@ function Attractions() {
     }
 
     // 出行计划创建成功，更新用户信息，跳转计划详情生成页面
-    Promise.all([whoAmI(), navigate(`/tourist-plan/${data.createTouristPlan.id}`)]);
+    Promise.all([
+      whoAmI(),
+      navigate(`/tourist-plan/${data.createTouristPlan.id}`),
+      emit(EVENT_BUS_TOKENS.REFRESH_TOURIST_PLANS),
+    ]);
   };
 
   return (

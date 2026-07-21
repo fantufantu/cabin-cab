@@ -1,5 +1,5 @@
 import { using } from "@aiszlab/relax/react";
-import { LOCAL_STORAGE, LOCAL_STORAGE_KEYS } from "../utils/tauri.util";
+import { LOCAL_STORAGE, LOCAL_STORAGE_KEYS } from "../utils/tauri.utils";
 import { Mode } from "musae/types/theme";
 
 interface Store {
