@@ -1,6 +1,9 @@
 .getting-started {
-  background-image: url(https://images.unsplash.com/photo-1706067167279-755e2a63269b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080);
-  background-size: cover;
+  background: linear-gradient(
+    180deg,
+    var(--color-surface) 0%,
+    var(--color-primary-container) 100%
+  );
 }
 
 .route-path {
@@ -28,13 +31,7 @@
 }
 
 @keyframes dotPulse {
-  0% {
-    opacity: 0;
-  }
-  60% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 0; }
+  60% { opacity: 1; }
+  100% { opacity: 1; }
 }
