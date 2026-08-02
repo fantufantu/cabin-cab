@@ -1,6 +1,6 @@
 import { useNavigate } from "@aiszlab/bee/router";
 import { Button, IconButton, Progress } from "musae";
-import { KeyboardArrowLeft } from "musae/icons";
+import { IconKeyboardArrowLeft } from "musae/icons";
 
 interface Props {
   step: number;
@@ -37,7 +37,7 @@ const TouristPlanHeader = ({ title, step, subTitle }: Props) => {
     <div className="p-5 safe-pt-5 shadow flex flex-col gap-2 sticky top-0 z-50 bg-color-on-primary">
       <div className="flex items-center gap-3">
         <IconButton size="small" color="secondary" onClick={goBack}>
-          <KeyboardArrowLeft size={24} />
+          <IconKeyboardArrowLeft size={24} />
         </IconButton>
 
         <div className="mr-auto">

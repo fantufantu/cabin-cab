@@ -1,7 +1,7 @@
 import { useNavigate } from "@aiszlab/bee/router";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
 import { Button, IconButton, Skeleton, Tabs, Tag } from "musae";
-import { CalendarToday, KeyboardArrowLeft, KeyboardArrowRight } from "musae/icons";
+import { IconCalendarToday, IconKeyboardArrowLeft, IconKeyboardArrowRight } from "musae/icons";
 import { usePlanContext } from "../../../contexts/tourist-planning.context";
 import {
   isUndefined,
@@ -172,13 +172,13 @@ function Attractions() {
 
       <TouristPlanFooter>
         <IconButton size="small" color="secondary" onClick={goBack}>
-          <KeyboardArrowLeft />
+          <IconKeyboardArrowLeft />
         </IconButton>
 
         <Button
           className="flex-1"
-          prefix={<CalendarToday />}
-          suffix={<KeyboardArrowRight />}
+          prefix={<IconCalendarToday />}
+          suffix={<IconKeyboardArrowRight />}
           onClick={submit}
         >
           生成出行计划

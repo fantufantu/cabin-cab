@@ -4,7 +4,7 @@ import { useNavigate } from "@aiszlab/bee/router";
 import { IconButton, Skeleton, Tag } from "musae";
 import { useMounted, useRequest } from "@aiszlab/relax";
 import { useEffect, useMemo } from "react";
-import { KeyboardArrowLeft, LocationOn } from "musae/icons";
+import { IconKeyboardArrowLeft, IconLocationOn } from "musae/icons";
 import dayjs from "dayjs";
 import { useAuthStore } from "../../../stores/auth.store";
 import { EVENT_BUS_TOKENS, useEventBusStore } from "../../../stores/event-bus.store";
@@ -46,7 +46,7 @@ function TouristPlanList() {
     <div className="flex flex-col">
       <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex items-center justify-center sticky top-0 z-50">
         <IconButton size="small" color="secondary" className="absolute left-5" onClick={toHome}>
-          <KeyboardArrowLeft size={24} />
+          <IconKeyboardArrowLeft size={24} />
         </IconButton>
 
         <h1 className="text-xl">我的出行计划</h1>
@@ -96,7 +96,7 @@ function TouristPlanList() {
               <div className="flex flex-wrap gap-2">
                 {plan.cities.map((city) => (
                   <Tag key={city.code}>
-                    <LocationOn />
+                    <IconLocationOn />
                     {city.name}
                   </Tag>
                 ))}

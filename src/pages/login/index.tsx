@@ -3,7 +3,7 @@ import { Button, Checkbox, Form, Input } from "musae";
 import { useNavigate, Link } from "@aiszlab/bee/router";
 import { useAuthStore } from "../../stores/auth.store";
 import { Notification } from "musae";
-import { RocketLaunch } from "musae/icons";
+import { IconRocketLaunch } from "musae/icons";
 import { stringify } from "@aiszlab/relax/class-name";
 
 interface FormValue {
@@ -51,7 +51,7 @@ const Login = () => {
       {/* Branding area — top 60% */}
       <div className="flex-1 flex flex-col items-center justify-center gap-4 px-8">
         <div className="bg-color-primary rounded-3xl p-6">
-          <RocketLaunch size={56} className="text-color-on-primary" />
+          <IconRocketLaunch size={56} className="text-color-on-primary" />
         </div>
 
         <h1 className="text-2xl font-semibold text-color-on-surface">驾驾旅游助手</h1>

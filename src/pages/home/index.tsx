@@ -1,7 +1,7 @@
 import { Button, Grid } from "musae";
 import styles from "./index.module.css";
 import { stringify } from "@aiszlab/relax/class-name";
-import { AddAlert, AccountCircle, AttachFile, AutoDelete } from "musae/icons";
+import { IconAddAlert, IconAccountCircle, IconAttachFile, IconAutoDelete } from "musae/icons";
 import { useNavigate } from "@aiszlab/bee/router";
 
 const { Col, Row } = Grid;
@@ -62,28 +62,28 @@ const Home = () => {
         <Row gutter={12}>
           {[
             {
-              icon: AddAlert,
+              icon: IconAddAlert,
               title: "选择城市",
               desc: "挑选你想去的城市",
               color: "#E3F2FD",
               iconColor: "#2196F3",
             },
             {
-              icon: AccountCircle,
+              icon: IconAccountCircle,
               title: "设定周期",
               desc: "规划出行日期时长",
               color: "#E8F5E9",
               iconColor: "#4CAF50",
             },
             {
-              icon: AttachFile,
+              icon: IconAttachFile,
               title: "选择景点",
               desc: "勾选感兴趣的景点",
               color: "#FFF3E0",
               iconColor: "#FF9800",
             },
             {
-              icon: AutoDelete,
+              icon: IconAutoDelete,
               title: "生成路线",
               desc: "AI自动排布最优行程",
               color: "#F3E5F5",

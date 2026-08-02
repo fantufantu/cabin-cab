@@ -10,7 +10,7 @@ import { Button, IconButton, Message, Skeleton, Tabs, Tag } from "musae";
 import { useAsyncEffect } from "@aiszlab/relax";
 import { useMemo, useState } from "react";
 import { TouristPlan as TouristPlanType } from "../../api/tourist-plan.types";
-import { KeyboardArrowLeft, LocationOn, Share } from "musae/icons";
+import { IconKeyboardArrowLeft, IconLocationOn, IconShare } from "musae/icons";
 import { stringify } from "@aiszlab/relax/class-name";
 import dayjs from "dayjs";
 import { clipboard } from "@aiszlab/relax/dom";
@@ -107,13 +107,13 @@ function TouristPlanLayout() {
         <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex flex-col gap-3 sticky top-0 z-10">
           <div className="flex items-center justify-between gap-2">
             <IconButton size="small" color="secondary" onClick={goBack}>
-              <KeyboardArrowLeft size={24} />
+              <IconKeyboardArrowLeft size={24} />
             </IconButton>
 
             <h1>专属旅行计划</h1>
 
             <IconButton size="small" color="secondary" onClick={share}>
-              <Share />
+              <IconShare />
             </IconButton>
           </div>
 
@@ -154,7 +154,7 @@ function TouristPlanLayout() {
               <div className="flex flex-wrap gap-2">
                 {touristPlan?.cities.map((_city) => (
                   <Tag key={_city.code}>
-                    <LocationOn />
+                    <IconLocationOn />
                     {_city.name}
                   </Tag>
                 ))}
@@ -191,7 +191,7 @@ function TouristPlanLayout() {
             <Button onClick={regenerate}>重新规划</Button>
 
             <IconButton size="small" onClick={share} className="ml-auto">
-              <Share />
+              <IconShare />
             </IconButton>
           </TouristPlanFooter>
         )}

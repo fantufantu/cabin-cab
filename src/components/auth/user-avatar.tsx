@@ -1,5 +1,5 @@
 import { Avatar, IconButton } from "musae";
-import { AccountCircle } from "musae/icons";
+import { IconAccountCircle } from "musae/icons";
 import { useAuthStore } from "../../stores/auth.store";
 import type { CSSProperties } from "react";
 
@@ -14,7 +14,7 @@ const UserAvatar = ({ className, style }: UserAvatarProps) => {
   if (!me) {
     return (
       <IconButton className={className} style={style} size="small">
-        <AccountCircle />
+        <IconAccountCircle />
       </IconButton>
     );
   }

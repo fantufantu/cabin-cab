@@ -1,5 +1,5 @@
 import { Button, Switch, useActionSheet } from "musae";
-import { DarkMode, LightMode, Logout } from "musae/icons";
+import { IconDarkMode, IconLightMode, IconLogout } from "musae/icons";
 import { useTheme } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
 import { useAuthStore } from "../../stores/auth.store";
@@ -42,7 +42,7 @@ const Profile = () => {
         style={{ borderColor: "var(--color-outline)" }}
       >
         <div className="flex items-center gap-3">
-          {mode === "dark" ? <DarkMode /> : <LightMode />}
+          {mode === "dark" ? <IconDarkMode /> : <IconLightMode />}
           <span className="text-color-on-surface">昼夜模式</span>
         </div>
 
@@ -50,8 +50,8 @@ const Profile = () => {
           value={mode === "dark"}
           onClick={(e) => persist(toggle(e))}
           icon
-          checkedChildren={<DarkMode />}
-          uncheckedChildren={<LightMode />}
+          checkedChildren={<IconDarkMode />}
+          uncheckedChildren={<IconLightMode />}
         />
       </div>
 
@@ -61,7 +61,7 @@ const Profile = () => {
           variant="outlined"
           color="secondary"
           className="flex items-center justify-center gap-3 w-full"
-          prefix={<Logout />}
+          prefix={<IconLogout />}
           onClick={handleLogoutClick}
         >
           退出登录

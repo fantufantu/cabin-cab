@@ -1,5 +1,5 @@
 import { Avatar, Progress, Skeleton, Tag } from "musae";
-import { AccountCircle } from "musae/icons";
+import { IconAccountCircle } from "musae/icons";
 import type { User } from "../../typings/user";
 import { useMemo } from "react";
 
@@ -27,7 +27,7 @@ const UserInfo = ({ user }: Props) => {
         {user.avatar ? (
           <Avatar size="large" src={user.avatar} alt={user.nickname} />
         ) : (
-          <AccountCircle size={56} className="text-color-secondary" />
+          <IconAccountCircle size={56} className="text-color-secondary" />
         )}
         <h2 className="text-lg font-medium text-color-on-surface">{user.nickname}</h2>
       </div>

@@ -1,26 +1,26 @@
 import { NavLink, Outlet, useLocation } from "@aiszlab/bee/router";
 import { useTheme } from "musae";
-import { AccountCircle, RocketLaunch, WbSunny } from "musae/icons";
+import { IconAccountCircle, IconRocketLaunch, IconWbSunny } from "musae/icons";
 
 const TABS = [
   {
     key: "home",
     label: "首页",
-    icon: WbSunny,
+    icon: IconWbSunny,
     to: "/",
     match: (pathname: string) => pathname === "/",
   },
   {
     key: "travel",
     label: "旅行",
-    icon: RocketLaunch,
+    icon: IconRocketLaunch,
     to: "/tourist-plan/list",
     match: (pathname: string) => pathname === "/tourist-plan/list",
   },
   {
     key: "profile",
     label: "我的",
-    icon: AccountCircle,
+    icon: IconAccountCircle,
     to: "/profile",
     match: (pathname: string) => pathname === "/profile",
   },
