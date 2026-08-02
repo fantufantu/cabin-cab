@@ -40,11 +40,11 @@ function TouristPlanList() {
   });
 
   // Close any open swipe card when the page scrolls (one-open-at-a-time)
-  useEffect(() => {
+  useMounted(() => {
     const handleScroll = () => setOpenCardId(null);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  });
 
   const touristPlans = useMemo(() => {
     return data?.touristPlans.items ?? [];
@@ -95,7 +95,10 @@ function TouristPlanList() {
         {loading &&
           touristPlans.length === 0 &&
           Array.from({ length: 10 }).map((_, i) => (
-            <div key={i} className="rounded-2xl bg-color-surface-container-low p-4 flex flex-col gap-3">
+            <div
+              key={i}
+              className="rounded-2xl bg-color-surface-container-low p-4 flex flex-col gap-3"
+            >
               <div className="flex justify-between items-center">
                 <Skeleton className="h-5 w-20 rounded" />
                 <Skeleton className="h-4 w-40 rounded" />
@@ -115,10 +118,7 @@ function TouristPlanList() {
             <div className="text-6xl mb-4">🗺️</div>
             <p className="text-lg font-medium text-color-on-surface">还没有出行计划</p>
             <p className="text-sm mt-2 text-color-on-surface-variant">开启你的第一段旅程吧</p>
-            <Button
-              className="mt-6"
-              onClick={() => navigate("/tourist-plan/cities")}
-            >
+            <Button className="mt-6" onClick={() => navigate("/tourist-plan/cities")}>
               创建行程
             </Button>
           </div>
@@ -131,9 +131,8 @@ function TouristPlanList() {
               key={plan.id}
               style={{
                 opacity: reducedMotion || visibleItems.has(plan.id) ? 1 : 0,
-                transform: reducedMotion || visibleItems.has(plan.id)
-                  ? "translateY(0)"
-                  : "translateY(16px)",
+                transform:
+                  reducedMotion || visibleItems.has(plan.id) ? "translateY(0)" : "translateY(16px)",
                 transition: "opacity 350ms ease-out, transform 350ms ease-out",
               }}
             >

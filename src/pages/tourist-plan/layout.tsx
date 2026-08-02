@@ -88,7 +88,7 @@ function TouristPlanLayout() {
   };
 
   const goBack = () => {
-    navigate("/");
+    navigate("/tourist-plan/list");
   };
 
   const tabItems = useMemo(

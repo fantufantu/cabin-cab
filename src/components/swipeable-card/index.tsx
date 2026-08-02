@@ -155,7 +155,7 @@ const SwipeableCard = ({
     <div className={`relative overflow-hidden rounded-2xl ${className}`}>
       {/* Delete action — rendered behind the card, wrapped in Popconfirm */}
       <div
-        className="absolute top-0 right-0 bottom-0 flex flex-col items-center justify-center gap-1"
+        className="absolute rounded-r-2xl inset-y-px inset-e-[1px] flex flex-col items-center justify-center transform-gpu z-0"
         style={{
           width: ACTION_WIDTH,
           backgroundColor: "var(--color-error)",
@@ -178,7 +178,7 @@ const SwipeableCard = ({
 
       {/* Card content — slides over the delete action */}
       <div
-        className="relative bg-color-surface-container-low rounded-2xl"
+        className="relative bg-color-surface-container-low z-10"
         style={{
           ...transitionStyle,
           transform: `translateX(${translateX}px)`,

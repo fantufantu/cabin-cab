@@ -43,7 +43,11 @@ const PlanCities = () => {
       />
 
       <div className="mx-4">
-        <Search onSearch={(keyword) => searchCities(keyword)} />
+        <Search
+          onSearch={(keyword) => searchCities(keyword)}
+          onClear={() => searchCities()}
+          searchButton="搜索"
+        />
       </div>
 
       <div className="mx-4 grid grid-cols-2 gap-3">
