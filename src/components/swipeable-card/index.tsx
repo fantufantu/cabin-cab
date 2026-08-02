@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useRef, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { IconDelete } from "musae/icons";
 import { Popconfirm } from "musae";
 import { useReducedMotion } from "../../utils/reduced-motion.util";
@@ -34,6 +34,15 @@ const SwipeableCard = ({
   const currentTranslate = useRef(0);
   const isDragging = useRef(false);
   const reducedMotion = useReducedMotion();
+
+  // Visually close the card when the parent closes it externally (another card
+  // opened, or the page scrolled). Skipped while a gesture is in flight so we
+  // never fight the user's active drag.
+  useEffect(() => {
+    if (!open && !isDragging.current) {
+      setTranslateX(0);
+    }
+  }, [open]);
 
   const transitionStyle = reducedMotion
     ? {}
