@@ -133,6 +133,22 @@ export const COUNT_TOURIST_PLANS_TODAY: TypedDocumentNode<
 `;
 
 /**
+ * 删除出行计划
+ */
+export const DELETE_TOURIST_PLAN: TypedDocumentNode<
+  {
+    deleteTouristPlan: boolean;
+  },
+  {
+    id: string;
+  }
+> = gql`
+  mutation DeleteTouristPlan($id: String!) {
+    deleteTouristPlan(id: $id)
+  }
+`;
+
+/**
  * 用`SSE`方式获取出行计划方案
  */
 export function listenTouristPlanProposal({
