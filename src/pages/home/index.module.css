@@ -2,3 +2,39 @@
   background-image: url(https://images.unsplash.com/photo-1706067167279-755e2a63269b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080);
   background-size: cover;
 }
+
+.route-path {
+  --route-length: 600;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+}
+
+.route-dot {
+  opacity: 1;
+}
+
+.route-path-animate {
+  animation: drawRoute 1.2s ease-out forwards;
+}
+
+@keyframes drawRoute {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.route-dot-animate {
+  animation: dotPulse 0.4s ease-out forwards;
+}
+
+@keyframes dotPulse {
+  0% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
