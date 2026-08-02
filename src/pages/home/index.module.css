@@ -6,18 +6,31 @@
   );
 }
 
-.route-path {
-  --route-length: 600;
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
+/* ====== 背景网格 ====== */
+.grid-static {
+  opacity: 0.12;
 }
 
-.route-dot {
-  opacity: 1;
+.grid-fade-animate {
+  opacity: 0;
+  animation: gridFade 1.2s ease-out forwards;
+}
+
+@keyframes gridFade {
+  to {
+    opacity: 0.12;
+  }
+}
+
+/* ====== 路线 ====== */
+.route-path-static {
+  stroke-dasharray: none;
 }
 
 .route-path-animate {
-  animation: drawRoute 1.2s ease-out forwards;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: drawRoute 1.5s ease-in-out forwards;
 }
 
 @keyframes drawRoute {
@@ -26,12 +39,127 @@
   }
 }
 
-.route-dot-animate {
-  animation: dotPulse 0.4s ease-out both;
+/* ====== 移动粒子 ====== */
+.particle-animate {
+  animation: travelParticle 2.5s ease-in-out forwards;
 }
 
-@keyframes dotPulse {
-  0% { opacity: 0; }
-  60% { opacity: 1; }
-  100% { opacity: 1; }
+@keyframes travelParticle {
+  to {
+    stroke-dashoffset: -600;
+  }
+}
+
+/* ====== 城市标记 ====== */
+.city-dot-static {
+  opacity: 1;
+  r: 4.5;
+}
+
+.city-dot-animate {
+  opacity: 0;
+  animation: cityDotAppear 0.35s ease-out both;
+}
+
+@keyframes cityDotAppear {
+  0% {
+    opacity: 0;
+    r: 0;
+  }
+  70% {
+    opacity: 1;
+    r: 5.5;
+  }
+  100% {
+    opacity: 1;
+    r: 4.5;
+  }
+}
+
+.city-ring-static {
+  opacity: 0.3;
+}
+
+.city-ring-animate {
+  opacity: 0;
+  animation: cityRingPulse 2.2s ease-out infinite;
+}
+
+@keyframes cityRingPulse {
+  0% {
+    opacity: 0.5;
+    r: 6;
+  }
+  100% {
+    opacity: 0;
+    r: 24;
+  }
+}
+
+/* ====== 中心枢纽 ====== */
+.hub-dot-static {
+  opacity: 1;
+}
+
+.hub-dot-animate {
+  opacity: 0;
+  animation: hubDotAppear 0.4s ease-out both;
+}
+
+@keyframes hubDotAppear {
+  0% {
+    opacity: 0;
+    r: 0;
+  }
+  60% {
+    opacity: 1;
+    r: 7.5;
+  }
+  100% {
+    opacity: 1;
+    r: 6;
+  }
+}
+
+.hub-pulse-static {
+  opacity: 0.4;
+}
+
+.hub-pulse-animate {
+  opacity: 0.6;
+  animation: hubPulse 2.5s ease-out infinite;
+}
+
+@keyframes hubPulse {
+  0% {
+    opacity: 0.5;
+    r: 12;
+  }
+  100% {
+    opacity: 0;
+    r: 28;
+  }
+}
+
+/* ====== 指南针 ====== */
+.compass-static {
+  opacity: 0.25;
+}
+
+.compass-animate {
+  opacity: 0;
+  animation: compassFade 0.8s ease-out 0.3s both,
+             compassSpin 40s linear 1s infinite;
+}
+
+@keyframes compassFade {
+  to {
+    opacity: 0.25;
+  }
+}
+
+@keyframes compassSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
