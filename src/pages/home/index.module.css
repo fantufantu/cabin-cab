@@ -27,7 +27,7 @@
 }
 
 .route-dot-animate {
-  animation: dotPulse 0.4s ease-out forwards;
+  animation: dotPulse 0.4s ease-out both;
 }
 
 @keyframes dotPulse {
