@@ -155,7 +155,7 @@ const SwipeableCard = ({
     <div className={`relative overflow-hidden rounded-2xl ${className}`}>
       {/* Delete action — rendered behind the card, wrapped in Popconfirm */}
       <div
-        className="absolute top-0 right-0 bottom-0 flex flex-col items-center justify-center gap-1 rounded-r-2xl"
+        className="absolute top-0 right-0 bottom-0 flex flex-col items-center justify-center gap-1"
         style={{
           width: ACTION_WIDTH,
           backgroundColor: "var(--color-error)",
@@ -167,6 +167,7 @@ const SwipeableCard = ({
           content="删除后无法恢复。"
           placement="top"
           onConfirm={onConfirmDelete}
+          onCancel={() => onOpenChange(false)}
         >
           <div className="flex flex-col items-center justify-center gap-1 w-full h-full">
             <IconDelete size={20} />
@@ -177,7 +178,7 @@ const SwipeableCard = ({
 
       {/* Card content — slides over the delete action */}
       <div
-        className="relative bg-color-surface-container-low"
+        className="relative bg-color-surface-container-low rounded-2xl"
         style={{
           ...transitionStyle,
           transform: `translateX(${translateX}px)`,
