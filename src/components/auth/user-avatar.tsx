@@ -1,8 +1,6 @@
 import { Avatar, IconButton } from "musae";
-import { AccountCircle } from "musae/icons";
-import { useNavigate } from "@aiszlab/bee/router";
+import { IconAccountCircle } from "musae/icons";
 import { useAuthStore } from "../../stores/auth.store";
-import { isTauri } from "../../utils/tauri.util";
 import type { CSSProperties } from "react";
 
 interface UserAvatarProps {
@@ -11,19 +9,12 @@ interface UserAvatarProps {
 }
 
 const UserAvatar = ({ className, style }: UserAvatarProps) => {
-  const navigate = useNavigate();
   const { me } = useAuthStore();
-
-  const toLogin = () => {
-    navigate("/login");
-  };
-
-  if (isTauri()) return null;
 
   if (!me) {
     return (
-      <IconButton className={className} style={style} onClick={toLogin} size="small">
-        <AccountCircle />
+      <IconButton className={className} style={style} size="small">
+        <IconAccountCircle />
       </IconButton>
     );
   }

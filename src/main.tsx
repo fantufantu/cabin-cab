@@ -4,6 +4,8 @@ import Application from "./application";
 import { lazy } from "react";
 
 const Home = lazy(() => import("./pages/home"));
+const MainLayout = lazy(() => import("./layout/main.layout"));
+const Profile = lazy(() => import("./pages/profile"));
 const TouristPlanLayout = lazy(() => import("./pages/tourist-plan/layout"));
 const TouristPlanProposal = lazy(() => import("./pages/tourist-plan/proposal"));
 const TouristPlanItineraries = lazy(() => import("./pages/tourist-plan/itineraries"));
@@ -19,33 +21,33 @@ bootstrap({
   render: Application,
   routes: [
     {
-      index: true,
-      element: <Home />,
-    },
-    {
-      path: "login",
-      element: <Login />,
-    },
-    {
-      path: "tourist-plan",
+      Component: MainLayout,
       children: [
         {
-          path: "list",
-          element: <TouristPlanList />,
+          index: true,
+          element: <Home />,
         },
         {
-          path: ":id",
-          Component: TouristPlanLayout,
-          children: [
-            {
-              index: true,
-              element: <TouristPlanProposal />,
-            },
-            {
-              path: "itineraries",
-              element: <TouristPlanItineraries />,
-            },
-          ],
+          path: "profile",
+          element: <Profile />,
+        },
+        {
+          path: "tourist-plan/list",
+          element: <TouristPlanList />,
+        },
+      ],
+    },
+    {
+      path: "tourist-plan/:id",
+      Component: TouristPlanLayout,
+      children: [
+        {
+          index: true,
+          element: <TouristPlanProposal />,
+        },
+        {
+          path: "itineraries",
+          element: <TouristPlanItineraries />,
         },
       ],
     },
@@ -66,6 +68,10 @@ bootstrap({
           element: <TouristPlanAttractions />,
         },
       ],
+    },
+    {
+      path: "login",
+      element: <Login />,
     },
   ],
 });

@@ -28,10 +28,10 @@ export const REGISTER: TypedDocumentNode<
  */
 export const LOGIN: TypedDocumentNode<
   { login: string },
-  { input: { username: string; password: string } }
+  { input: { who: string; password: string } }
 > = gql`
-  mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password)
+  mutation Login($input: LoginInput!) {
+    login(input: $input)
   }
 `;
 
@@ -46,6 +46,11 @@ export const WHO_AM_I: TypedDocumentNode<{ whoAmI: User }> = gql`
       nickname
       avatar
       emailAddress
+      membership {
+        name
+        quota
+      }
+      usedQuota
     }
   }
 `;
@@ -53,7 +58,7 @@ export const WHO_AM_I: TypedDocumentNode<{ whoAmI: User }> = gql`
 /**
  * 用户登录
  */
-export async function login(input: { username: string; password: string }) {
+export async function login(input: { who: string; password: string }) {
   const result = await client.mutate({ mutation: LOGIN, variables: { input } });
   return result.data?.login ?? null;
 }

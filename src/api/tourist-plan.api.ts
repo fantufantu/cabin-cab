@@ -1,5 +1,5 @@
 import { gql, TypedDocumentNode } from "@apollo/client";
-import { CreateTouristPlanInput, TouristPlan } from "./tourist-plan.types";
+import { CountTouristPlansTodayResponse, CountTouristPlansTodayVariables, CreateTouristPlanInput, TouristPlan } from "./tourist-plan.types";
 import { BASE_URL, STATUS_CODE, StatusCode } from "../constants/api.constant";
 import { tryParse } from "@aiszlab/relax";
 import { Paginated } from "./pagination.types";
@@ -117,6 +117,34 @@ export const TOURIST_PLANS: TypedDocumentNode<
       }
       total
     }
+  }
+`;
+
+/**
+ * 查询当天出行计划个数
+ */
+export const COUNT_TOURIST_PLANS_TODAY: TypedDocumentNode<
+  CountTouristPlansTodayResponse,
+  CountTouristPlansTodayVariables
+> = gql`
+  query CountTouristPlansToday($belongToId: String!) {
+    countTouristPlansToday(belongToId: $belongToId)
+  }
+`;
+
+/**
+ * 删除出行计划
+ */
+export const DELETE_TOURIST_PLAN: TypedDocumentNode<
+  {
+    deleteTouristPlan: boolean;
+  },
+  {
+    id: string;
+  }
+> = gql`
+  mutation DeleteTouristPlan($id: String!) {
+    deleteTouristPlan(id: $id)
   }
 `;
 

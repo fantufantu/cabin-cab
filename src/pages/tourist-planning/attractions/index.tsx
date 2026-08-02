@@ -1,9 +1,8 @@
 import { useNavigate } from "@aiszlab/bee/router";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
 import { Button, IconButton, Skeleton, Tabs, Tag } from "musae";
-import { CalendarToday, KeyboardArrowLeft, KeyboardArrowRight } from "musae/icons";
+import { IconCalendarToday, IconKeyboardArrowLeft, IconKeyboardArrowRight } from "musae/icons";
 import { usePlanContext } from "../../../contexts/tourist-planning.context";
-import useAmapStore from "../../../stores/amap.store";
 import {
   isUndefined,
   range,
@@ -13,14 +12,16 @@ import {
   useRequest,
 } from "@aiszlab/relax";
 import TouristPlanFooter from "../../../components/tourist-plan/footer";
-import { Key, useMemo, useState } from "react";
+import { Key, useState } from "react";
 import TouristAttractionCard from "../../../components/attraction/card";
 import { useMutation } from "@apollo/client/react";
 import { CREATE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
-import useAppStore from "../../../stores/app.store";
+import { useAuthStore } from "../../../stores/auth.store";
+import { EVENT_BUS_TOKENS, useEventBusStore } from "../../../stores/event-bus.store";
+import { queryCities } from "../../../api/city.api";
+import { queryAttractions } from "../../../api/attraction.api";
 
 function Attractions() {
-  const { queryAttractions, cities, queryCities, touristAttractions } = useAmapStore();
   const {
     cities: { selectedCityCodes },
     period: { duration, depatureAt },
@@ -34,12 +35,8 @@ function Attractions() {
   const [selectedAttractionTree, setSelectedAttractionTree] = useState(
     () => new Map<string, Set<string>>(),
   );
-  const { getAppId } = useAppStore();
-
-  const currentTouristAttractions = useMemo(() => {
-    if (isUndefined(currentCityCode)) return [];
-    return toArray(touristAttractions.get(currentCityCode)?.values()) ?? [];
-  }, [currentCityCode, touristAttractions]);
+  const { whoAmI, me } = useAuthStore();
+  const { emit } = useEventBusStore();
 
   const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
 
@@ -47,9 +44,24 @@ function Attractions() {
     navigate(-1);
   };
 
-  useRequest(() => Promise.allSettled([queryCities(), queryAttractions(currentCityCode)]), {
-    auto: true,
-  });
+  const { data: cities } = useRequest(
+    () => queryCities().then((_cities) => new Map(_cities.map(({ code, name }) => [code, name]))),
+    {
+      auto: true,
+    },
+  );
+
+  const { data, run } = useRequest(
+    async (cityCode?: string) => {
+      if (!cityCode) return null;
+      return await queryAttractions(cityCode).catch(() => null);
+    },
+    {
+      auto: true,
+      defaultParams: [currentCityCode],
+    },
+  );
+  const attractions = data ?? [];
 
   const selectAttraction = useEvent((code: string) => {
     if (isUndefined(currentCityCode)) return;
@@ -78,7 +90,7 @@ function Attractions() {
   const changeDistrict = useEvent((activeKey: Key) => {
     const cityCode = activeKey.toString();
     setCurrentCityCode(cityCode);
-    queryAttractions(cityCode);
+    run(cityCode);
   });
 
   const submit = async () => {
@@ -91,7 +103,7 @@ function Attractions() {
           attractionCodes: toArray(selectedAttractionTree).flatMap(([_cityCode, _attractions]) =>
             toArray(_attractions),
           ),
-          belongToId: await getAppId(),
+          belongToId: me!.id,
         },
       },
     });
@@ -100,8 +112,12 @@ function Attractions() {
       return;
     }
 
-    // 出行计划创建成功，跳转计划详情生成页面
-    navigate(`/tourist-plan/${data.createTouristPlan.id}`);
+    // 出行计划创建成功，更新用户信息，跳转计划详情生成页面
+    Promise.all([
+      whoAmI(),
+      emit(EVENT_BUS_TOKENS.REFRESH_TOURIST_PLANS),
+      navigate(`/tourist-plan/${data.createTouristPlan.id}`),
+    ]);
   };
 
   return (
@@ -116,7 +132,7 @@ function Attractions() {
             key: cityCode,
             label: (
               <span className="flex items-center">
-                <span>{cities.get(cityCode)?.name ?? cityCode}</span>
+                <span>{cities?.get(cityCode) ?? cityCode}</span>
                 &nbsp;
                 <Tag size="small" className="rounded-full">
                   {(!isUndefined(currentCityCode) && selectedAttractionTree.get(cityCode)?.size) ??
@@ -129,14 +145,14 @@ function Attractions() {
       />
 
       <div className="flex flex-col gap-2 p-4">
-        {currentTouristAttractions.length === 0 &&
+        {attractions.length === 0 &&
           range(1, 10).map((key) => {
             return <Skeleton key={key} className="h-20 rounded-lg" />;
           })}
 
-        {currentTouristAttractions.length > 0 && (
+        {attractions.length > 0 && (
           <>
-            {currentTouristAttractions.map((attraction) => (
+            {attractions.map((attraction) => (
               <TouristAttractionCard
                 key={attraction.code}
                 attraction={attraction}
@@ -156,13 +172,13 @@ function Attractions() {
 
       <TouristPlanFooter>
         <IconButton size="small" color="secondary" onClick={goBack}>
-          <KeyboardArrowLeft />
+          <IconKeyboardArrowLeft />
         </IconButton>
 
         <Button
           className="flex-1"
-          prefix={<CalendarToday />}
-          suffix={<KeyboardArrowRight />}
+          prefix={<IconCalendarToday />}
+          suffix={<IconKeyboardArrowRight />}
           onClick={submit}
         >
           生成出行计划

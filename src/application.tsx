@@ -1,5 +1,5 @@
 import { type ApplicationProps } from "@aiszlab/bee";
-import Layout from "./layout";
+import AppLayout from "./layout/app.layout";
 import { ConfigProvider, ThemeProvider } from "musae";
 import { zh_CN } from "musae/locales";
 import { ApolloProvider } from "@apollo/client/react";
@@ -26,7 +26,7 @@ const Application = ({ children }: ApplicationProps) => {
     <ConfigProvider locale={zh_CN}>
       <ThemeProvider defaultMode={mode}>
         <ApolloProvider client={client}>
-          <Layout>{children}</Layout>
+          <AppLayout>{children}</AppLayout>
         </ApolloProvider>
       </ThemeProvider>
     </ConfigProvider>

@@ -2,7 +2,7 @@ import { stringify } from "@aiszlab/relax/class-name";
 import type { City } from "../../api/city.types";
 import styles from "./style.module.css";
 import { useEvent } from "@aiszlab/relax";
-import { CheckCircle } from "musae/icons";
+import { IconCheckCircle } from "musae/icons";
 import { Tag } from "musae";
 
 interface Props {
@@ -41,7 +41,7 @@ function City({ item, onClick, isSelected }: Props) {
       {isSelected && (
         <>
           <div className={stringify(styles["city--selected"], "absolute inset-0 z-10")} />
-          <CheckCircle
+          <IconCheckCircle
             className="absolute top-3.5 right-3"
             color="var(--color-success)"
             size={20}

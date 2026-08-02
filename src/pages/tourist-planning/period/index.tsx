@@ -1,5 +1,5 @@
 import { Button, Calendar, IconButton, Tag } from "musae";
-import { Add, Remove, CalendarToday, KeyboardArrowRight, KeyboardArrowLeft } from "musae/icons";
+import { IconAdd, IconRemove, IconCalendarToday, IconKeyboardArrowRight, IconKeyboardArrowLeft } from "musae/icons";
 import { usePlanContext } from "../../../contexts/tourist-planning.context";
 import { useNavigate } from "@aiszlab/bee/router";
 import { useCallback, useMemo } from "react";
@@ -58,13 +58,13 @@ const PlanPeriod = () => {
           <span className="mr-auto">自定义天数</span>
 
           <IconButton size="small" color="secondary" onClick={() => subtractDuration()}>
-            <Remove size="small" />
+            <IconRemove size="small" />
           </IconButton>
 
           <span>{duration}天</span>
 
           <IconButton size="small" onClick={() => addDuration()}>
-            <Add size="small" />
+            <IconAdd size="small" />
           </IconButton>
         </div>
       </div>
@@ -83,13 +83,13 @@ const PlanPeriod = () => {
 
       <TouristPlanFooter>
         <IconButton size="small" color="secondary" onClick={goBack}>
-          <KeyboardArrowLeft />
+          <IconKeyboardArrowLeft />
         </IconButton>
 
         <Button
           className="flex-1"
-          prefix={<CalendarToday />}
-          suffix={<KeyboardArrowRight />}
+          prefix={<IconCalendarToday />}
+          suffix={<IconKeyboardArrowRight />}
           onClick={goNext}
         >
           确认 {duration} 天

@@ -16,6 +16,9 @@ export const LOCAL_STORAGE_KEYS = {
   THEME_MODE: "theme-mode",
 };
 
+/** 游客模式默认额度 */
+export const GUEST_QUOTA = 3;
+
 /**
  * browser localStorage 降级，接口与 LazyStore 对齐
  */
