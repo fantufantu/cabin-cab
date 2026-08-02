@@ -9,19 +9,7 @@ import dayjs from "dayjs";
 import { useAuthStore } from "../../../stores/auth.store";
 import { EVENT_BUS_TOKENS, useEventBusStore } from "../../../stores/event-bus.store";
 import SwipeableCard from "../../../components/swipeable-card";
-
-function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(() => {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
-  useEffect(() => {
-    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mql.addEventListener("change", handler);
-    return () => mql.removeEventListener("change", handler);
-  }, []);
-  return reduced;
-}
+import { useReducedMotion } from "../../../utils/reduced-motion.util";
 
 function TouristPlanList() {
   const [queryTouristPlans] = useLazyQuery(TOURIST_PLANS, {
@@ -30,8 +18,9 @@ function TouristPlanList() {
   const [deleteTouristPlan] = useMutation(DELETE_TOURIST_PLAN);
   const navigate = useNavigate();
   const { myId } = useAuthStore();
-  const { on } = useEventBusStore();
+  const { on, emit } = useEventBusStore();
   const reducedMotion = useReducedMotion();
+  const [openCardId, setOpenCardId] = useState<string | null>(null);
 
   const { data, loading, run } = useRequest(
     async () => {
@@ -50,6 +39,13 @@ function TouristPlanList() {
     });
   });
 
+  // Close any open swipe card when the page scrolls (one-open-at-a-time)
+  useEffect(() => {
+    const handleScroll = () => setOpenCardId(null);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const touristPlans = useMemo(() => {
     return data?.touristPlans.items ?? [];
   }, [data]);
@@ -62,7 +58,7 @@ function TouristPlanList() {
     const result = await deleteTouristPlan({ variables: { id } }).catch(() => null);
     if (!result) return;
     Message.success({ description: "行程已删除" });
-    run();
+    emit(EVENT_BUS_TOKENS.REFRESH_TOURIST_PLANS);
   };
 
   const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set());
@@ -143,6 +139,8 @@ function TouristPlanList() {
             >
               <SwipeableCard
                 onConfirmDelete={() => handleDelete(plan.id)}
+                open={openCardId === plan.id}
+                onOpenChange={(open) => setOpenCardId(open ? plan.id : null)}
                 className="shadow-sm"
               >
                 <div

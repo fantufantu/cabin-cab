@@ -1,6 +1,7 @@
-import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { type ReactNode, useCallback, useRef, useState } from "react";
 import { IconDelete } from "musae/icons";
 import { Popconfirm } from "musae";
+import { useReducedMotion } from "../../utils/reduced-motion.util";
 
 const SWIPE_THRESHOLD = 20;
 const ACTION_WIDTH = 80;
@@ -9,32 +10,24 @@ const SPRING_DURATION = 300;
 interface SwipeableCardProps {
   /** Called after user confirms deletion via Popconfirm */
   onConfirmDelete: () => void;
+  /** Whether the card is currently swiped open */
+  open: boolean;
+  /** Called when the card's open state should change */
+  onOpenChange: (open: boolean) => void;
   deleteLabel?: string;
   children: ReactNode;
   className?: string;
 }
 
-function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(() => {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
-  useEffect(() => {
-    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mql.addEventListener("change", handler);
-    return () => mql.removeEventListener("change", handler);
-  }, []);
-  return reduced;
-}
-
 const SwipeableCard = ({
   onConfirmDelete,
+  open,
+  onOpenChange,
   deleteLabel = "删除",
   children,
   className = "",
 }: SwipeableCardProps) => {
   const [translateX, setTranslateX] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
@@ -53,11 +46,11 @@ const SwipeableCard = ({
       const touch = e.touches[0];
       touchStartX.current = touch.clientX;
       touchStartY.current = touch.clientY;
-      currentTranslate.current = isOpen ? -ACTION_WIDTH : 0;
+      currentTranslate.current = open ? -ACTION_WIDTH : 0;
       isDragging.current = false;
       setDragging(false);
     },
-    [isOpen],
+    [open],
   );
 
   const onTouchMove = useCallback((e: React.TouchEvent) => {
@@ -86,12 +79,68 @@ const SwipeableCard = ({
     // Snap: if swiped left past SWIPE_THRESHOLD, open. Else close.
     if (translateX < -SWIPE_THRESHOLD) {
       setTranslateX(-ACTION_WIDTH);
-      setIsOpen(true);
+      onOpenChange(true);
     } else {
       setTranslateX(0);
-      setIsOpen(false);
+      onOpenChange(false);
     }
-  }, [translateX]);
+  }, [translateX, onOpenChange]);
+
+  // Pointer handlers — enable the same swipe gesture with a mouse on desktop
+  // (Tauri macOS). Guarded by pointerType === "mouse" so touch devices keep
+  // using the touch handlers above and the two never double-fire.
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      touchStartX.current = e.clientX;
+      touchStartY.current = e.clientY;
+      currentTranslate.current = open ? -ACTION_WIDTH : 0;
+      isDragging.current = false;
+      setDragging(false);
+    },
+    [open],
+  );
+
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
+    const deltaX = e.clientX - touchStartX.current;
+    const deltaY = e.clientY - touchStartY.current;
+
+    // Detect horizontal swipe (reject vertical scroll)
+    if (!isDragging.current && Math.abs(deltaX) > 5 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      isDragging.current = true;
+      setDragging(true);
+    }
+
+    if (!isDragging.current) return;
+
+    // Clamp: can only swipe left (negative), max to -ACTION_WIDTH
+    const newTranslate = Math.max(-ACTION_WIDTH, Math.min(0, currentTranslate.current + deltaX));
+    setTranslateX(newTranslate);
+  }, []);
+
+  const onPointerUp = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+      if (!isDragging.current) return;
+      isDragging.current = false;
+      setDragging(false);
+
+      // Snap: if swiped left past SWIPE_THRESHOLD, open. Else close.
+      if (translateX < -SWIPE_THRESHOLD) {
+        setTranslateX(-ACTION_WIDTH);
+        onOpenChange(true);
+      } else {
+        setTranslateX(0);
+        onOpenChange(false);
+      }
+    },
+    [translateX, onOpenChange],
+  );
 
   return (
     <div className={`relative overflow-hidden rounded-2xl ${className}`}>
@@ -129,6 +178,10 @@ const SwipeableCard = ({
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
         onTouchCancel={onTouchEnd}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
       >
         {children}
       </div>
