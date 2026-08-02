@@ -35,6 +35,7 @@ const SwipeableCard = ({
 }: SwipeableCardProps) => {
   const [translateX, setTranslateX] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
   const currentTranslate = useRef(0);
@@ -43,7 +44,9 @@ const SwipeableCard = ({
 
   const transitionStyle = reducedMotion
     ? {}
-    : { transition: `transform ${SPRING_DURATION}ms ease-in-out` };
+    : dragging
+      ? { transition: "none" }
+      : { transition: `transform ${SPRING_DURATION}ms ease-in-out` };
 
   const onTouchStart = useCallback(
     (e: React.TouchEvent) => {
@@ -52,6 +55,7 @@ const SwipeableCard = ({
       touchStartY.current = touch.clientY;
       currentTranslate.current = isOpen ? -ACTION_WIDTH : 0;
       isDragging.current = false;
+      setDragging(false);
     },
     [isOpen],
   );
@@ -64,6 +68,7 @@ const SwipeableCard = ({
     // Detect horizontal swipe (reject vertical scroll)
     if (!isDragging.current && Math.abs(deltaX) > 5 && Math.abs(deltaX) > Math.abs(deltaY)) {
       isDragging.current = true;
+      setDragging(true);
     }
 
     if (!isDragging.current) return;
@@ -76,6 +81,7 @@ const SwipeableCard = ({
   const onTouchEnd = useCallback(() => {
     if (!isDragging.current) return;
     isDragging.current = false;
+    setDragging(false);
 
     // Snap: if swiped left past SWIPE_THRESHOLD, open. Else close.
     if (translateX < -SWIPE_THRESHOLD) {
@@ -86,11 +92,6 @@ const SwipeableCard = ({
       setIsOpen(false);
     }
   }, [translateX]);
-
-  const close = useCallback(() => {
-    setTranslateX(0);
-    setIsOpen(false);
-  }, []);
 
   return (
     <div className={`relative overflow-hidden rounded-2xl ${className}`}>
@@ -122,10 +123,12 @@ const SwipeableCard = ({
         style={{
           ...transitionStyle,
           transform: `translateX(${translateX}px)`,
+          touchAction: "pan-y",
         }}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
+        onTouchCancel={onTouchEnd}
       >
         {children}
       </div>

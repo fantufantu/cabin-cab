@@ -27,6 +27,8 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         "--color-surface": colors["surface"],
         "--color-tertiary": colors["tertiary"],
         "--color-tertiary-container": colors["tertiary-container"],
+        "--color-error": colors["error"],
+        "--color-on-error": colors["on-error"],
       }}
     >
       {children}
