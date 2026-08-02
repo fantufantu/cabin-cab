@@ -27,10 +27,10 @@ function TouristPlanList() {
   const [queryTouristPlans] = useLazyQuery(TOURIST_PLANS, {
     fetchPolicy: "no-cache",
   });
-  const [deleteTouristPlan, { loading: deleting }] = useMutation(DELETE_TOURIST_PLAN);
+  const [deleteTouristPlan] = useMutation(DELETE_TOURIST_PLAN);
   const navigate = useNavigate();
   const { myId } = useAuthStore();
-  const { on, emit } = useEventBusStore();
+  const { on } = useEventBusStore();
   const reducedMotion = useReducedMotion();
 
   const { data, loading, run } = useRequest(
@@ -73,12 +73,15 @@ function TouristPlanList() {
       setVisibleItems(new Set(touristPlans.map((p) => p.id)));
       return;
     }
+    const timers: ReturnType<typeof setTimeout>[] = [];
     touristPlans.forEach((plan, i) => {
-      const timer = setTimeout(() => {
-        setVisibleItems((prev) => new Set(prev).add(plan.id));
-      }, i * 60);
-      return () => clearTimeout(timer);
+      timers.push(
+        setTimeout(() => {
+          setVisibleItems((prev) => new Set(prev).add(plan.id));
+        }, i * 60),
+      );
     });
+    return () => timers.forEach(clearTimeout);
   }, [touristPlans, reducedMotion]);
 
   return (
