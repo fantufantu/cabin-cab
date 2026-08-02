@@ -21,6 +21,12 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         "--color-success": colors["success"],
         "--color-success-20": "color-mix(in srgb, var(--color-success) 20%, transparent)",
         "--color-success-80": "color-mix(in srgb, var(--color-success) 80%, transparent)",
+        "--color-on-surface-variant": colors["on-surface-variant"],
+        "--color-outline-variant": colors["outline-variant"],
+        "--color-primary-container": colors["primary-container"],
+        "--color-surface": colors["surface"],
+        "--color-tertiary": colors["tertiary"],
+        "--color-tertiary-container": colors["tertiary-container"],
       }}
     >
       {children}

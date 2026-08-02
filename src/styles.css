@@ -26,6 +26,15 @@
 @utility bg-color-surface-container-highest {
   background-color: var(--color-surface-container-highest);
 }
+@utility bg-color-surface {
+  background-color: var(--color-surface);
+}
+@utility bg-color-primary-container {
+  background-color: var(--color-primary-container);
+}
+@utility bg-color-tertiary-container {
+  background-color: var(--color-tertiary-container);
+}
 
 /* text utilities */
 @utility text-color-primary {
@@ -43,10 +52,19 @@
 @utility text-color-on-surface {
   color: var(--color-on-surface);
 }
+@utility text-color-on-surface-variant {
+  color: var(--color-on-surface-variant);
+}
+@utility text-color-tertiary {
+  color: var(--color-tertiary);
+}
 
 /* border utilities */
 @utility border-color-outline {
   border-color: var(--color-outline);
+}
+@utility border-color-outline-variant {
+  border-color: var(--color-outline-variant);
 }
 
 /* 在真机模式下安全的上边距 */
