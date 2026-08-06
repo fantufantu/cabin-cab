@@ -17,7 +17,6 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         "--color-on-primary-20": "color-mix(in srgb, var(--color-on-primary) 20%, transparent)",
         "--color-secondary": colors["secondary"],
         "--color-on-secondary": colors["on-secondary"],
-        "--color-outline": colors["outline"],
         "--color-success": colors["success"],
         "--color-success-20": "color-mix(in srgb, var(--color-success) 20%, transparent)",
         "--color-success-80": "color-mix(in srgb, var(--color-success) 80%, transparent)",

@@ -33,7 +33,7 @@ const UserInfo = ({ user }: Props) => {
       </div>
 
       {user.membership && (
-        <div className="flex flex-col gap-2 px-4 py-3 rounded-xl border border-color-outline">
+        <div className="flex flex-col gap-2 px-4 py-3 rounded-xl border border-color-outline-variant">
           <div className="flex items-center justify-between">
             <Tag>{user.membership.name}</Tag>
             <span className="text-sm text-color-secondary">

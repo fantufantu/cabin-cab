@@ -60,9 +60,6 @@
 }
 
 /* border utilities */
-@utility border-color-outline {
-  border-color: var(--color-outline);
-}
 @utility border-color-outline-variant {
   border-color: var(--color-outline-variant);
 }

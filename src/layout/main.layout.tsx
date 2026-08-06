@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useLocation } from "@aiszlab/bee/router";
-import { useTheme } from "musae";
+import { Divider, useTheme } from "musae";
 import { IconAccountCircle, IconRocketLaunch, IconWbSunny } from "musae/icons";
 
 const TABS = [
@@ -36,13 +36,15 @@ const MainLayout = () => {
         <Outlet />
       </div>
 
-      <nav
-        className="fixed bottom-0 left-0 right-0 z-50 flex justify-around py-2 safe-pb-4 border-t"
-        style={{
-          backgroundColor: colors["surface-container-low"],
-          borderColor: colors.outline,
-        }}
-      >
+      <div className="fixed bottom-0 left-0 right-0 z-50">
+        <Divider />
+
+        <nav
+          className="flex justify-around py-2 safe-pb-4"
+          style={{
+            backgroundColor: colors["surface-container-low"],
+          }}
+        >
         {TABS.map(({ key, label, icon: Icon, to, match }) => {
           const isActive = match(location.pathname);
 
@@ -62,7 +64,8 @@ const MainLayout = () => {
             </NavLink>
           );
         })}
-      </nav>
+        </nav>
+      </div>
     </>
   );
 };

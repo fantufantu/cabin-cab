@@ -1,4 +1,4 @@
-import { Button, Switch, useActionSheet } from "musae";
+import { Button, Divider, Switch, useActionSheet } from "musae";
 import { IconDarkMode, IconLightMode, IconLogout } from "musae/icons";
 import { useTheme } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
@@ -37,10 +37,9 @@ const Profile = () => {
       {!!me && <UserInfo user={me} />}
 
       {/* Theme toggle */}
-      <div
-        className="flex items-center justify-between px-4 py-3 rounded-xl border"
-        style={{ borderColor: "var(--color-outline)" }}
-      >
+      <Divider />
+
+      <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           {mode === "dark" ? <IconDarkMode /> : <IconLightMode />}
           <span className="text-color-on-surface">昼夜模式</span>
