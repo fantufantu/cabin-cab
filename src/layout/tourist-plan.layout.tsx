@@ -4,20 +4,20 @@ import {
   listenTouristPlanProposal,
   PARSE_TOURIST_PLAN,
   TOURIST_PLAN,
-} from "../../api/tourist-plan.api";
+} from "../api/tourist-plan.api";
 import { Outlet, useLocation, useNavigate, useParams } from "@aiszlab/bee/router";
 import { Button, IconButton, Message, Skeleton, Tabs, Tag } from "musae";
 import { useAsyncEffect } from "@aiszlab/relax";
 import { useMemo, useState } from "react";
-import { TouristPlan as TouristPlanType } from "../../api/tourist-plan.types";
+import { TouristPlan as TouristPlanType } from "../api/tourist-plan.types";
 import { IconKeyboardArrowLeft, IconLocationOn, IconShare } from "musae/icons";
 import { stringify } from "@aiszlab/relax/class-name";
 import dayjs from "dayjs";
 import { clipboard } from "@aiszlab/relax/dom";
-import { useAuthStore } from "../../stores/auth.store";
-import { LOCAL_STORAGE, LOCAL_STORAGE_KEYS, GUEST_QUOTA } from "../../utils/tauri.utils";
-import TouristPlanFooter from "../../components/tourist-plan/footer";
-import TouristPlanContext from "../../contexts/tourist-plan.context";
+import { useAuthStore } from "../stores/auth.store";
+import { LOCAL_STORAGE, LOCAL_STORAGE_KEYS, GUEST_QUOTA } from "../utils/tauri.utils";
+import TouristPlanFooter from "../components/tourist-plan/footer";
+import TouristPlanContext from "../contexts/tourist-plan.context";
 
 function TouristPlanLayout() {
   const { id } = useParams();
