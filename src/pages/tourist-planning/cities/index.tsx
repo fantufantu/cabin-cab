@@ -6,6 +6,7 @@ import City from "../../../components/city";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
 import TouristPlanFooter from "../../../components/tourist-plan/footer";
 import { queryCities } from "../../../api/city.api";
+import { useMemo } from "react";
 
 const PlanCities = () => {
   const {
@@ -28,11 +29,7 @@ const PlanCities = () => {
     navigate("/tourist-planning/period");
   };
 
-  const cities = data ?? [];
-  const cityNameMap = cities.reduce(
-    (map, city) => map.set(city.code, city.name),
-    new Map<string, string>(),
-  );
+  const cities = useMemo(() => new Map((data ?? []).map((city) => [city.code, city])), [data]);
 
   return (
     <div className="min-h-screen flex flex-col gap-4">
@@ -51,7 +48,7 @@ const PlanCities = () => {
       </div>
 
       <div className="mx-4 grid grid-cols-2 gap-3">
-        {cities.map((item) => {
+        {cities.values().map((item) => {
           return (
             <City
               key={item.code}
@@ -72,7 +69,7 @@ const PlanCities = () => {
             {toArray(selectedCityCodes).map((code, index) => {
               return (
                 <span key={code}>
-                  <span>{cityNameMap.get(code) ?? code}</span>
+                  <span>{cities.get(code)?.name ?? code}</span>
                   {index < selectedCityCodes.size - 1 && <span>，</span>}
                 </span>
               );

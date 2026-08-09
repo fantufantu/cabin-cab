@@ -20,7 +20,7 @@
     "@tauri-apps/plugin-store": "^2.4.3",
     "dayjs": "^1.11.20",
     "framer-motion": "^12.40.0",
-    "musae": "1.3.1",
+    "musae": "1.3.1-beta.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
