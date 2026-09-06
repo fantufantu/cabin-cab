@@ -10,7 +10,7 @@ import TouristPlanFooter from "../../../components/tourist-plan/footer";
 const PlanPeriod = () => {
   const navigate = useNavigate();
   const {
-    cities: { selectedCityCodes },
+    districts: { selectedDistrictCodes },
     period: { duration, setDuration, addDuration, depatureAt, subtractDuration, setDepatureAt },
   } = usePlanContext();
 
@@ -77,7 +77,7 @@ const PlanPeriod = () => {
         <h3>行程摘要</h3>
 
         <div className="bg-color-surface-container-highest rounded-lg p-2 text-color-on-surface text-sm">
-          计划旅游 {selectedCityCodes.size} 个城市，建议合理分配每城游览时间
+          计划旅游 {selectedDistrictCodes.size} 个城市，建议合理分配每城游览时间
         </div>
       </div>
 

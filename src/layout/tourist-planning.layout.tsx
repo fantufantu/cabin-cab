@@ -8,17 +8,17 @@ const TouristPlanningLayout = () => {
   const [duration, { add, subtract, setCount: setDuration }] = useCounter(1, { min: 1 });
   const [depatureAt, setDepatureAt] = useState(() => dayjs().startOf("day"));
 
-  const [cachedSelectedCityCodes, setCachedSelectedCityCodes] =
-    useSessionStorageState("cabin-cab__plan__cities");
+  const [cachedSelectedDistrictCodes, setCachedSelectedDistrictCodes] =
+    useSessionStorageState("cabin-cab__plan__districts");
 
-  const selectedCityCodes = useMemo(() => {
-    return new Set<string>(JSON.parse(cachedSelectedCityCodes ?? "[]"));
-  }, [cachedSelectedCityCodes]);
+  const selectedDistrictCodes = useMemo(() => {
+    return new Set<string>(JSON.parse(cachedSelectedDistrictCodes ?? "[]"));
+  }, [cachedSelectedDistrictCodes]);
 
-  const toggleCityCode = useEvent((cityCode: string) => {
-    const next = new Set(selectedCityCodes);
-    next.has(cityCode) ? next.delete(cityCode) : next.add(cityCode);
-    setCachedSelectedCityCodes(JSON.stringify(toArray(next)));
+  const toggleDistrictCode = useEvent((districtCode: string) => {
+    const next = new Set(selectedDistrictCodes);
+    next.has(districtCode) ? next.delete(districtCode) : next.add(districtCode);
+    setCachedSelectedDistrictCodes(JSON.stringify(toArray(next)));
   });
 
   const addDuration = () => {
@@ -33,7 +33,7 @@ const TouristPlanningLayout = () => {
   useUnmount(() => {
     setDuration(1);
     setDepatureAt(() => dayjs().startOf("day"));
-    setCachedSelectedCityCodes(null);
+    setCachedSelectedDistrictCodes(null);
   });
 
   return (
@@ -47,9 +47,9 @@ const TouristPlanningLayout = () => {
           depatureAt,
           setDepatureAt,
         },
-        cities: {
-          selectedCityCodes,
-          toggleCityCode,
+        districts: {
+          selectedDistrictCodes,
+          toggleDistrictCode,
         },
       }}
     >

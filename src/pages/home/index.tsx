@@ -38,7 +38,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const startTouristPlan = () => {
-    navigate("/tourist-planning/cities");
+    navigate("/tourist-planning/districts");
   };
 
   const viewTouristPlans = () => {

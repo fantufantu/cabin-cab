@@ -15,8 +15,8 @@ interface PlanDetail {
  */
 export interface TouristPlan {
   id: string;
-  cityCodes: string[];
-  cities: {
+  districtCodes: string[];
+  districts: {
     code: string;
     name: string;
   }[];
@@ -25,7 +25,7 @@ export interface TouristPlan {
   attractions: {
     code: string;
     name: string;
-    cityCode: string;
+    districtCode: string;
   }[];
   duration: number;
   proposal?: string;
@@ -39,7 +39,7 @@ export interface TouristPlan {
  */
 export type CreateTouristPlanInput = Pick<
   TouristPlan,
-  "depatureAt" | "attractionCodes" | "cityCodes" | "duration" | "belongToId"
+  "depatureAt" | "attractionCodes" | "districtCodes" | "duration" | "belongToId"
 >;
 
 /**

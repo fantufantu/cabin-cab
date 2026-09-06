@@ -12,7 +12,7 @@ const ATTRACTIONS: TypedDocumentNode<
   },
   {
     pagination: { page: number; limit: number };
-    filter?: { cityCode?: string; keyword?: string };
+    filter?: { districtCode?: string; keyword?: string };
   }
 > = gql`
   query Attractions($pagination: Pagination!, $filter: FilterAttractionsInput) {
@@ -20,7 +20,7 @@ const ATTRACTIONS: TypedDocumentNode<
       items {
         code
         name
-        cityCode
+        districtCode
         image
       }
       total
@@ -31,12 +31,12 @@ const ATTRACTIONS: TypedDocumentNode<
 /**
  * 查询景点（分页，一页查询全部）
  */
-async function queryAttractions(cityCode: string): Promise<Attraction[]> {
+async function queryAttractions(districtCode: string): Promise<Attraction[]> {
   const { data } = await client.query({
     query: ATTRACTIONS,
     variables: {
       pagination: { page: 1, limit: 999 },
-      filter: { cityCode },
+      filter: { districtCode },
     },
   });
 

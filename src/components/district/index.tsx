@@ -1,20 +1,20 @@
 import { stringify } from "@aiszlab/relax/class-name";
-import type { City } from "../../api/city.types";
+import type { District } from "../../api/district.types";
 import styles from "./style.module.css";
 import { useEvent } from "@aiszlab/relax";
 import { IconCheckCircle } from "musae/icons";
 import { Tag } from "musae";
 
 interface Props {
-  item: City;
+  item: District;
   onClick: (code: string) => void;
   isSelected: boolean;
 }
 
 /**
- * 城市卡片
+ * 地区卡片
  */
-function City({ item, onClick, isSelected }: Props) {
+function District({ item, onClick, isSelected }: Props) {
   const click = useEvent(() => {
     onClick(item.code);
   });
@@ -23,7 +23,7 @@ function City({ item, onClick, isSelected }: Props) {
     <div
       key={item.code}
       className={stringify(
-        styles.city,
+        styles.district,
         "bg-cover h-40 rounded-2xl flex flex-col text-color-on-primary",
         "p-3 relative overflow-hidden",
       )}
@@ -40,7 +40,7 @@ function City({ item, onClick, isSelected }: Props) {
 
       {isSelected && (
         <>
-          <div className={stringify(styles["city--selected"], "absolute inset-0 z-10")} />
+          <div className={stringify(styles["district--selected"], "absolute inset-0 z-10")} />
           <IconCheckCircle
             className="absolute top-3.5 right-3"
             color="var(--color-success)"
@@ -52,4 +52,4 @@ function City({ item, onClick, isSelected }: Props) {
   );
 }
 
-export default City;
+export default District;

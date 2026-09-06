@@ -4,6 +4,6 @@
 export interface Attraction {
   code: string;
   name: string;
-  cityCode: string;
+  districtCode: string;
   image: string;
 }

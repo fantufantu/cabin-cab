@@ -1,8 +1,8 @@
-.city {
+.district {
   background-image: var(--image);
   background-position: center;
 }
 
-.city--selected {
+.district--selected {
   background: linear-gradient(to top, var(--color-success-80), transparent);
 }

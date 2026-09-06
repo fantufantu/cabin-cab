@@ -118,7 +118,7 @@ function TouristPlanList() {
             <div className="text-6xl mb-4">🗺️</div>
             <p className="text-lg font-medium text-color-on-surface">还没有出行计划</p>
             <p className="text-sm mt-2 text-color-on-surface-variant">开启你的第一段旅程吧</p>
-            <Button className="mt-6" onClick={() => navigate("/tourist-plan/cities")}>
+            <Button className="mt-6" onClick={() => navigate("/tourist-planning/districts")}>
               创建行程
             </Button>
           </div>
@@ -159,12 +159,12 @@ function TouristPlanList() {
                     </span>
                   </div>
 
-                  {/* City tags */}
+                  {/* District tags */}
                   <div className="flex flex-wrap gap-2">
-                    {plan.cities.map((city) => (
-                      <Tag key={city.code}>
+                    {plan.districts.map((district) => (
+                      <Tag key={district.code}>
                         <IconLocationOn />
-                        {city.name}
+                        {district.name}
                       </Tag>
                     ))}
                   </div>

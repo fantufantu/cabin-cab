@@ -10,9 +10,9 @@ interface PlanContextValue {
     depatureAt: Dayjs;
     setDepatureAt: (date: Dayjs) => void;
   };
-  cities: {
-    selectedCityCodes: Set<string>;
-    toggleCityCode: (cityCode: string) => void;
+  districts: {
+    selectedDistrictCodes: Set<string>;
+    toggleDistrictCode: (districtCode: string) => void;
   };
 }
 

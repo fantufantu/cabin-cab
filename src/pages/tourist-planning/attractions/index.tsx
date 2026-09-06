@@ -18,18 +18,18 @@ import { useMutation } from "@apollo/client/react";
 import { CREATE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
 import { useAuthStore } from "../../../stores/auth.store";
 import { EVENT_BUS_TOKENS, useEventBusStore } from "../../../stores/event-bus.store";
-import { queryCities } from "../../../api/city.api";
+import { queryDistricts } from "../../../api/district.api";
 import { queryAttractions } from "../../../api/attraction.api";
 
 function Attractions() {
   const {
-    cities: { selectedCityCodes },
+    districts: { selectedDistrictCodes },
     period: { duration, depatureAt },
   } = usePlanContext();
 
   const navigate = useNavigate();
-  const [currentCityCode, setCurrentCityCode] = useState(
-    () => selectedCityCodes.values().next().value,
+  const [currentDistrictCode, setCurrentDistrictCode] = useState(
+    () => selectedDistrictCodes.values().next().value,
   );
   const { sentinelRef, viewportRef } = useInfiniteScroll<HTMLElement, HTMLDivElement>();
   const [selectedAttractionTree, setSelectedAttractionTree] = useState(
@@ -44,64 +44,67 @@ function Attractions() {
     navigate(-1);
   };
 
-  const { data: cities } = useRequest(
-    () => queryCities().then((_cities) => new Map(_cities.map(({ code, name }) => [code, name]))),
+  const { data: districts } = useRequest(
+    () =>
+      queryDistricts().then((_districts) =>
+        new Map(_districts.map(({ code, name }) => [code, name])),
+      ),
     {
       auto: true,
     },
   );
 
   const { data, run } = useRequest(
-    async (cityCode?: string) => {
-      if (!cityCode) return null;
-      return await queryAttractions(cityCode).catch(() => null);
+    async (districtCode?: string) => {
+      if (!districtCode) return null;
+      return await queryAttractions(districtCode).catch(() => null);
     },
     {
       auto: true,
-      defaultParams: [currentCityCode],
+      defaultParams: [currentDistrictCode],
     },
   );
   const attractions = data ?? [];
 
   const selectAttraction = useEvent((code: string) => {
-    if (isUndefined(currentCityCode)) return;
+    if (isUndefined(currentDistrictCode)) return;
 
     setSelectedAttractionTree((prev) => {
       const next = new Map(prev);
-      const selectedAttractionCodes = next.get(currentCityCode) ?? new Set();
+      const selectedAttractionCodes = next.get(currentDistrictCode) ?? new Set();
       selectedAttractionCodes.add(code);
-      next.set(currentCityCode, selectedAttractionCodes);
+      next.set(currentDistrictCode, selectedAttractionCodes);
       return next;
     });
   });
 
   const deselectAttraction = useEvent((code: string) => {
-    if (isUndefined(currentCityCode)) return;
+    if (isUndefined(currentDistrictCode)) return;
 
     setSelectedAttractionTree((prev) => {
       const next = new Map(prev);
-      const selectedAttractionCodes = next.get(currentCityCode) ?? new Set();
+      const selectedAttractionCodes = next.get(currentDistrictCode) ?? new Set();
       selectedAttractionCodes.delete(code);
-      next.set(currentCityCode, selectedAttractionCodes);
+      next.set(currentDistrictCode, selectedAttractionCodes);
       return next;
     });
   });
 
   const changeDistrict = useEvent((activeKey: Key) => {
-    const cityCode = activeKey.toString();
-    setCurrentCityCode(cityCode);
-    run(cityCode);
+    const districtCode = activeKey.toString();
+    setCurrentDistrictCode(districtCode);
+    run(districtCode);
   });
 
   const submit = async () => {
     const { data } = await createTouristPlan({
       variables: {
         input: {
-          cityCodes: toArray(selectedCityCodes),
+          districtCodes: toArray(selectedDistrictCodes),
           duration,
           depatureAt: depatureAt.valueOf(),
-          attractionCodes: toArray(selectedAttractionTree).flatMap(([_cityCode, _attractions]) =>
-            toArray(_attractions),
+          attractionCodes: toArray(selectedAttractionTree).flatMap(
+            ([_districtCode, _attractions]) => toArray(_attractions),
           ),
           belongToId: me!.id,
         },
@@ -125,17 +128,18 @@ function Attractions() {
       <TouristPlanHeader step={3} title="景点" subTitle="选择您喜欢的景点" />
 
       <Tabs
-        activeKey={currentCityCode}
+        activeKey={currentDistrictCode}
         onChange={changeDistrict}
-        items={toArray(selectedCityCodes).map((cityCode) => {
+        items={toArray(selectedDistrictCodes).map((districtCode) => {
           return {
-            key: cityCode,
+            key: districtCode,
             label: (
               <span className="flex items-center">
-                <span>{cities?.get(cityCode) ?? cityCode}</span>
+                <span>{districts?.get(districtCode) ?? districtCode}</span>
                 &nbsp;
                 <Tag size="small" className="rounded-full">
-                  {(!isUndefined(currentCityCode) && selectedAttractionTree.get(cityCode)?.size) ??
+                  {(!isUndefined(currentDistrictCode) &&
+                    selectedAttractionTree.get(districtCode)?.size) ??
                     0}
                 </Tag>
               </span>
@@ -157,8 +161,8 @@ function Attractions() {
                 key={attraction.code}
                 attraction={attraction}
                 checked={
-                  !isUndefined(currentCityCode) &&
-                  selectedAttractionTree.get(currentCityCode)?.has(attraction.code)
+                  !isUndefined(currentDistrictCode) &&
+                  selectedAttractionTree.get(currentDistrictCode)?.has(attraction.code)
                 }
                 onSelect={selectAttraction}
                 onDeselect={deselectAttraction}

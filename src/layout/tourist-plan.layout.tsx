@@ -68,7 +68,7 @@ function TouristPlanLayout() {
         variables: {
           input: {
             attractionCodes: (touristPlan?.attractions ?? []).map((_item) => _item.code),
-            cityCodes: (touristPlan?.cities ?? []).map((_item) => _item.code),
+            districtCodes: (touristPlan?.districts ?? []).map((_item) => _item.code),
             depatureAt: touristPlan?.depatureAt ?? 0,
             duration: touristPlan?.duration ?? 0,
             belongToId: await myId(),
@@ -138,7 +138,7 @@ function TouristPlanLayout() {
 
                 <div className="flex gap-2 justify-between items-center mx-4">
                   <span>{touristPlan?.duration}天行程</span>
-                  <span>{touristPlan?.cities.length}个城市</span>
+                  <span>{touristPlan?.districts.length}个城市</span>
                   <span>{touristPlan?.attractions.length}个景点</span>
                 </div>
 
@@ -152,10 +152,10 @@ function TouristPlanLayout() {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {touristPlan?.cities.map((_city) => (
-                  <Tag key={_city.code}>
+                {touristPlan?.districts.map((_district) => (
+                  <Tag key={_district.code}>
                     <IconLocationOn />
-                    {_city.name}
+                    {_district.name}
                   </Tag>
                 ))}
               </div>

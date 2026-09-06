@@ -36,7 +36,7 @@ export const TOURIST_PLAN: TypedDocumentNode<
   query TouristPlan($id: String!) {
     touristPlan(id: $id) {
       id
-      cities {
+      districts {
         code
         name
       }
@@ -44,7 +44,7 @@ export const TOURIST_PLAN: TypedDocumentNode<
       attractions {
         code
         name
-        cityCode
+        districtCode
       }
       duration
       itineraries {
@@ -103,7 +103,7 @@ export const TOURIST_PLANS: TypedDocumentNode<
     touristPlans(filter: $filter) {
       items {
         id
-        cities {
+        districts {
           code
           name
         }
@@ -111,7 +111,7 @@ export const TOURIST_PLANS: TypedDocumentNode<
         attractions {
           code
           name
-          cityCode
+          districtCode
         }
         duration
       }
