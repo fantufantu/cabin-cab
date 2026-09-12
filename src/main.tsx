@@ -2,6 +2,7 @@ import { bootstrap } from "@aiszlab/bee";
 import "./styles.css";
 import Application from "./application";
 import { lazy } from "react";
+import RouteTransitionLayout from "./components/route-transition";
 
 const Home = lazy(() => import("./pages/home"));
 const MainLayout = lazy(() => import("./layout/main.layout"));
@@ -21,57 +22,62 @@ bootstrap({
   render: Application,
   routes: [
     {
-      Component: MainLayout,
+      Component: RouteTransitionLayout,
       children: [
         {
-          index: true,
-          element: <Home />,
+          Component: MainLayout,
+          children: [
+            {
+              index: true,
+              element: <Home />,
+            },
+            {
+              path: "profile",
+              element: <Profile />,
+            },
+            {
+              path: "tourist-plan/list",
+              element: <TouristPlanList />,
+            },
+          ],
         },
         {
-          path: "profile",
-          element: <Profile />,
+          path: "tourist-plan/:id",
+          Component: TouristPlanLayout,
+          children: [
+            {
+              index: true,
+              element: <TouristPlanProposal />,
+            },
+            {
+              path: "itineraries",
+              element: <TouristPlanItineraries />,
+            },
+          ],
         },
         {
-          path: "tourist-plan/list",
-          element: <TouristPlanList />,
+          path: "tourist-planning",
+          Component: TouristPlanningLayout,
+          children: [
+            {
+              path: "districts",
+              element: <TouristPlanDistricts />,
+            },
+            {
+              path: "period",
+              element: <TouristPlanPeriod />,
+            },
+            {
+              path: "attractions",
+              element: <TouristPlanAttractions />,
+            },
+          ],
+        },
+        {
+          path: "login",
+          element: <Login />,
         },
       ],
-    },
-    {
-      path: "tourist-plan/:id",
-      Component: TouristPlanLayout,
-      children: [
-        {
-          index: true,
-          element: <TouristPlanProposal />,
-        },
-        {
-          path: "itineraries",
-          element: <TouristPlanItineraries />,
-        },
-      ],
-    },
-    {
-      path: "tourist-planning",
-      Component: TouristPlanningLayout,
-      children: [
-        {
-          path: "districts",
-          element: <TouristPlanDistricts />,
-        },
-        {
-          path: "period",
-          element: <TouristPlanPeriod />,
-        },
-        {
-          path: "attractions",
-          element: <TouristPlanAttractions />,
-        },
-      ],
-    },
-    {
-      path: "login",
-      element: <Login />,
     },
   ],
 });

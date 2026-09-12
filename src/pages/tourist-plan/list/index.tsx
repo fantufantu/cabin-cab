@@ -42,8 +42,9 @@ function TouristPlanList() {
   // Close any open swipe card when the page scrolls (one-open-at-a-time)
   useMounted(() => {
     const handleScroll = () => setOpenCardId(null);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    // Route pages scroll inside their own viewport; element scroll events do not bubble.
+    window.addEventListener("scroll", handleScroll, { capture: true, passive: true });
+    return () => window.removeEventListener("scroll", handleScroll, true);
   });
 
   const touristPlans = useMemo(() => {

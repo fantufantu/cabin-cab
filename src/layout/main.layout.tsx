@@ -1,4 +1,5 @@
-import { NavLink, Outlet, useLocation } from "@aiszlab/bee/router";
+import { NavLink, useLocation } from "@aiszlab/bee/router";
+import AnimatedOutlet from "../components/route-transition/outlet";
 import { Divider, useTheme } from "musae";
 import { IconAccountCircle, IconRocketLaunch, IconWbSunny } from "musae/icons";
 
@@ -33,7 +34,7 @@ const MainLayout = () => {
   return (
     <>
       <div className="pb-24">
-        <Outlet />
+        <AnimatedOutlet />
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 z-50">

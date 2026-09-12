@@ -1,0 +1,60 @@
+.viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--color-surface);
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  background: var(--color-surface);
+  box-shadow: -8px 0 24px rgb(0 0 0 / 8%);
+}
+
+.scroller {
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.stack {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  background: var(--color-surface);
+}
+
+.content[data-present="false"] {
+  position: absolute;
+  inset: 0;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background: black;
+  pointer-events: none;
+}
+
+.loading {
+  min-height: 50vh;
+  display: grid;
+  place-items: center;
+  color: var(--color-on-surface-variant);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page,
+  .content {
+    transform: none !important;
+    opacity: 1 !important;
+    box-shadow: none;
+  }
+}

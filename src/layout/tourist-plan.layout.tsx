@@ -5,7 +5,8 @@ import {
   PARSE_TOURIST_PLAN,
   TOURIST_PLAN,
 } from "../api/tourist-plan.api";
-import { Outlet, useLocation, useNavigate, useParams } from "@aiszlab/bee/router";
+import { useLocation, useNavigate, useParams } from "@aiszlab/bee/router";
+import AnimatedOutlet from "../components/route-transition/outlet";
 import { Button, IconButton, Message, Skeleton, Tabs, Tag } from "musae";
 import { useAsyncEffect } from "@aiszlab/relax";
 import { useMemo, useState } from "react";
@@ -183,7 +184,7 @@ function TouristPlanLayout() {
             </div>
           )}
 
-          {!isLoading && <Outlet />}
+          {!isLoading && <AnimatedOutlet />}
         </div>
 
         {!isLoading && (

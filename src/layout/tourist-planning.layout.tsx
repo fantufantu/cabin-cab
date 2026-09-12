@@ -1,4 +1,4 @@
-import { Outlet } from "@aiszlab/bee/router";
+import AnimatedOutlet from "../components/route-transition/outlet";
 import PlanContext from "../contexts/tourist-planning.context";
 import { toArray, useCounter, useEvent, useSessionStorageState, useUnmount } from "@aiszlab/relax";
 import { useMemo, useState } from "react";
@@ -53,7 +53,7 @@ const TouristPlanningLayout = () => {
         },
       }}
     >
-      <Outlet />
+      <AnimatedOutlet />
     </PlanContext.Provider>
   );
 };
