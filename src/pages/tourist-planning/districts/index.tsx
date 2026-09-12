@@ -1,20 +1,34 @@
-import { toArray, useRequest } from "@aiszlab/relax";
-import { Button, Search } from "musae";
+import { useBoolean, useRequest } from "@aiszlab/relax";
+import { BottomSheet, Button, Input, Menu, Typography, type SearchRef } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
 import { usePlanContext } from "../../../contexts/tourist-planning.context";
-import District from "../../../components/district";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
 import TouristPlanFooter from "../../../components/tourist-plan/footer";
 import { queryDistricts } from "../../../api/district.api";
-import { useMemo } from "react";
+import type { District as DistrictModel } from "../../../api/district.types";
+import { IconKeyboardArrowRight, IconClose, IconLocationCity } from "musae/icons";
+import { useMemo, useRef } from "react";
 
 const PlanDistricts = () => {
+  const {
+    "0": isVisible,
+    "1": { turnOn, turnOff },
+  } = useBoolean();
+
   const {
     districts: { selectedDistrictCodes, toggleDistrictCode },
   } = usePlanContext();
   const navigate = useNavigate();
 
-  const { data, run: searchDistricts } = useRequest(
+  const searchRef = useRef<SearchRef>(null);
+  const districtLookupRef = useRef(new Map<string, DistrictModel>());
+
+  const {
+    data,
+    error,
+    loading,
+    run: searchDistricts,
+  } = useRequest(
     (keyword?: string) =>
       queryDistricts({
         keyword,
@@ -34,61 +48,60 @@ const PlanDistricts = () => {
     [data],
   );
 
+  const focusSearch = () => {
+    searchRef.current?.focus();
+  };
+
   return (
-    <div className="min-h-screen flex flex-col gap-4">
-      <TouristPlanHeader
-        title="选择目的城市"
-        step={1}
-        subTitle={`可多选，已选 ${selectedDistrictCodes.size} 个城市`}
-      />
+    <div className="min-h-screen flex flex-col bg-color-surface">
+      <TouristPlanHeader title="选择目的地" step={1} subTitle="支持选择多个城市，可连续勾选" />
 
-      <div className="mx-4">
-        <Search
-          onSearch={(keyword) => searchDistricts(keyword)}
-          onClear={() => searchDistricts()}
-          searchButton="搜索"
-        />
-      </div>
+      <main className="px-4 py-4 flex flex-col gap-5">
+        <Typography.Title>你想去哪里？</Typography.Title>
 
-      <div className="mx-4 grid grid-cols-2 gap-3">
-        {districts.values().map((item) => {
-          return (
-            <District
-              key={item.code}
-              item={item}
-              onClick={toggleDistrictCode}
-              isSelected={selectedDistrictCodes.has(item.code)}
-            />
-          );
-        })}
-      </div>
+        <Typography.Body>选择目的地后，为您推荐合适行程</Typography.Body>
+
+        <Input label="目的城市" placeholder="请选择一个或多个城市" onClick={turnOn}></Input>
+
+        <Typography.Label>为您推荐的城市</Typography.Label>
+      </main>
 
       <TouristPlanFooter>
-        {selectedDistrictCodes.size === 0 && <span>请至少选择一个城市</span>}
-
-        {selectedDistrictCodes.size > 0 && (
-          <span className="whitespace-nowrap overflow-hidden text-ellipsis">
-            已选择 {selectedDistrictCodes.size} 个城市：
-            {toArray(selectedDistrictCodes).map((code, index) => {
-              return (
-                <span key={code}>
-                  <span>{districts.get(code)?.name ?? code}</span>
-                  {index < selectedDistrictCodes.size - 1 && <span>，</span>}
-                </span>
-              );
-            })}
-          </span>
-        )}
-
         <Button
-          className="ml-auto"
-          size="small"
+          className="flex-1"
           onClick={nextStep}
           disabled={selectedDistrictCodes.size === 0}
+          suffix={<IconKeyboardArrowRight />}
         >
-          下一步
+          完成（{selectedDistrictCodes.size}）
         </Button>
       </TouristPlanFooter>
+
+      <BottomSheet open={isVisible} onClose={turnOff} height="90vh" panelClassName="p-4 gap-4">
+        <div className="flex justify-between items-center">
+          <Typography.Title size="large">选择目的城市</Typography.Title>
+          <IconClose size="large" />
+        </div>
+
+        <Input placeholder="请搜索省份或城市"></Input>
+
+        <Button prefix={<IconLocationCity />} size="small" variant="outlined" className="w-fit">
+          使用当前位置
+        </Button>
+
+        <div className="flex flex-col gap-2 overflow-auto">
+          <Typography.Title>全部省份和城市</Typography.Title>
+
+          <Menu
+            size="large"
+            items={(data ?? []).map(({ code, name }) => ({
+              key: code,
+              label: name,
+              trailing: <IconKeyboardArrowRight size="large" />,
+            }))}
+          />
+        </div>
+      </BottomSheet>
     </div>
   );
 };
