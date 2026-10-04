@@ -32,7 +32,9 @@ const client = new ApolloClient({
       };
     }),
 
-    new ErrorLink(({ error }) => {
+    new ErrorLink(({ error, operation }) => {
+      if (operation.getContext().suppressErrorNotification) return;
+
       const errorMessage = error.message;
       if (!errorMessage) return;
 

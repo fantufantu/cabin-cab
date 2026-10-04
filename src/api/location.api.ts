@@ -33,6 +33,7 @@ export async function reverseGeocode(
     query: REVERSE_GEOCODE,
     variables: { input },
     fetchPolicy: "no-cache",
+    context: { suppressErrorNotification: true },
   });
 
   return data?.reverseGeocode;
