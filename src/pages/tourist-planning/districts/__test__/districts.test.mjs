@@ -12,14 +12,29 @@ const { createServer } = await import(
 
 const DISTRICTS = [
   {
-    code: "110000",
-    name: "北京市",
-    image: "https://example.com/beijing.jpg",
+    code: "330000",
+    name: "浙江省",
+    image: "https://example.com/zhejiang.jpg",
   },
   {
     code: "330100",
     name: "杭州市",
     image: "https://example.com/hangzhou.jpg",
+  },
+  {
+    code: "110000",
+    name: "北京市",
+    image: "https://example.com/beijing.jpg",
+  },
+  {
+    code: "110101",
+    name: "东城区",
+    image: "https://example.com/dongcheng.jpg",
+  },
+  {
+    code: "110102",
+    name: "西城区",
+    image: "https://example.com/xicheng.jpg",
   },
 ];
 
@@ -42,19 +57,26 @@ before(async () => {
           if (source === "@aiszlab/bee/router") return "\0district-test:router";
           if (source === "musae") return "\0district-test:musae";
           if (source === "musae/icons") return "\0district-test:icons";
+          if (source === "../../../utils/geolocation.util") return "\0district-test:geolocation";
+          if (source === "../../../api/location.api") return "\0district-test:location";
+          if (source === "../../../components/tourist-plan/header") return "\0district-test:header";
+          if (source === "../../../components/tourist-plan/footer") return "\0district-test:footer";
+          if (source === "../../../components/district") return "\0district-test:district-card";
         },
         load(id) {
-          if (id === "\0district-test:relax") {
-            return `
-              export const toArray = Array.from;
-              export const useEvent = (handler) => handler;
-              export const useRequest = () => globalThis.__districtRequestState;
-            `;
-          }
-
           if (id === "\0district-test:class-name") {
             return `
               export const stringify = (...values) => values.filter(Boolean).join(" ");
+            `;
+          }
+
+          if (id === "\0district-test:relax") {
+            return `
+              export { useToggleable } from "/Users/tutu/workspace/cabin-cab/node_modules/@aiszlab/relax/dist/hooks/use-toggleable.mjs";
+              export const toArray = Array.from;
+              export const useEvent = (handler) => handler;
+              export const useRequest = () => globalThis.__districtRequestState;
+              export const useBoolean = () => [false, { turnOn: () => {}, turnOff: () => {} }];
             `;
           }
 
@@ -62,14 +84,57 @@ before(async () => {
             return "export const useNavigate = () => () => {};";
           }
 
+          if (id === "\0district-test:geolocation") {
+            return `
+              export class GeolocationError extends Error {}
+              export const getCurrentPosition = async () => ({ latitude: 0, longitude: 0 });
+            `;
+          }
+
+          if (id === "\0district-test:location") {
+            return "export const reverseGeocode = async () => null;";
+          }
+
           if (id === "\0district-test:musae") {
             return `
               import React from "react";
-              export const Button = ({ children, disabled }) =>
-                React.createElement("button", { disabled }, children);
+              export const Checkbox = ({ checked, onChange }) =>
+                React.createElement("button", {
+                  type: "button",
+                  role: "checkbox",
+                  "aria-checked": checked,
+                  onClick: () => onChange?.(),
+                  ref: (element) => {
+                    if (element) element.__triggerChange = onChange;
+                  },
+                }, checked ? "已选" : "未选");
+              export const Button = ({ children, disabled, onClick, prefix, suffix }) =>
+                React.createElement("button", { disabled, onClick }, prefix, children, suffix);
+              export const BottomSheet = ({ children }) => React.createElement("div", null, children);
+              export const Input = ({ label, placeholder, onClick, onChange, value }) =>
+                React.createElement("input", { "aria-label": label, placeholder, onClick, onChange, value });
+              export const Menu = ({ items, onClick }) =>
+                React.createElement("div", null, items?.map((item) =>
+                  React.createElement("div", {
+                    key: item.key,
+                    "data-menu-key": item.key,
+                    onClick: () => onClick?.(item.key),
+                  },
+                    React.createElement("span", null, item.key),
+                    React.createElement("span", { onClick: (event) => event.stopPropagation() }, item.leading),
+                    item.label,
+                    item.trailing,
+                  )
+                ));
+              export const Message = { error: () => {}, success: () => {} };
+              export const Typography = {
+                Title: ({ children }) => React.createElement("h2", null, children),
+                Body: ({ children }) => React.createElement("p", null, children),
+                Label: ({ children }) => React.createElement("label", null, children),
+              };
               export const Divider = () => React.createElement("hr");
-              export const IconButton = ({ children }) =>
-                React.createElement("button", null, children);
+              export const IconButton = ({ children, onClick }) =>
+                React.createElement("button", { onClick }, children);
               export const Search = React.forwardRef(({ placeholder }, ref) => {
                 const inputRef = React.useRef(null);
                 React.useImperativeHandle(ref, () => ({
@@ -91,13 +156,30 @@ before(async () => {
               import React from "react";
               const Icon = () => React.createElement("span", { "aria-hidden": "true" });
               export const IconAdd = Icon;
+              export const IconAddLocationAlt = Icon;
               export const IconCheck = Icon;
               export const IconCheckCircle = Icon;
               export const IconKeyboardArrowLeft = Icon;
               export const IconKeyboardArrowRight = Icon;
               export const IconLocationOn = Icon;
+              export const IconClose = Icon;
+              export const IconLocationCity = Icon;
+              export const IconMyLocation = Icon;
             `;
           }
+
+          if (id === "\0district-test:header") {
+            return `import React from "react"; export default ({ title, subTitle }) => React.createElement("header", null, title, subTitle);`;
+          }
+
+          if (id === "\0district-test:footer") {
+            return `import React from "react"; export default ({ children }) => React.createElement("footer", null, children);`;
+          }
+
+          if (id === "\0district-test:district-card") {
+            return `import React from "react"; export default ({ item, onClick }) => React.createElement("button", { onClick: () => onClick(item.code) }, item.name);`;
+          }
+
         },
       },
     ],
@@ -130,7 +212,7 @@ async function renderDistrictPage(selectedDistrictCodes = new Set()) {
         value: {
           districts: {
             selectedDistrictCodes,
-            toggleDistrictCode: () => {},
+            setSelectedDistrictCodes: () => {},
           },
           period: {},
         },
@@ -146,42 +228,19 @@ test("shows selected cities as removable items and completes with the selected c
   assert.match(html, /支持选择多个城市/);
   assert.match(html, /已选城市/);
   assert.match(html, /data-closable="true"[^>]*>北京市/);
-  assert.match(html, /继续添加/);
   assert.match(html, /完成（1）/);
   assert.doesNotMatch(html, />下一步</);
 });
 
-test("communicates loading, failure, and empty search-result states", async () => {
-  globalThis.__districtRequestState = {
-    data: null,
-    error: null,
-    loading: true,
-    run: async () => {},
-  };
-  const loadingHtml = await renderDistrictPage();
-  assert.match(loadingHtml, /正在加载城市/);
+test("groups districts by administrative level and allows selecting a parent before drilling down", async () => {
+  const html = await renderDistrictPage();
 
-  globalThis.__districtRequestState = {
-    data: null,
-    error: new Error("offline"),
-    loading: false,
-    run: async () => {},
-  };
-  const errorHtml = await renderDistrictPage();
-  assert.match(errorHtml, /城市加载失败/);
-  assert.match(errorHtml, /重新加载/);
-
-  globalThis.__districtRequestState = {
-    data: [],
-    error: null,
-    loading: false,
-    run: async () => {},
-  };
-  const emptyHtml = await renderDistrictPage();
-  assert.match(emptyHtml, /没有找到相关城市/);
+  assert.match(html, /全部省份和城市/);
+  assert.match(html, /北京市/);
+  assert.doesNotMatch(html, />东城区</);
 });
 
-test("moves focus to city search when the user chooses to continue adding", async () => {
+test("page selection stores only leaves and syncs parent and child checkbox state", async () => {
   const browserWindow = new Window({ url: "http://localhost/tourist-planning/districts" });
   Object.defineProperties(globalThis, {
     document: { configurable: true, value: browserWindow.document },
@@ -198,31 +257,48 @@ test("moves focus to city search when the user chooses to continue adding", asyn
   const container = document.createElement("div");
   document.body.append(container);
   const root = createRoot(container);
-
-  await act(async () => {
-    root.render(
-      React.createElement(
-        PlanContext.Provider,
-        {
-          value: {
-            districts: {
-              selectedDistrictCodes: new Set(["110000"]),
-              toggleDistrictCode: () => {},
+  const selectedRef = { current: new Set() };
+  const PageProvider = () => {
+    const [selected, setSelected] = React.useState(new Set());
+    selectedRef.current = selected;
+    return React.createElement(
+      PlanContext.Provider,
+      {
+        value: {
+          districts: {
+            selectedDistrictCodes: selected,
+            setSelectedDistrictCodes: (codes) => {
+              setSelected(new Set(codes));
             },
-            period: {},
           },
+          period: {},
         },
-        React.createElement(PlanDistricts),
-      ),
+      },
+      React.createElement(PlanDistricts),
     );
-  });
+  };
 
-  const continueAdding = [...document.querySelectorAll("span")].find(
-    (element) => element.textContent === "继续添加",
+  await act(async () => root.render(React.createElement(PageProvider)));
+  const provinceRow = container.querySelector('[data-menu-key="330000"]');
+  assert.ok(provinceRow);
+  const provinceDrillDown = [...provinceRow.querySelectorAll("button")].find((button) =>
+    button.textContent.includes("下级"),
   );
-  assert.ok(continueAdding);
-  continueAdding.click();
-  assert.equal(document.activeElement?.getAttribute("aria-label"), "搜索城市");
+  assert.ok(provinceDrillDown);
+  await act(async () => provinceDrillDown.click());
+
+  const parentRow = container.querySelector('[data-menu-key="330100"]');
+  assert.ok(parentRow);
+  const parentCheckbox = parentRow.querySelector('[role="checkbox"]');
+  assert.ok(parentCheckbox);
+  await act(async () => parentCheckbox.__triggerChange());
+
+  assert.deepEqual([...selectedRef.current], ["330100"]);
+  assert.equal(parentRow.querySelector('[role="checkbox"]').getAttribute("aria-checked"), "true");
+
+  const selectedParentCheckbox = parentRow.querySelector('[role="checkbox"]');
+  await act(async () => selectedParentCheckbox.__triggerChange());
+  assert.deepEqual([...selectedRef.current], []);
 
   await act(async () => root.unmount());
   await browserWindow.close();
@@ -233,14 +309,14 @@ test("exposes each city card as an accessible multi-select toggle", async () => 
 
   const selectedHtml = renderToStaticMarkup(
     React.createElement(District, {
-      item: DISTRICTS[0],
+      item: DISTRICTS.find(({ code }) => code === "110000"),
       isSelected: true,
       onClick: () => {},
     }),
   );
   const unselectedHtml = renderToStaticMarkup(
     React.createElement(District, {
-      item: DISTRICTS[1],
+      item: DISTRICTS.find(({ code }) => code === "330100"),
       isSelected: false,
       onClick: () => {},
     }),

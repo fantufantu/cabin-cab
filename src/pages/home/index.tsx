@@ -1,7 +1,13 @@
 import { Button, Grid } from "musae";
 import styles from "./index.module.css";
 import { stringify } from "@aiszlab/relax/class-name";
-import { IconBolt, IconExplore, IconPsychology, IconSwapHoriz } from "musae/icons";
+import {
+  IconBolt,
+  IconExplore,
+  IconKeyboardArrowRight,
+  IconPsychology,
+  IconSwapHoriz,
+} from "musae/icons";
 import { useNavigate } from "@aiszlab/bee/router";
 import RouteAnimation from "./route-animation";
 
@@ -48,16 +54,33 @@ const Home = () => {
   return (
     <div className="flex flex-col gap-10 pb-4">
       {/* Hero */}
-      <div className={stringify("px-6 pb-10 safe-pt-12", styles["getting-started"])}>
+      <div className={stringify("px-5 pb-8 safe-pt-3", styles["getting-started"])}>
+        <header className="flex items-center justify-between py-2">
+          <div className="flex items-center gap-3">
+            <div className={stringify("flex h-10 w-10 items-center justify-center rounded-2xl", styles.brandMark)}>
+              <IconExplore size={23} color="var(--color-primary)" />
+            </div>
+            <div>
+              <p className="text-lg font-bold leading-tight text-color-on-surface">驾驾</p>
+              <p className="mt-0.5 text-xs text-color-on-surface-variant">旅行灵感，随时出发</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={viewTouristPlans}
+            className="flex items-center gap-1 rounded-full border border-color-outline-variant bg-color-surface/70 px-3 py-2 text-xs font-medium text-color-on-surface"
+          >
+            我的行程 <IconKeyboardArrowRight size={16} />
+          </button>
+        </header>
+
         {/* 路线动画 */}
-        <div className="mb-4">
+        <div className="-mx-1 mb-1 mt-2">
           <RouteAnimation />
         </div>
 
         {/* 标题区 */}
-        <p className="text-color-on-surface-variant text-sm font-medium">
-          AI 智能规划
-        </p>
+        <p className="text-color-primary text-sm font-semibold tracking-wide">AI 智能规划</p>
         <h1 className="text-color-on-surface text-3xl font-bold mt-2 leading-tight">
           发现世界之美
         </h1>

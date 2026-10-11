@@ -10,6 +10,24 @@
     transform 160ms ease;
 }
 
+.district--placeholder {
+  background-image:
+    radial-gradient(ellipse at 78% 22%, color-mix(in srgb, var(--color-primary) 24%, transparent), transparent 54%),
+    linear-gradient(145deg, var(--color-surface-container-high) 0%, var(--color-surface-container-low) 100%);
+}
+
+.district__initial {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: color-mix(in srgb, var(--color-primary) 17%, transparent);
+  font-size: 108px;
+  font-weight: 700;
+  line-height: 1;
+  transform: translate(-50%, -58%);
+  pointer-events: none;
+}
+
 .district::after {
   position: absolute;
   inset: 0;

@@ -15,10 +15,8 @@ const TouristPlanningLayout = () => {
     return new Set<string>(JSON.parse(cachedSelectedDistrictCodes ?? "[]"));
   }, [cachedSelectedDistrictCodes]);
 
-  const toggleDistrictCode = useEvent((districtCode: string) => {
-    const next = new Set(selectedDistrictCodes);
-    next.has(districtCode) ? next.delete(districtCode) : next.add(districtCode);
-    setCachedSelectedDistrictCodes(JSON.stringify(toArray(next)));
+  const setSelectedDistrictCodes = useEvent((districtCodes: Set<string>) => {
+    setCachedSelectedDistrictCodes(JSON.stringify(toArray(districtCodes)));
   });
 
   const addDuration = () => {
@@ -49,7 +47,7 @@ const TouristPlanningLayout = () => {
         },
         districts: {
           selectedDistrictCodes,
-          toggleDistrictCode,
+          setSelectedDistrictCodes,
         },
       }}
     >

@@ -1,10 +1,11 @@
-/**
- * 地区数据结构（服务端）
- */
+import { DistrictLevel } from "../constants/district.constant";
+
 export interface District {
   code: string;
   name: string;
   image: string;
+  level: DistrictLevel;
+  parentCode: string;
 }
 
 /**

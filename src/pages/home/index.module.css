@@ -2,8 +2,13 @@
   background: linear-gradient(
     180deg,
     var(--color-surface) 0%,
-    var(--color-primary-container) 100%
+    color-mix(in srgb, var(--color-primary-container) 68%, var(--color-surface)) 100%
   );
+}
+
+.brandMark {
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
 
 /* ====== 背景网格 ====== */

@@ -1,6 +1,6 @@
 import { useNavigate } from "@aiszlab/bee/router";
 import { IconButton } from "musae";
-import { IconCheck, IconKeyboardArrowLeft } from "musae/icons";
+import { IconKeyboardArrowLeft } from "musae/icons";
 import { stringify } from "@aiszlab/relax/class-name";
 
 interface Props {
@@ -14,8 +14,7 @@ const TOURIST_PLAN_STEPS = ["城市", "日期", "景点", "路线"] as const;
 /**
  * 旅行计划页头
  *
- * 移动端优先的紧凑步骤导航，用 connected-dot stepper 替代传统的
- * 进度条 + 文本标签的多行布局，将 3 行压缩为 2 行。
+ * 移动端优先的行程规划页头，突出当前步骤并保持导航轻量。
  */
 const TouristPlanHeader = ({ title, step, subTitle }: Props) => {
   const navigate = useNavigate();
@@ -25,68 +24,54 @@ const TouristPlanHeader = ({ title, step, subTitle }: Props) => {
   };
 
   return (
-    <div className="px-4 pb-3 safe-pt-3 flex flex-col gap-3 sticky top-0 z-50 bg-color-on-primary border-b border-color-outline-variant">
-      {/* 顶部：返回按钮 + 标题区域 */}
-      <div className="flex items-center gap-2">
-        <IconButton size="small" color="secondary" onClick={goBack}>
+    <div className="sticky top-0 z-50 border-b border-color-outline-variant bg-color-surface/95 px-4 pb-4 pt-2 backdrop-blur-md safe-pt-2">
+      <div className="flex items-center gap-3">
+        <IconButton size="small" color="secondary" onClick={goBack} aria-label="返回上一页">
           <IconKeyboardArrowLeft size={24} />
         </IconButton>
 
-        <div className="min-w-0">
-          <h1 className="text-lg font-semibold text-color-on-surface leading-tight">{title}</h1>
-          <p className="text-xs text-color-on-surface-variant truncate">{subTitle}</p>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="mb-0.5 text-[11px] font-semibold tracking-[0.14em] text-color-primary">
+                行程规划
+              </p>
+              <h1 className="truncate text-lg font-semibold leading-tight text-color-on-surface">
+                {title}
+              </h1>
+            </div>
+            <span className="shrink-0 rounded-full bg-color-primary-container px-2.5 py-1 text-xs font-semibold text-color-primary">
+              {String(step).padStart(2, "0")} <span className="opacity-60">/ 04</span>
+            </span>
+          </div>
+          <p className="mt-1 truncate text-xs text-color-on-surface-variant">{subTitle}</p>
         </div>
       </div>
 
-      {/* 步骤指示器：connected dots */}
-      <nav className="flex items-center justify-between px-1" aria-label="规划步骤">
-        {TOURIST_PLAN_STEPS.map((label, index) => {
-          const stepNum = index + 1;
-          const isActive = stepNum === step;
-          const isCompleted = stepNum < step;
-          const isLast = index === TOURIST_PLAN_STEPS.length - 1;
-
-          return (
-            <div key={label} className="flex items-center flex-1 last:flex-none">
-              {/* Step dot */}
-              <div className="flex flex-col items-center gap-1">
-                <div
-                  className={stringify(
-                    "w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold transition-colors duration-300",
-                    isActive && "bg-color-primary text-color-on-primary",
-                    isCompleted && "bg-color-primary-container text-color-primary",
-                    !isActive &&
-                      !isCompleted &&
-                      "border border-color-outline-variant text-color-on-surface-variant",
-                  )}
-                >
-                  {isCompleted ? <IconCheck size={14} /> : stepNum}
-                </div>
-                <span
-                  className={stringify(
-                    "text-xs whitespace-nowrap transition-colors duration-300",
-                    isActive && "text-color-primary font-medium",
-                    !isActive && "text-color-on-surface-variant",
-                  )}
-                >
-                  {label}
-                </span>
-              </div>
-
-              {/* Connector line */}
-              {!isLast && (
-                <div className="flex-1 h-px mx-1 mb-5 transition-colors duration-300">
-                  <div
-                    className={stringify(
-                      "h-full rounded-full transition-colors duration-300",
-                      stepNum <= step ? "bg-color-primary" : "bg-color-outline-variant",
-                    )}
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
+      <nav className="mt-4" aria-label="规划步骤">
+        <div className="mb-2 flex items-center justify-between text-[11px] font-medium text-color-on-surface-variant">
+          {TOURIST_PLAN_STEPS.map((label, index) => (
+            <span
+              key={label}
+              className={stringify(index + 1 === step && "text-color-primary font-semibold")}
+            >
+              {label}
+            </span>
+          ))}
+        </div>
+        <div
+          className="h-1.5 overflow-hidden rounded-full bg-color-surface-container-high"
+          role="progressbar"
+          aria-valuemin={1}
+          aria-valuemax={TOURIST_PLAN_STEPS.length}
+          aria-valuenow={step}
+          aria-label={`第 ${step} 步，共 ${TOURIST_PLAN_STEPS.length} 步`}
+        >
+          <div
+            className="h-full rounded-full bg-color-primary transition-[width] duration-300 ease-out"
+            style={{ width: `${(step / TOURIST_PLAN_STEPS.length) * 100}%` }}
+          />
+        </div>
       </nav>
     </div>
   );

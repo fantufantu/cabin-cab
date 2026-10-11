@@ -21,6 +21,8 @@ const DISTRICTS: TypedDocumentNode<
         code
         name
         image
+        level
+        parentCode
       }
       total
     }

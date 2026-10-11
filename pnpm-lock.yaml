@@ -15,8 +15,8 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@aiszlab/relax':
-        specifier: 2.1.3-beta.12
-        version: 2.1.3-beta.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: 2.1.3-beta.15
+        version: 2.1.3-beta.15(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@apollo/client':
         specifier: ^4.1.9
         version: 4.1.9(graphql@16.13.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rxjs@7.8.2)
@@ -33,8 +33,8 @@ importers:
         specifier: ^12.40.0
         version: 12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       musae:
-        specifier: 1.3.1-beta.12
-        version: 1.3.1-beta.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23)
+        specifier: 1.3.1-beta.18
+        version: 1.3.1-beta.18(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23)
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -84,14 +84,14 @@ packages:
       react: '>=18'
       react-dom: '>=18'
 
-  '@aiszlab/relax@2.1.3-beta.10':
-    resolution: {integrity: sha512-rNTG2sj6C5XNQcqfJw7nYbVI56zRKMBm8QVR+Ic7CLqcGwy+m7I+Hd+dRxZCk5NyzegPHjPX7+8M2FX2boP2TA==}
+  '@aiszlab/relax@2.1.3-beta.13':
+    resolution: {integrity: sha512-xjvG2Z7Obh1nkL9oQ1b+P53ZJdq9XMO37qPrqRiEn/vu8I1tL9G5oMxMUggmyE81AjpBgKs2iU0/fu7vGjqZ0A==}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
 
-  '@aiszlab/relax@2.1.3-beta.12':
-    resolution: {integrity: sha512-gmVZQfnnI9eNzV7GGnhfjyAzxdSF+acimHPwf7+oo83n5zR4Blw+ydxSNui6sYmkhuNuH5m/lx7DSZLoSRZXPg==}
+  '@aiszlab/relax@2.1.3-beta.15':
+    resolution: {integrity: sha512-f3rhypw6JXFBqBiCdLQRNwWzyUtVIIb40sWBT+/ZE2BXpcQ1mHVcE1vs38g1tuhaDQ6BmM0p2eVZxeCf8u79mg==}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
@@ -2532,8 +2532,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  musae@1.3.1-beta.12:
-    resolution: {integrity: sha512-zUSW+iAO+fCjN4nKvJVrd0FnO2315Lv92cHSbaTzzByWt2rDNUju4LkLliyroVd8PobRWrbBxD1UMCAGOTpeaA==}
+  musae@1.3.1-beta.18:
+    resolution: {integrity: sha512-J+zGBXAYRDf4OucNp9BpdacZWTt1MbYrLTefN6iHO5J09mMB9JV772CZ+0LCob39DZ3rxiNzR+fVGnLHmSH5fA==}
     engines: {node: '>=22.0.0', pnpm: '>=10'}
     peerDependencies:
       react: '>=18'
@@ -3078,7 +3078,7 @@ snapshots:
       react-is: 19.2.4
       rxjs: 7.8.2
 
-  '@aiszlab/relax@2.1.3-beta.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@aiszlab/relax@2.1.3-beta.13(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.28.6
       react: 19.2.4
@@ -3086,7 +3086,7 @@ snapshots:
       react-is: 19.2.4
       rxjs: 7.8.2
 
-  '@aiszlab/relax@2.1.3-beta.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@aiszlab/relax@2.1.3-beta.15(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@babel/runtime': 7.28.6
       react: 19.2.4
@@ -5844,10 +5844,10 @@ snapshots:
 
   ms@2.1.3: {}
 
-  musae@1.3.1-beta.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23):
+  musae@1.3.1-beta.18(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.23):
     dependencies:
       '@aiszlab/fuzzy': 2.1.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@aiszlab/relax': 2.1.3-beta.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@aiszlab/relax': 2.1.3-beta.13(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@babel/runtime': 7.28.6
       '@floating-ui/dom': 1.7.6
       '@lexical/code': 0.40.0
