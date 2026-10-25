@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { after, before, beforeEach, test } from "node:test";
+import { after, afterEach, before, beforeEach, test } from "node:test";
 import React from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
@@ -14,16 +14,29 @@ const DISTRICTS = [
   {
     code: "330000",
     name: "浙江省",
+    level: "province",
+    parentCode: "",
     image: "https://example.com/zhejiang.jpg",
   },
   {
     code: "330100",
     name: "杭州市",
+    level: "city",
+    parentCode: "330000",
     image: "https://example.com/hangzhou.jpg",
   },
   {
     code: "110000",
     name: "北京市",
+    level: "province",
+    parentCode: "",
+    image: "https://example.com/beijing.jpg",
+  },
+  {
+    code: "110100",
+    name: "北京市",
+    level: "city",
+    parentCode: "110000",
     image: "https://example.com/beijing.jpg",
   },
   {
@@ -39,6 +52,9 @@ const DISTRICTS = [
 ];
 
 let server;
+let browserWindow;
+let root;
+const relaxHooks = new URL("../../../../../node_modules/@aiszlab/relax/dist/hooks/", import.meta.url).pathname;
 
 before(async () => {
   server = await createServer({
@@ -58,6 +74,7 @@ before(async () => {
           if (source === "musae") return "\0district-test:musae";
           if (source === "musae/icons") return "\0district-test:icons";
           if (source === "../../../utils/geolocation.util") return "\0district-test:geolocation";
+          if (source === "../../../api/district.api") return "\0district-test:district-api";
           if (source === "../../../api/location.api") return "\0district-test:location";
           if (source === "../../../components/tourist-plan/header") return "\0district-test:header";
           if (source === "../../../components/tourist-plan/footer") return "\0district-test:footer";
@@ -72,10 +89,10 @@ before(async () => {
 
           if (id === "\0district-test:relax") {
             return `
-              export { useToggleable } from "/Users/tutu/workspace/cabin-cab/node_modules/@aiszlab/relax/dist/hooks/use-toggleable.mjs";
+              export { useToggleable } from "${relaxHooks}use-toggleable.mjs";
+              export { useRequest } from "${relaxHooks}use-request.mjs";
               export const toArray = Array.from;
               export const useEvent = (handler) => handler;
-              export const useRequest = () => globalThis.__districtRequestState;
               export const useBoolean = () => [false, { turnOn: () => {}, turnOff: () => {} }];
             `;
           }
@@ -91,6 +108,10 @@ before(async () => {
             `;
           }
 
+          if (id === "\0district-test:district-api") {
+            return "export const queryDistricts = async () => globalThis.__districts;";
+          }
+
           if (id === "\0district-test:location") {
             return "export const reverseGeocode = async () => null;";
           }
@@ -104,9 +125,6 @@ before(async () => {
                   role: "checkbox",
                   "aria-checked": checked,
                   onClick: () => onChange?.(),
-                  ref: (element) => {
-                    if (element) element.__triggerChange = onChange;
-                  },
                 }, checked ? "已选" : "未选");
               export const Button = ({ children, disabled, onClick, prefix, suffix }) =>
                 React.createElement("button", { disabled, onClick }, prefix, children, suffix);
@@ -142,11 +160,12 @@ before(async () => {
                 }));
                 return React.createElement("input", { ref: inputRef, "aria-label": placeholder });
               });
-              export const Tag = ({ children, closable, onClick }) =>
+              export const Tag = ({ children, closable, onClose }) =>
                 React.createElement(
                   "span",
-                  { "data-closable": closable || undefined, onClick },
+                  { "data-closable": closable || undefined },
                   children,
+                  closable && React.createElement("button", { "aria-label": "移除" + children, onClick: onClose }, "移除"),
                 );
             `;
           }
@@ -179,7 +198,6 @@ before(async () => {
           if (id === "\0district-test:district-card") {
             return `import React from "react"; export default ({ item, onClick }) => React.createElement("button", { onClick: () => onClick(item.code) }, item.name);`;
           }
-
         },
       },
     ],
@@ -191,12 +209,22 @@ after(async () => {
 });
 
 beforeEach(() => {
-  globalThis.__districtRequestState = {
-    data: DISTRICTS,
-    error: null,
-    loading: false,
-    run: async () => {},
-  };
+  globalThis.__districts = DISTRICTS;
+  browserWindow = new Window({ url: "http://localhost/tourist-planning/districts" });
+  Object.defineProperties(globalThis, {
+    document: { configurable: true, value: browserWindow.document },
+    HTMLElement: { configurable: true, value: browserWindow.HTMLElement },
+    navigator: { configurable: true, value: browserWindow.navigator },
+    window: { configurable: true, value: browserWindow },
+  });
+  globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+});
+
+afterEach(async () => {
+  if (root) await act(async () => root.unmount());
+  root = undefined;
+  await browserWindow.close();
+  delete globalThis.__districts;
 });
 
 async function renderDistrictPage(selectedDistrictCodes = new Set()) {
@@ -205,34 +233,47 @@ async function renderDistrictPage(selectedDistrictCodes = new Set()) {
     server.ssrLoadModule("/src/pages/tourist-planning/districts/index.tsx"),
   ]);
 
-  return renderToStaticMarkup(
-    React.createElement(
+  const container = document.createElement("div");
+  document.body.append(container);
+  root = createRoot(container);
+  const PageProvider = () => {
+    const [selected, setSelected] = React.useState(selectedDistrictCodes);
+    return React.createElement(
       PlanContext.Provider,
       {
         value: {
           districts: {
-            selectedDistrictCodes,
-            setSelectedDistrictCodes: () => {},
+            selectedDistrictCodes: selected,
+            setSelectedDistrictCodes: setSelected,
           },
           period: {},
         },
       },
       React.createElement(PlanDistricts),
-    ),
-  );
+    );
+  };
+  await act(async () => root.render(React.createElement(PageProvider)));
+  return container.innerHTML;
 }
 
 test("shows selected cities as removable items and completes with the selected count", async () => {
-  const html = await renderDistrictPage(new Set(["110000"]));
+  const html = await renderDistrictPage(new Set(["110100"]));
 
   assert.match(html, /支持选择多个城市/);
   assert.match(html, /已选城市/);
   assert.match(html, /data-closable="true"[^>]*>北京市/);
   assert.match(html, /完成（1）/);
   assert.doesNotMatch(html, />下一步</);
+  const removeButton = document.querySelector('[aria-label="移除北京市"]');
+  assert.ok(removeButton);
+  await act(async () => removeButton.click());
+  assert.equal(document.querySelector('[aria-label="移除北京市"]'), null);
+  const completeButton = document.querySelector("footer button");
+  assert.equal(completeButton.textContent, "完成（0）");
+  assert.equal(completeButton.disabled, true);
 });
 
-test("groups districts by administrative level and allows selecting a parent before drilling down", async () => {
+test("groups districts by administrative level and hides cities until drilling down", async () => {
   const html = await renderDistrictPage();
 
   assert.match(html, /全部省份和城市/);
@@ -241,22 +282,13 @@ test("groups districts by administrative level and allows selecting a parent bef
 });
 
 test("page selection stores only leaves and syncs parent and child checkbox state", async () => {
-  const browserWindow = new Window({ url: "http://localhost/tourist-planning/districts" });
-  Object.defineProperties(globalThis, {
-    document: { configurable: true, value: browserWindow.document },
-    HTMLElement: { configurable: true, value: browserWindow.HTMLElement },
-    navigator: { configurable: true, value: browserWindow.navigator },
-    window: { configurable: true, value: browserWindow },
-  });
-  globalThis.IS_REACT_ACT_ENVIRONMENT = true;
-
   const [{ default: PlanContext }, { default: PlanDistricts }] = await Promise.all([
     server.ssrLoadModule("/src/contexts/tourist-planning.context.ts"),
     server.ssrLoadModule("/src/pages/tourist-planning/districts/index.tsx"),
   ]);
   const container = document.createElement("div");
   document.body.append(container);
-  const root = createRoot(container);
+  root = createRoot(container);
   const selectedRef = { current: new Set() };
   const PageProvider = () => {
     const [selected, setSelected] = React.useState(new Set());
@@ -282,7 +314,7 @@ test("page selection stores only leaves and syncs parent and child checkbox stat
   const provinceRow = container.querySelector('[data-menu-key="330000"]');
   assert.ok(provinceRow);
   const provinceDrillDown = [...provinceRow.querySelectorAll("button")].find((button) =>
-    button.textContent.includes("下级"),
+    button.textContent.includes("城市"),
   );
   assert.ok(provinceDrillDown);
   await act(async () => provinceDrillDown.click());
@@ -291,17 +323,14 @@ test("page selection stores only leaves and syncs parent and child checkbox stat
   assert.ok(parentRow);
   const parentCheckbox = parentRow.querySelector('[role="checkbox"]');
   assert.ok(parentCheckbox);
-  await act(async () => parentCheckbox.__triggerChange());
+  await act(async () => parentCheckbox.click());
 
   assert.deepEqual([...selectedRef.current], ["330100"]);
   assert.equal(parentRow.querySelector('[role="checkbox"]').getAttribute("aria-checked"), "true");
 
   const selectedParentCheckbox = parentRow.querySelector('[role="checkbox"]');
-  await act(async () => selectedParentCheckbox.__triggerChange());
+  await act(async () => selectedParentCheckbox.click());
   assert.deepEqual([...selectedRef.current], []);
-
-  await act(async () => root.unmount());
-  await browserWindow.close();
 });
 
 test("exposes each city card as an accessible multi-select toggle", async () => {
