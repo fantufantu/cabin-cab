@@ -12,7 +12,7 @@ import SwipeableCard from "../../../components/swipeable-card";
 import { useReducedMotion } from "../../../utils/reduced-motion.util";
 
 function TouristPlanList() {
-  const [queryTouristPlans] = useLazyQuery(TOURIST_PLANS, {
+  const [queryTouristPlans, { loading: queryLoading, called }] = useLazyQuery(TOURIST_PLANS, {
     fetchPolicy: "no-cache",
   });
   const [deleteTouristPlan] = useMutation(DELETE_TOURIST_PLAN);
@@ -32,6 +32,9 @@ function TouristPlanList() {
     },
     { auto: true },
   );
+
+  // An earlier request can settle while Apollo is still fetching the latest one.
+  const isLoading = loading || queryLoading || !called;
 
   useMounted(() => {
     return on(EVENT_BUS_TOKENS.REFRESH_TOURIST_PLANS, () => {
@@ -92,7 +95,7 @@ function TouristPlanList() {
 
       <div className="flex flex-col gap-4 p-4">
         {/* Loading skeletons */}
-        {loading &&
+        {isLoading &&
           touristPlans.length === 0 &&
           Array.from({ length: 10 }).map((_, i) => (
             <div
@@ -113,7 +116,7 @@ function TouristPlanList() {
           ))}
 
         {/* Empty state */}
-        {!loading && touristPlans.length === 0 && (
+        {!isLoading && touristPlans.length === 0 && (
           <div className="flex flex-col items-center justify-center py-24 text-color-on-surface-variant">
             <div className="text-6xl mb-4">🗺️</div>
             <p className="text-lg font-medium text-color-on-surface">还没有出行计划</p>
