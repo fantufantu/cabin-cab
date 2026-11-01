@@ -12,7 +12,7 @@ interface PlanContextValue {
   };
   districts: {
     selectedDistrictCodes: Set<string>;
-    toggleDistrictCode: (districtCode: string) => void;
+    setSelectedDistrictCodes: (districtCodes: Set<string>) => void;
   };
 }
 

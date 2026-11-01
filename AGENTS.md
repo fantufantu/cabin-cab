@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
+This file provides guidance to Codex (Codex.ai/code) and Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Development Commands
 
@@ -175,6 +175,8 @@ Stores use `@aiszlab/relax`'s `using()` pattern (similar to Zustand):
 ### Theme & Styling
 
 CSS custom properties are defined in `src/layout/app.layout.tsx` via `musae`'s `useTheme().colors`, mapping Material 3 color tokens (surface, surface-container-low/high/highest, primary, on-primary, secondary, on-secondary, on-surface, on-surface-variant, outline-variant, primary-container, tertiary, tertiary-container, error, on-error, success) to `--color-*` variables. Tailwind utilities in `src/styles.css` expose these as `bg-color-*`, `text-color-*`, and `border-color-*` utility classes.
+
+- Use Musae theme color tokens for borders and outlines (for example, `border-color-outline-variant`); do not define standalone border colors.
 
 - **Tailwind CSS v4** with `@utility` directives defined in `src/styles.css` for theme-aware color utilities.
 - **CSS Modules** (`.module.css`) are used for component-specific styles alongside Tailwind utilities.

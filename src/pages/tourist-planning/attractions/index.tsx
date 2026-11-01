@@ -54,10 +54,10 @@ function Attractions() {
     },
   );
 
-  const { data, run } = useRequest(
+  const { data, error, loading, run } = useRequest(
     async (districtCode?: string) => {
       if (!districtCode) return null;
-      return await queryAttractions(districtCode).catch(() => null);
+      return queryAttractions(districtCode);
     },
     {
       auto: true,
@@ -149,10 +149,29 @@ function Attractions() {
       />
 
       <div className="flex flex-col gap-2 p-4">
-        {attractions.length === 0 &&
+        {loading &&
           range(1, 10).map((key) => {
             return <Skeleton key={key} className="h-20 rounded-lg" />;
           })}
+
+        {!loading && error && (
+          <div className="flex flex-col items-center gap-3 py-12 text-center">
+            <p className="text-sm text-color-on-surface-variant">景点数据加载失败，请重试</p>
+            <Button
+              size="small"
+              color="secondary"
+              onClick={() => run(currentDistrictCode)}
+            >
+              重试
+            </Button>
+          </div>
+        )}
+
+        {!loading && !error && attractions.length === 0 && (
+          <p className="py-12 text-center text-sm text-color-on-surface-variant">
+            暂无景点数据
+          </p>
+        )}
 
         {attractions.length > 0 && (
           <>
