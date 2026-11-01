@@ -1,11 +1,18 @@
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { createServer } from "../../../../../node_modules/.pnpm/node_modules/vite/dist/node/index.js";
 
+const cacheDir = await mkdtemp(join(tmpdir(), "cabin-cab-test-"));
+
 const server = await createServer({
   appType: "custom",
+  configFile: false,
+  cacheDir,
   ssr: { noExternal: ["@apollo/client", "@aiszlab/bee", "@aiszlab/relax", "musae"] },
   esbuild: { jsx: "automatic" },
   logLevel: "silent",
@@ -44,7 +51,10 @@ const server = await createServer({
     },
   }],
 });
-after(() => server.close());
+after(async () => {
+  await server.close();
+  await rm(cacheDir, { recursive: true, force: true });
+});
 const { default: List } = await server.ssrLoadModule("/src/pages/tourist-plan/list/index.tsx");
 
 function render({ loading = false, called = true, requestLoading = false, items = [] } = {}) {

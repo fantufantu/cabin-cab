@@ -1,3 +1,7 @@
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { createRequire } from "node:module";
+import { join } from "node:path";
 import assert from "node:assert/strict";
 import { after, afterEach, before, beforeEach, test } from "node:test";
 import React from "react";
@@ -51,6 +55,10 @@ const DISTRICTS = [
   },
 ];
 
+const require = createRequire(import.meta.url);
+globalThis.__districtTestUsing = require("@aiszlab/relax/react").using;
+const cacheDir = await mkdtemp(join(tmpdir(), "cabin-cab-test-"));
+
 let server;
 let browserWindow;
 let root;
@@ -59,6 +67,8 @@ const relaxHooks = new URL("../../../../../node_modules/@aiszlab/relax/dist/hook
 before(async () => {
   server = await createServer({
     appType: "custom",
+    configFile: false,
+    cacheDir,
     esbuild: { jsx: "automatic" },
     logLevel: "silent",
     server: { middlewareMode: true },
@@ -68,6 +78,7 @@ before(async () => {
         name: "district-page-test-dependencies",
         enforce: "pre",
         resolveId(source) {
+          if (source === "@aiszlab/relax/react") return "\0district-test:store";
           if (source === "@aiszlab/relax") return "\0district-test:relax";
           if (source === "@aiszlab/relax/class-name") return "\0district-test:class-name";
           if (source === "@aiszlab/bee/router") return "\0district-test:router";
@@ -75,12 +86,14 @@ before(async () => {
           if (source === "musae/icons") return "\0district-test:icons";
           if (source === "../../../utils/geolocation.util") return "\0district-test:geolocation";
           if (source === "../../../api/district.api") return "\0district-test:district-api";
+          if (source === "../../api/amap.api" || source === "../api/amap.api") return "\0district-test:amap-api";
           if (source === "../../../api/location.api") return "\0district-test:location";
           if (source === "../../../components/tourist-plan/header") return "\0district-test:header";
           if (source === "../../../components/tourist-plan/footer") return "\0district-test:footer";
           if (source === "../../../components/district") return "\0district-test:district-card";
         },
         load(id) {
+          if (id === "\0district-test:store") return "export const using = globalThis.__districtTestUsing;";
           if (id === "\0district-test:class-name") {
             return `
               export const stringify = (...values) => values.filter(Boolean).join(" ");
@@ -110,6 +123,10 @@ before(async () => {
 
           if (id === "\0district-test:district-api") {
             return "export const queryDistricts = async () => globalThis.__districts;";
+          }
+
+          if (id === "\0district-test:amap-api") {
+            return "export const getAmapCredential = async () => { if (globalThis.__amapCredential) return globalThis.__amapCredential(); throw new Error('Unavailable'); };";
           }
 
           if (id === "\0district-test:location") {
@@ -206,6 +223,7 @@ before(async () => {
 
 after(async () => {
   await server.close();
+  await rm(cacheDir, { recursive: true, force: true });
 });
 
 beforeEach(() => {
@@ -356,4 +374,48 @@ test("exposes each city card as an accessible multi-select toggle", async () => 
   assert.match(selectedHtml, /aria-label="取消选择北京市"/);
   assert.match(unselectedHtml, /aria-pressed="false"/);
   assert.match(unselectedHtml, /aria-label="选择杭州市"/);
+});
+
+test("route preview reorders cities and keeps the remaining route after removal", async () => {
+  await renderDistrictPage(new Set(["330100", "110100"]));
+  const route = document.querySelector('[aria-label="城市路线预览"]');
+  assert.ok(route);
+  const cityNames = () => [...route.querySelectorAll("ol li")].map((item) => item.textContent);
+  assert.match(cityNames()[0], /杭州市/);
+  await act(async () => document.querySelector('[aria-label="上移北京市"]').click());
+  assert.match(cityNames()[0], /北京市/);
+  assert.match(cityNames()[1], /杭州市/);
+  assert.equal(document.querySelector('[aria-label="上移北京市"]').disabled, true);
+  await act(async () => document.querySelector('[aria-label="移除北京市"]').click());
+  assert.equal(cityNames().length, 1);
+  assert.match(cityNames()[0], /杭州市/);
+});
+
+
+test("global AMap store retries failures, merges concurrent requests and reuses the key", async () => {
+  const { useAmapStore } = await server.ssrLoadModule("/src/stores/amap.store.ts");
+  assert.equal(await useAmapStore.state.loadApiKey(), null);
+  assert.equal(useAmapStore.state.apiKey, null);
+  assert.equal(useAmapStore.state.apiSecret, null);
+
+  let calls = 0;
+  let resolveCredential;
+  globalThis.__amapCredential = () => {
+    calls += 1;
+    return new Promise((resolve) => { resolveCredential = resolve; });
+  };
+  try {
+    const first = useAmapStore.state.loadApiKey();
+    const second = useAmapStore.state.loadApiKey();
+    assert.equal(first, second);
+    assert.equal(calls, 1);
+    resolveCredential({ apiKey: "test-map-key", apiSecret: "test-map-secret" });
+    assert.deepEqual(await Promise.all([first, second]), ["test-map-key", "test-map-key"]);
+    assert.equal(useAmapStore.state.apiKey, "test-map-key");
+    assert.equal(useAmapStore.state.apiSecret, "test-map-secret");
+    assert.equal(await useAmapStore.state.loadApiKey(), "test-map-key");
+    assert.equal(calls, 1);
+  } finally {
+    delete globalThis.__amapCredential;
+  }
 });

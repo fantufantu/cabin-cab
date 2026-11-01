@@ -18,6 +18,7 @@ import { useAuthStore } from "../stores/auth.store";
 import { LOCAL_STORAGE, LOCAL_STORAGE_KEYS, GUEST_QUOTA } from "../utils/tauri.utils";
 import TouristPlanFooter from "../components/tourist-plan/footer";
 import TouristPlanContext from "../contexts/tourist-plan.context";
+import HeaderIconButton from "../components/header-icon-button";
 
 function TouristPlanLayout() {
   const { id } = useParams();
@@ -93,8 +94,9 @@ function TouristPlanLayout() {
 
   const tabItems = useMemo(
     () => [
-      { key: `/tourist-plan/${id}`, label: "计划内容" },
       { key: `/tourist-plan/${id}/itineraries`, label: "行程详情" },
+      { key: `/tourist-plan/${id}/route`, label: "旅程路线" },
+      { key: `/tourist-plan/${id}`, label: "计划内容" },
     ],
     [id],
   );
@@ -106,15 +108,15 @@ function TouristPlanLayout() {
       <div className="min-h-screen flex flex-col">
         <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex flex-col gap-3 sticky top-0 z-10">
           <div className="flex items-center justify-between gap-2">
-            <IconButton size="small" color="secondary" onClick={goBack}>
+            <HeaderIconButton tone="primary" onClick={goBack} aria-label="返回行程列表">
               <IconKeyboardArrowLeft size={24} />
-            </IconButton>
+            </HeaderIconButton>
 
             <h1>专属旅行计划</h1>
 
-            <IconButton size="small" color="secondary" onClick={share}>
+            <HeaderIconButton tone="primary" onClick={share} aria-label="分享行程">
               <IconShare />
-            </IconButton>
+            </HeaderIconButton>
           </div>
 
           {isLoading && (

@@ -1,0 +1,42 @@
+.button {
+  color: var(--header-button-color);
+  background-color: var(--header-button-background);
+  transition: background-color 150ms;
+}
+
+.primary {
+  --header-button-color: var(--color-on-primary);
+  --header-button-background: color-mix(in srgb, var(--color-on-primary) 12%, transparent);
+  --header-button-active: var(--color-on-primary-20);
+}
+
+.surface {
+  --header-button-color: var(--color-on-surface);
+  --header-button-background: var(--color-surface-container-high);
+  --header-button-active: var(--color-surface-container-highest);
+}
+
+@media (hover: hover) {
+  .button:not(:disabled):hover {
+    background-color: var(--header-button-active);
+  }
+}
+
+.button:not(:disabled):active {
+  background-color: var(--header-button-active);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--header-button-color);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.38;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

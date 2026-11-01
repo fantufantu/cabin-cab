@@ -9,6 +9,7 @@ const Profile = lazy(() => import("./pages/profile"));
 const TouristPlanLayout = lazy(() => import("./layout/tourist-plan.layout"));
 const TouristPlanProposal = lazy(() => import("./pages/tourist-plan/proposal"));
 const TouristPlanItineraries = lazy(() => import("./pages/tourist-plan/itineraries"));
+const TouristPlanRoute = lazy(() => import("./pages/tourist-plan/route"));
 const TouristPlanningLayout = lazy(() => import("./layout/tourist-planning.layout"));
 const TouristPlanDistricts = lazy(() => import("./pages/tourist-planning/districts"));
 const TouristPlanPeriod = lazy(() => import("./pages/tourist-planning/period"));
@@ -48,6 +49,10 @@ bootstrap({
         {
           path: "itineraries",
           element: <TouristPlanItineraries />,
+        },
+        {
+          path: "route",
+          element: <TouristPlanRoute />,
         },
       ],
     },

@@ -4,6 +4,11 @@
   @import "musae";
 }
 
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
 /* bg utilities */
 @utility bg-color-primary {
   background-color: var(--color-primary);

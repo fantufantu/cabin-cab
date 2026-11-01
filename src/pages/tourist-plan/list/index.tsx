@@ -1,13 +1,14 @@
 import { useLazyQuery, useMutation } from "@apollo/client/react";
 import { TOURIST_PLANS, DELETE_TOURIST_PLAN } from "../../../api/tourist-plan.api";
 import { useNavigate } from "@aiszlab/bee/router";
-import { Button, IconButton, Skeleton, Tag, Message } from "musae";
+import { Button, Skeleton, Tag, Message } from "musae";
 import { useMounted, useRequest } from "@aiszlab/relax";
 import { useEffect, useMemo, useState } from "react";
 import { IconKeyboardArrowLeft, IconLocationOn } from "musae/icons";
 import dayjs from "dayjs";
 import { useAuthStore } from "../../../stores/auth.store";
 import { EVENT_BUS_TOKENS, useEventBusStore } from "../../../stores/event-bus.store";
+import HeaderIconButton from "../../../components/header-icon-button";
 import SwipeableCard from "../../../components/swipeable-card";
 import { useReducedMotion } from "../../../utils/reduced-motion.util";
 
@@ -87,9 +88,14 @@ function TouristPlanList() {
     <div className="flex flex-col min-h-screen bg-color-surface">
       {/* Header */}
       <div className="bg-color-primary text-color-on-primary p-5 safe-pt-5 flex items-center justify-center sticky top-0 z-50">
-        <IconButton size="small" color="secondary" className="absolute left-5" onClick={toHome}>
+        <HeaderIconButton
+          tone="primary"
+          className="absolute left-5"
+          onClick={toHome}
+          aria-label="返回首页"
+        >
           <IconKeyboardArrowLeft size={24} />
-        </IconButton>
+        </HeaderIconButton>
         <h1 className="text-xl font-medium tracking-wide">我的出行计划</h1>
       </div>
 

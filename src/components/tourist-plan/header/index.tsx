@@ -1,5 +1,5 @@
 import { useNavigate } from "@aiszlab/bee/router";
-import { IconButton } from "musae";
+import HeaderIconButton from "../../header-icon-button";
 import { IconKeyboardArrowLeft } from "musae/icons";
 import { stringify } from "@aiszlab/relax/class-name";
 
@@ -26,9 +26,9 @@ const TouristPlanHeader = ({ title, step, subTitle }: Props) => {
   return (
     <div className="sticky top-0 z-50 border-b border-color-outline-variant bg-color-surface/95 px-4 pb-4 pt-2 backdrop-blur-md safe-pt-2">
       <div className="flex items-center gap-3">
-        <IconButton size="small" color="secondary" onClick={goBack} aria-label="返回上一页">
+        <HeaderIconButton onClick={goBack} aria-label="返回上一页">
           <IconKeyboardArrowLeft size={24} />
-        </IconButton>
+        </HeaderIconButton>
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-3">

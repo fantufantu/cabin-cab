@@ -3,7 +3,6 @@ import {
   BottomSheet,
   Button,
   Checkbox,
-  IconButton,
   Input,
   Menu,
   Message,
@@ -26,7 +25,8 @@ import {
 import { useMemo, useState } from "react";
 import { getCurrentPosition, GeolocationError } from "../../../utils/geolocation.util";
 import { reverseGeocode } from "../../../api/location.api";
-import DistrictCard from "../../../components/district";
+import HeaderIconButton from "../../../components/header-icon-button";
+import RouteMap from "../../../components/route-map";
 import { DISTRICT_LEVELS } from "../../../constants/district.constant";
 
 interface ToggleableDistrict {
@@ -116,7 +116,12 @@ const PlanDistricts = () => {
   } = useToggleable(data?.toggleableDistricts ?? [], {
     selectionMode: "leaf",
     toggledKeys: Array.from(selectedDistrictCodes),
-    onToggle: (nextCodes) => setSelectedDistrictCodes(new Set(nextCodes.map(String))),
+    onToggle: (nextCodes) => {
+      const next = new Set(nextCodes.map(String));
+      const retained = Array.from(selectedDistrictCodes).filter((code) => next.has(code));
+      const added = Array.from(next).filter((code) => !selectedDistrictCodes.has(code));
+      setSelectedDistrictCodes(new Set([...retained, ...added]));
+    },
   });
 
   const toggleDistrict = (code: string) => toggle(code);
@@ -213,46 +218,12 @@ const PlanDistricts = () => {
           <IconKeyboardArrowRight className="text-color-on-surface-variant" />
         </button>
 
-        <section className="flex flex-col gap-3">
-          <div className="flex items-end justify-between">
-            <div>
-              <Typography.Title size="medium">已选目的地</Typography.Title>
-              <p className="mt-1 text-xs text-color-on-surface-variant">
-                {selectedDistrictCodes.size > 0
-                  ? `已挑选 ${selectedDistrictCodes.size} 座城市`
-                  : "选好城市后会显示在这里"}
-              </p>
-            </div>
-            {selectedDistrictCodes.size > 0 && (
-              <Button size="small" variant="text" onClick={turnOn}>
-                编辑
-              </Button>
-            )}
-          </div>
-
-          {selectedDistricts.length > 0 ? (
-            <div className="grid grid-cols-2 gap-3">
-              {selectedDistricts.map((district) => (
-                <DistrictCard
-                  key={district.code}
-                  item={district}
-                  isSelected
-                  onClick={toggleDistrict}
-                />
-              ))}
-            </div>
-          ) : (
-            <button
-              type="button"
-              className="flex min-h-32 flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-color-outline-variant bg-color-surface-container-low px-5 py-6 text-center"
-              onClick={turnOn}
-            >
-              <IconAddLocationAlt size={28} color="var(--color-primary)" />
-              <span className="text-sm font-medium text-color-on-surface">添加第一座城市</span>
-              <span className="text-xs text-color-on-surface-variant">可一次选择多个目的地</span>
-            </button>
-          )}
-        </section>
+        {selectedDistricts.length > 0 && (
+          <RouteMap
+            cities={selectedDistricts}
+            onReorder={(codes) => setSelectedDistrictCodes(new Set(codes))}
+          />
+        )}
       </main>
 
       <TouristPlanFooter>
@@ -270,9 +241,9 @@ const PlanDistricts = () => {
         <div className="flex justify-between items-center">
           <Typography.Title size="large">选择目的城市</Typography.Title>
 
-          <IconButton variant="text" onClick={turnOff}>
-            <IconClose size="large" />
-          </IconButton>
+          <HeaderIconButton onClick={turnOff} aria-label="关闭城市选择">
+            <IconClose size={24} />
+          </HeaderIconButton>
         </div>
 
         {selectedDistrictCodes.size > 0 && (
