@@ -9,7 +9,7 @@ import {
   IconSwapHoriz,
 } from "musae/icons";
 import { useNavigate } from "@aiszlab/bee/router";
-import RouteAnimation from "./route-animation";
+import TravelScene from "./travel-scene";
 
 const { Col, Row } = Grid;
 
@@ -74,9 +74,9 @@ const Home = () => {
           </button>
         </header>
 
-        {/* 路线动画 */}
-        <div className="-mx-1 mb-1 mt-2">
-          <RouteAnimation />
+        {/* 微缩旅行场景 */}
+        <div className="-mx-1 mb-5 mt-4">
+          <TravelScene />
         </div>
 
         {/* 标题区 */}
