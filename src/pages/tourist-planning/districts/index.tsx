@@ -26,15 +26,18 @@ const PlanDistricts = () => {
   const navigate = useNavigate();
   const citySheetRef = useRef<CitySelectSheetRef>(null);
   const [isLocating, setIsLocating] = useState(false);
-  const { data } = useRequest(async () => {
-    const districts = await queryDistricts({ keyword: "" });
-    const cityMap = new Map(
-      districts
-        .filter(({ level }) => level === DISTRICT_LEVELS.CITY)
-        .map((city) => [city.code, city]),
-    );
-    return { cityMap, districtMap: cityMap };
-  }, { auto: true });
+  const { data } = useRequest(
+    async () => {
+      const districts = await queryDistricts({ keyword: "" });
+      const cityMap = new Map(
+        districts
+          .filter(({ level }) => level === DISTRICT_LEVELS.CITY)
+          .map((city) => [city.code, city]),
+      );
+      return { cityMap, districtMap: cityMap };
+    },
+    { auto: true },
+  );
   const nextStep = () => navigate("/tourist-planning/period");
 
   const selectCurrentCity = async () => {
@@ -79,7 +82,7 @@ const PlanDistricts = () => {
     <div className="min-h-screen flex flex-col bg-color-surface">
       <TouristPlanHeader title="选择目的地" step={1} subTitle="支持选择多个城市，可连续勾选" />
 
-      <main className="flex flex-1 flex-col gap-6 px-4 py-5">
+      <main className="flex flex-1 flex-col gap-6 px-4 py-5 z-0">
         <section className="rounded-3xl bg-color-primary-container p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -107,11 +110,17 @@ const PlanDistricts = () => {
               </div>
             ) : (
               <p className="mt-2 text-sm text-color-on-surface-variant">
-                {selectedDistrictCodes.size > 0 ? "正在加载已选城市…" : "还未选择城市，点击下方添加目的地"}
+                {selectedDistrictCodes.size > 0
+                  ? "正在加载已选城市…"
+                  : "还未选择城市，点击下方添加目的地"}
               </p>
             )}
           </section>
-          <Button className="mt-5 w-full" onClick={() => citySheetRef.current?.open()} prefix={<IconAddLocationAlt />}>
+          <Button
+            className="mt-5 w-full"
+            onClick={() => citySheetRef.current?.open()}
+            prefix={<IconAddLocationAlt />}
+          >
             添加目的地
           </Button>
         </section>
