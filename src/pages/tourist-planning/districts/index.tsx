@@ -1,5 +1,5 @@
-import { useBoolean, useRequest, useToggleable } from "@aiszlab/relax";
-import { BottomSheet, Button, Checkbox, Input, Menu, Message, Tag, Typography } from "musae";
+import { useRequest } from "@aiszlab/relax";
+import { Button, Message, Tag, Typography } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
 import { usePlanContext } from "../../../contexts/tourist-planning.context";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
@@ -9,124 +9,33 @@ import { type District as DistrictType } from "../../../api/district.types";
 import {
   IconAddLocationAlt,
   IconKeyboardArrowRight,
-  IconClose,
   IconLocationCity,
   IconMyLocation,
 } from "musae/icons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { getCurrentPosition, GeolocationError } from "../../../utils/geolocation.util";
 import { reverseGeocode } from "../../../api/location.api";
-import HeaderIconButton from "../../../components/header-icon-button";
+import CitySelectSheet, { type CitySelectSheetRef } from "../../../components/city-select-sheet";
 import RouteMap from "../../../components/route-map";
 import { DISTRICT_LEVELS } from "../../../constants/district.constant";
 
-interface ToggleableDistrict {
-  key: string;
-  children?: ToggleableDistrict[];
-}
-
 const PlanDistricts = () => {
-  const {
-    "0": isVisible,
-    "1": { turnOn, turnOff },
-  } = useBoolean();
-
   const {
     districts: { selectedDistrictCodes, setSelectedDistrictCodes },
   } = usePlanContext();
   const navigate = useNavigate();
+  const citySheetRef = useRef<CitySelectSheetRef>(null);
   const [isLocating, setIsLocating] = useState(false);
-
-  const [keyword, setKeyword] = useState("");
-  const [districtPath, setDistrictPath] = useState<DistrictType[]>([]);
-
-  const { data, run: searchDistricts } = useRequest(
-    async (keyword?: string) => {
-      const districts = await queryDistricts({
-        keyword,
-      });
-
-      const { districtMap, cityMap, provinceMap, toggleableDistricts } = districts
-        .values()
-        .filter(({ level }) => level === DISTRICT_LEVELS.PROVINCE || level === DISTRICT_LEVELS.CITY)
-        .reduce(
-          (prev, current) => {
-            prev.districtMap.set(current.code, current);
-
-            switch (current.level) {
-              case DISTRICT_LEVELS.PROVINCE:
-                prev.provinceMap.set(current.code, current);
-                break;
-              case DISTRICT_LEVELS.CITY:
-                prev.cityMap.set(current.code, current);
-                prev.toggleableDistricts.set(current.parentCode, {
-                  key: current.parentCode,
-                  children: (
-                    prev.toggleableDistricts.get(current.parentCode)?.children ?? []
-                  ).concat({
-                    key: current.code,
-                  }),
-                });
-                break;
-              default:
-                break;
-            }
-
-            return prev;
-          },
-          {
-            districtMap: new Map<string, DistrictType>(),
-            provinceMap: new Map<string, DistrictType>(),
-            cityMap: new Map<string, DistrictType>(),
-            toggleableDistricts: new Map<string, ToggleableDistrict>(),
-          },
-        );
-
-      return {
-        districts,
-        districtMap,
-        provinceMap,
-        cityMap,
-        toggleableDistricts: toggleableDistricts.values().toArray(),
-      };
-    },
-    {
-      defaultParams: [""],
-      auto: true,
-    },
-  );
-
-  const nextStep = () => {
-    navigate("/tourist-planning/period");
-  };
-
-  const {
-    toggledKeys: selectedLeafCodes,
-    isToggled: isDistrictSelected,
-    toggle,
-  } = useToggleable(data?.toggleableDistricts ?? [], {
-    selectionMode: "leaf",
-    toggledKeys: Array.from(selectedDistrictCodes),
-    onToggle: (nextCodes) => {
-      const next = new Set(nextCodes.map(String));
-      const retained = Array.from(selectedDistrictCodes).filter((code) => next.has(code));
-      const added = Array.from(next).filter((code) => !selectedDistrictCodes.has(code));
-      setSelectedDistrictCodes(new Set([...retained, ...added]));
-    },
-  });
-
-  const toggleDistrict = (code: string) => toggle(code);
-
-  const isSearching = keyword.trim().length > 0;
-  const currentParent = districtPath[districtPath.length - 1];
-  const visibleDistricts = isSearching
-    ? data?.districts
-    : currentParent
-      ? data?.cityMap
-          .values()
-          .filter((city) => city.parentCode === currentParent.code)
-          .toArray()
-      : data?.provinceMap.values().toArray();
+  const { data } = useRequest(async () => {
+    const districts = await queryDistricts({ keyword: "" });
+    const cityMap = new Map(
+      districts
+        .filter(({ level }) => level === DISTRICT_LEVELS.CITY)
+        .map((city) => [city.code, city]),
+    );
+    return { cityMap, districtMap: cityMap };
+  }, { auto: true });
+  const nextStep = () => navigate("/tourist-planning/period");
 
   const selectCurrentCity = async () => {
     if (isLocating) return;
@@ -158,7 +67,7 @@ const PlanDistricts = () => {
       return;
     }
 
-    if (!selectedLeafCodes.has(matchedCity.code)) toggle(matchedCity.code);
+    setSelectedDistrictCodes(new Set([...selectedDistrictCodes, matchedCity.code]));
     Message.success({ description: `已添加${matchedCity.name}` });
   };
 
@@ -184,7 +93,25 @@ const PlanDistricts = () => {
               <IconLocationCity size={26} />
             </div>
           </div>
-          <Button className="mt-5 w-full" onClick={turnOn} prefix={<IconAddLocationAlt />}>
+          <section className="mt-5" aria-label="已确认的目的城市" aria-live="polite">
+            <p className="text-sm font-medium text-color-on-surface">
+              已选城市（{selectedDistrictCodes.size}）
+            </p>
+            {selectedDistricts.length > 0 ? (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectedDistricts.map((city, index) => (
+                  <Tag key={city.code} className="rounded-full">
+                    {index + 1}. {city.name}
+                  </Tag>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-color-on-surface-variant">
+                {selectedDistrictCodes.size > 0 ? "正在加载已选城市…" : "还未选择城市，点击下方添加目的地"}
+              </p>
+            )}
+          </section>
+          <Button className="mt-5 w-full" onClick={() => citySheetRef.current?.open()} prefix={<IconAddLocationAlt />}>
             添加目的地
           </Button>
         </section>
@@ -192,7 +119,7 @@ const PlanDistricts = () => {
         <button
           type="button"
           className="flex items-center gap-3 rounded-2xl border border-color-outline-variant bg-color-surface-container-low p-4 text-left"
-          onClick={selectCurrentCity}
+          onClick={() => selectCurrentCity()}
           disabled={isLocating}
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-color-surface text-color-primary">
@@ -228,120 +155,11 @@ const PlanDistricts = () => {
         </Button>
       </TouristPlanFooter>
 
-      <BottomSheet open={isVisible} onClose={turnOff} height="90vh" panelClassName="p-4 gap-4">
-        <div className="flex justify-between items-center">
-          <Typography.Title size="large">选择目的城市</Typography.Title>
-
-          <HeaderIconButton onClick={turnOff} aria-label="关闭城市选择">
-            <IconClose size={24} />
-          </HeaderIconButton>
-        </div>
-
-        {selectedDistrictCodes.size > 0 && (
-          <section className="flex flex-col gap-2" aria-label="已选城市">
-            <Typography.Title>已选城市（{selectedDistrictCodes.size}）</Typography.Title>
-
-            <div className="flex flex-wrap gap-2">
-              {Array.from(selectedLeafCodes).map((code) => {
-                const district = data?.cityMap.get(code.toString());
-
-                return (
-                  <Tag key={code} closable onClose={() => toggle(code)} className="rounded-full">
-                    {district?.name ?? code}
-                  </Tag>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
-        <Input
-          placeholder="请搜索省份或城市"
-          value={keyword}
-          onChange={(value: string) => {
-            setKeyword(value);
-            setDistrictPath([]);
-            searchDistricts(value);
-          }}
-        />
-
-        <Button
-          prefix={<IconLocationCity />}
-          size="small"
-          variant="outlined"
-          className="w-fit"
-          loading={isLocating}
-          onClick={selectCurrentCity}
-        >
-          使用当前位置
-        </Button>
-
-        <div className="flex flex-col gap-2 overflow-auto">
-          <div className="flex items-center gap-2">
-            {districtPath.length > 0 && (
-              <Button
-                size="small"
-                variant="text"
-                onClick={() => setDistrictPath(districtPath.slice(0, -1))}
-              >
-                返回
-              </Button>
-            )}
-            <Typography.Title>
-              {isSearching ? "搜索结果" : (currentParent?.name ?? "全部省份和城市")}
-            </Typography.Title>
-          </div>
-
-          <Menu
-            size="large"
-            onClick={(key) => {
-              const code = key.toString();
-              if (data?.provinceMap.has(code)) {
-                const province = data.provinceMap.get(code);
-                if (!province) return;
-                setKeyword("");
-                searchDistricts("");
-                setDistrictPath(isSearching ? [province] : [...districtPath, province]);
-                return;
-              }
-
-              toggleDistrict(code);
-            }}
-            items={(visibleDistricts ?? []).map(({ code, name }) => {
-              const isProvince = data?.provinceMap.has(code);
-
-              return {
-                key: code,
-                leading: isProvince ? undefined : (
-                  <span onClick={(event) => event.stopPropagation()}>
-                    <Checkbox
-                      checked={isDistrictSelected(code)}
-                      onChange={() => toggleDistrict(code)}
-                    />
-                  </span>
-                ),
-                label: name,
-                trailing: isProvince && (
-                  <Button
-                    size="small"
-                    variant="text"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      const province = data?.provinceMap.get(code);
-                      if (!province) return;
-                      setKeyword("");
-                      searchDistricts("");
-                      setDistrictPath(isSearching ? [province] : [...districtPath, province]);
-                    }}
-                  >
-                    城市 <IconKeyboardArrowRight size="large" />
-                  </Button>
-                ),
-              };
-            })}
-          />
-        </div>
-      </BottomSheet>
+      <CitySelectSheet
+        ref={citySheetRef}
+        value={selectedDistricts}
+        onChange={(cities) => setSelectedDistrictCodes(new Set(cities.map(({ code }) => code)))}
+      />
     </div>
   );
 };

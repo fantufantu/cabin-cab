@@ -207,13 +207,12 @@ export default function RouteMap({ cities, onReorder, onSelectCity }: Props) {
           </li>
         ))}
       </ol>
-      <p className="px-4 pb-4 text-xs text-color-on-surface-variant">
-        {cities.length === 1
-          ? onReorder
-            ? "再选一座城市，即可查看城市间连线"
-            : "本次行程仅包含一座城市"
-          : "连线仅示意城市游览顺序，不代表实际交通路线"}
-      </p>
+
+      {cities.length === 1 && (
+        <p className="px-4 pb-4 text-xs text-color-on-surface-variant">
+          {onReorder ? "再选一座城市，即可查看城市间连线" : "本次行程仅包含一座城市"}
+        </p>
+      )}
     </section>
   );
 }

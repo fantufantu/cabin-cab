@@ -32,7 +32,7 @@ const MainLayout = () => {
 
   return (
     <>
-      <div className="pb-24">
+      <div className="relative z-0 pb-24">
         <Outlet />
       </div>
 

@@ -84,10 +84,10 @@ before(async () => {
           if (source === "@aiszlab/bee/router") return "\0district-test:router";
           if (source === "musae") return "\0district-test:musae";
           if (source === "musae/icons") return "\0district-test:icons";
-          if (source === "../../../utils/geolocation.util") return "\0district-test:geolocation";
-          if (source === "../../../api/district.api") return "\0district-test:district-api";
+          if (source.endsWith("/utils/geolocation.util")) return "\0district-test:geolocation";
+          if (source.endsWith("/api/district.api")) return "\0district-test:district-api";
           if (source === "../../api/amap.api" || source === "../api/amap.api") return "\0district-test:amap-api";
-          if (source === "../../../api/location.api") return "\0district-test:location";
+          if (source.endsWith("/api/location.api")) return "\0district-test:location";
           if (source === "../../../components/tourist-plan/header") return "\0district-test:header";
           if (source === "../../../components/tourist-plan/footer") return "\0district-test:footer";
           if (source === "../../../components/district") return "\0district-test:district-card";
@@ -271,6 +271,7 @@ async function renderDistrictPage(selectedDistrictCodes = new Set()) {
     );
   };
   await act(async () => root.render(React.createElement(PageProvider)));
+  await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent.includes("添加目的地")).click());
   return container.innerHTML;
 }
 
@@ -286,6 +287,8 @@ test("shows selected cities as removable items and completes with the selected c
   assert.ok(removeButton);
   await act(async () => removeButton.click());
   assert.equal(document.querySelector('[aria-label="移除北京市"]'), null);
+  assert.equal(document.querySelector("footer button").textContent, "完成（1）");
+  await act(async () => [...document.querySelectorAll("button")].find((button) => button.textContent === "确认（0）").click());
   const completeButton = document.querySelector("footer button");
   assert.equal(completeButton.textContent, "完成（0）");
   assert.equal(completeButton.disabled, true);
@@ -329,6 +332,7 @@ test("page selection stores only leaves and syncs parent and child checkbox stat
   };
 
   await act(async () => root.render(React.createElement(PageProvider)));
+  await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent.includes("添加目的地")).click());
   const provinceRow = container.querySelector('[data-menu-key="330000"]');
   assert.ok(provinceRow);
   const provinceDrillDown = [...provinceRow.querySelectorAll("button")].find((button) =>
@@ -343,12 +347,18 @@ test("page selection stores only leaves and syncs parent and child checkbox stat
   assert.ok(parentCheckbox);
   await act(async () => parentCheckbox.click());
 
+  assert.deepEqual([...selectedRef.current], []);
+  const confirm = [...container.querySelectorAll("button")].find((button) => button.textContent === "确认（1）");
+  assert.ok(confirm);
+  await act(async () => confirm.click());
   assert.deepEqual([...selectedRef.current], ["330100"]);
   assert.equal(parentRow.querySelector('[role="checkbox"]').getAttribute("aria-checked"), "true");
 
   const selectedParentCheckbox = parentRow.querySelector('[role="checkbox"]');
   await act(async () => selectedParentCheckbox.click());
-  assert.deepEqual([...selectedRef.current], []);
+  assert.deepEqual([...selectedRef.current], ["330100"]);
+  await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent.includes("添加目的地")).click());
+  assert.ok(container.querySelector('[aria-label="移除杭州市"]'));
 });
 
 test("exposes each city card as an accessible multi-select toggle", async () => {
@@ -387,6 +397,8 @@ test("route preview reorders cities and keeps the remaining route after removal"
   assert.match(cityNames()[1], /杭州市/);
   assert.equal(document.querySelector('[aria-label="上移北京市"]').disabled, true);
   await act(async () => document.querySelector('[aria-label="移除北京市"]').click());
+  assert.equal(cityNames().length, 2);
+  await act(async () => [...document.querySelectorAll("button")].find((button) => button.textContent === "确认（1）").click());
   assert.equal(cityNames().length, 1);
   assert.match(cityNames()[0], /杭州市/);
 });
@@ -418,4 +430,41 @@ test("global AMap store retries failures, merges concurrent requests and reuses 
   } finally {
     delete globalThis.__amapCredential;
   }
+});
+
+test("city sheet opens by ref and emits city objects only when confirmed", async () => {
+  const { default: CitySelectSheet } = await server.ssrLoadModule("/src/components/city-select-sheet/index.tsx");
+  const ref = React.createRef();
+  const changes = [];
+  const city = DISTRICTS.find(({ code }) => code === "330100");
+  const container = document.createElement("div");
+  document.body.append(container);
+  root = createRoot(container);
+  await act(async () => root.render(React.createElement(CitySelectSheet, {
+    ref,
+    value: [city],
+    onChange: (cities) => changes.push(cities),
+  })));
+  await act(async () => ref.current.open());
+  await act(async () => container.querySelector('[aria-label="移除杭州市"]').click());
+  assert.deepEqual(changes, []);
+  await act(async () => ref.current.open());
+  assert.ok(container.querySelector('[aria-label="移除杭州市"]'));
+  await act(async () => [...container.querySelectorAll("button")].find((button) => button.textContent === "确认（1）").click());
+  assert.deepEqual(changes, [[city]]);
+});
+
+
+test("step page shows confirmed city names outside the sheet", async () => {
+  await renderDistrictPage(new Set(["330100", "110100"]));
+  const summary = document.querySelector('[aria-label="已确认的目的城市"]');
+  assert.ok(summary);
+  assert.match(summary.textContent, /已选城市（2）/);
+  assert.match(summary.textContent, /1\. 杭州市/);
+  assert.match(summary.textContent, /2\. 北京市/);
+  await act(async () => document.querySelector('[aria-label="移除北京市"]').click());
+  assert.match(summary.textContent, /北京市/);
+  await act(async () => [...document.querySelectorAll("button")].find((button) => button.textContent === "确认（1）").click());
+  assert.match(summary.textContent, /已选城市（1）/);
+  assert.doesNotMatch(summary.textContent, /北京市/);
 });
