@@ -37,7 +37,8 @@
       "debugApplicationIdSuffix": ".debug"
     },
     "iOS": {
-      "developmentTeam": "8959G6UR72"
+      "developmentTeam": "8959G6UR72",
+      "minimumSystemVersion": "15.0"
     }
   }
 }
