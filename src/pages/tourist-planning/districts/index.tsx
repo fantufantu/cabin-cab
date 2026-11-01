@@ -1,14 +1,5 @@
 import { useBoolean, useRequest, useToggleable } from "@aiszlab/relax";
-import {
-  BottomSheet,
-  Button,
-  Checkbox,
-  Input,
-  Menu,
-  Message,
-  Tag,
-  Typography,
-} from "musae";
+import { BottomSheet, Button, Checkbox, Input, Menu, Message, Tag, Typography } from "musae";
 import { useNavigate } from "@aiszlab/bee/router";
 import { usePlanContext } from "../../../contexts/tourist-planning.context";
 import TouristPlanHeader from "../../../components/tourist-plan/header";
@@ -22,7 +13,7 @@ import {
   IconLocationCity,
   IconMyLocation,
 } from "musae/icons";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { getCurrentPosition, GeolocationError } from "../../../utils/geolocation.util";
 import { reverseGeocode } from "../../../api/location.api";
 import HeaderIconButton from "../../../components/header-icon-button";
