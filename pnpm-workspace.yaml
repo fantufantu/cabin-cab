@@ -2,5 +2,5 @@ allowBuilds:
   esbuild: true
   musae: true
 minimumReleaseAgeExclude:
-  - "@aiszlab/relax"
+  - "@aiszlab/*"
   - musae

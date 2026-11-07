@@ -1,8 +1,9 @@
 import { useNavigate } from "@aiszlab/bee/router";
-import TouristPlanHeader from "../../../components/tourist-plan/header";
+import { createPortal } from "react-dom";
 import { Button, IconButton, Skeleton, Tabs, Tag } from "musae";
 import { IconCalendarToday, IconKeyboardArrowLeft, IconKeyboardArrowRight } from "musae/icons";
 import { usePlanContext } from "../../../contexts/tourist-planning.context";
+import { TouristPlanHeaderContent } from "../../../components/tourist-plan/header";
 import {
   isUndefined,
   range,
@@ -11,7 +12,6 @@ import {
   useInfiniteScroll,
   useRequest,
 } from "@aiszlab/relax";
-import TouristPlanFooter from "../../../components/tourist-plan/footer";
 import { Key, useState } from "react";
 import TouristAttractionCard from "../../../components/attraction/card";
 import { useMutation } from "@apollo/client/react";
@@ -20,11 +20,14 @@ import { useAuthStore } from "../../../stores/auth.store";
 import { EVENT_BUS_TOKENS, useEventBusStore } from "../../../stores/event-bus.store";
 import { queryDistricts } from "../../../api/district.api";
 import { queryAttractions } from "../../../api/attraction.api";
+import { getTouristPlanningFlowStep } from "../../../constants/tourist-planning.constant";
 
 function Attractions() {
   const {
     districts: { selectedDistrictCodes },
     period: { duration, depatureAt },
+    headerContainer,
+    footerContainer,
   } = usePlanContext();
 
   const navigate = useNavigate();
@@ -40,9 +43,7 @@ function Attractions() {
 
   const [createTouristPlan] = useMutation(CREATE_TOURIST_PLAN);
 
-  const goBack = () => {
-    navigate(-1);
-  };
+  const goBack = useEvent(() => navigate(-1));
 
   const { data: districts } = useRequest(
     () =>
@@ -96,7 +97,7 @@ function Attractions() {
     run(districtCode);
   });
 
-  const submit = async () => {
+  const submit = useEvent(async () => {
     const { data } = await createTouristPlan({
       variables: {
         input: {
@@ -121,93 +122,139 @@ function Attractions() {
       emit(EVENT_BUS_TOKENS.REFRESH_TOURIST_PLANS),
       navigate(`/tourist-plan/${data.createTouristPlan.id}`),
     ]);
-  };
+  });
 
   return (
-    <div className="min-h-screen flex flex-col" ref={viewportRef}>
-      <TouristPlanHeader step={3} title="景点" subTitle="选择您喜欢的景点" />
-
-      <Tabs
-        activeKey={currentDistrictCode}
-        onChange={changeDistrict}
-        items={toArray(selectedDistrictCodes).map((districtCode) => {
-          return {
-            key: districtCode,
-            label: (
-              <span className="flex items-center">
-                <span>{districts?.get(districtCode) ?? districtCode}</span>
-                &nbsp;
-                <Tag size="small" className="rounded-full">
-                  {(!isUndefined(currentDistrictCode) &&
-                    selectedAttractionTree.get(districtCode)?.size) ??
-                    0}
-                </Tag>
-              </span>
-            ),
-          };
-        })}
-      />
-
-      <div className="flex flex-col gap-2 p-4">
-        {loading &&
-          range(1, 10).map((key) => {
-            return <Skeleton key={key} className="h-20 rounded-lg" />;
+    <>
+      <div className="flex flex-1 flex-col" ref={viewportRef}>
+        <Tabs
+          activeKey={currentDistrictCode}
+          onChange={changeDistrict}
+          items={toArray(selectedDistrictCodes).map((districtCode) => {
+            return {
+              key: districtCode,
+              label: (
+                <span className="flex items-center">
+                  <span>{districts?.get(districtCode) ?? districtCode}</span>
+                  &nbsp;
+                  <Tag size="small" className="rounded-full">
+                    {(!isUndefined(currentDistrictCode) &&
+                      selectedAttractionTree.get(districtCode)?.size) ??
+                      0}
+                  </Tag>
+                </span>
+              ),
+            };
           })}
+        />
 
-        {!loading && error && (
-          <div className="flex flex-col items-center gap-3 py-12 text-center">
-            <p className="text-sm text-color-on-surface-variant">景点数据加载失败，请重试</p>
-            <Button
-              size="small"
-              color="secondary"
-              onClick={() => run(currentDistrictCode)}
-            >
-              重试
-            </Button>
-          </div>
-        )}
+        <div className="flex flex-col gap-2 p-4">
+          {loading &&
+            range(1, 10).map((key) => {
+              return <Skeleton key={key} className="h-20 rounded-lg" />;
+            })}
 
-        {!loading && !error && attractions.length === 0 && (
-          <p className="py-12 text-center text-sm text-color-on-surface-variant">
-            暂无景点数据
-          </p>
-        )}
+          {!loading && error && (
+            <div className="flex flex-col items-center gap-3 py-12 text-center">
+              <p className="text-sm text-color-on-surface-variant">景点数据加载失败，请重试</p>
+              <Button
+                size="small"
+                color="secondary"
+                onClick={() => run(currentDistrictCode)}
+              >
+                重试
+              </Button>
+            </div>
+          )}
 
-        {attractions.length > 0 && (
-          <>
-            {attractions.map((attraction) => (
-              <TouristAttractionCard
-                key={attraction.code}
-                attraction={attraction}
-                checked={
-                  !isUndefined(currentDistrictCode) &&
-                  selectedAttractionTree.get(currentDistrictCode)?.has(attraction.code)
-                }
-                onSelect={selectAttraction}
-                onDeselect={deselectAttraction}
-              />
-            ))}
+          {!loading && !error && attractions.length === 0 && (
+            <section className="my-6 flex flex-col gap-5 rounded-3xl bg-color-surface-container-low p-6">
+              <div className="flex flex-col gap-2">
+                <Tag size="small" variant="filled" className="w-fit rounded-full">
+                  行程灵感
+                </Tag>
+                <h2 className="text-xl font-semibold text-color-on-surface">
+                  {districts?.get(currentDistrictCode) ?? "这座城市"}，慢慢逛也很好
+                </h2>
+                <p className="text-sm leading-6 text-color-on-surface-variant">
+                  这里暂时还没有收录景点。先把行程计划下来，之后也可以按自己的兴趣探索城市。
+                </p>
+              </div>
 
-            <span ref={sentinelRef} />
-          </>
-        )}
+              <div className="flex items-center gap-3 rounded-2xl bg-color-surface p-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-color-primary-container text-color-primary">
+                  <IconCalendarToday />
+                </span>
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-medium text-color-on-surface">
+                    {depatureAt.format("M月D日")} 出发 · {duration} 天
+                  </span>
+                  <span className="text-xs text-color-on-surface-variant">
+                    不选景点也能继续，AI 会根据你的行程安排生成计划
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-center text-xs text-color-on-surface-variant">
+                想加入热门景点？
+                <button
+                  type="button"
+                  className="ml-1 font-medium text-color-primary underline underline-offset-2"
+                  onClick={() => navigate("/tourist-planning/districts")}
+                >
+                  返回第一步更换城市
+                </button>
+              </p>
+            </section>
+          )}
+
+          {attractions.length > 0 && (
+            <>
+              {attractions.map((attraction) => (
+                <TouristAttractionCard
+                  key={attraction.code}
+                  attraction={attraction}
+                  checked={
+                    !isUndefined(currentDistrictCode) &&
+                    selectedAttractionTree.get(currentDistrictCode)?.has(attraction.code)
+                  }
+                  onSelect={selectAttraction}
+                  onDeselect={deselectAttraction}
+                />
+              ))}
+
+              <span ref={sentinelRef} />
+            </>
+          )}
+        </div>
       </div>
+      {headerContainer &&
+        createPortal(
+          <TouristPlanHeaderContent
+            title={getTouristPlanningFlowStep("attractions").title}
+            subTitle={getTouristPlanningFlowStep("attractions").subTitle}
+          />,
+          headerContainer,
+        )}
+      {footerContainer &&
+        createPortal(
+          <>
+            <IconButton size="small" color="secondary" onClick={goBack}>
+              <IconKeyboardArrowLeft />
+            </IconButton>
 
-      <TouristPlanFooter>
-        <IconButton size="small" color="secondary" onClick={goBack}>
-          <IconKeyboardArrowLeft />
-        </IconButton>
-
-        <Button
-          className="flex-1"
-          prefix={<IconCalendarToday />}
-          suffix={<IconKeyboardArrowRight />}
-          onClick={submit}
-        >
-          生成出行计划
-        </Button>
-      </TouristPlanFooter>
-    </div>
+            <Button
+              className="flex-1"
+              prefix={<IconCalendarToday />}
+              suffix={<IconKeyboardArrowRight />}
+              onClick={submit}
+            >
+              生成出行计划
+            </Button>
+          </>,
+          footerContainer,
+        )}
+    </>
   );
 }
 

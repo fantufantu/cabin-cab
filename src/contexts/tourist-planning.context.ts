@@ -2,6 +2,8 @@ import { Dayjs } from "dayjs";
 import { createContext, useContext } from "react";
 
 interface PlanContextValue {
+  headerContainer: HTMLDivElement | null;
+  footerContainer: HTMLDivElement | null;
   period: {
     duration: number;
     setDuration: (duration: number) => void;
